@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Seasonal Life 도구함</title>
+<meta name="description" content="My Seasonal Life 블로그에서 만든 계산기와 테스트 모음.">
+<meta property="og:title" content="My Seasonal Life 도구함">
+<meta property="og:description" content="전기요금 계산기, 분노관제센터 테스트">
+<style>
+:root { --frame: #2152C4; --ink: #14306F; --paper: #fff; --line: #c9d5f0; --muted: #5a6680; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--frame); color: #1b2333; font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  padding: 24px max(16px, env(safe-area-inset-left, 0px)) 40px max(16px, env(safe-area-inset-right, 0px)); line-height: 1.6; word-break: keep-all; }
+.slip { max-width: 560px; margin: 0 auto; background: var(--paper); border-radius: 18px; padding: 26px 22px; }
+h1 { margin: 0 0 4px; font-size: 30px; color: var(--ink); }
+p { margin: 0; color: var(--muted); }
+.list { display: grid; gap: 12px; margin-top: 20px; }
+a.tool { display: block; text-decoration: none; color: inherit; border: 2px solid var(--line); border-radius: 12px; padding: 16px; }
+a.tool:hover, a.tool:focus-visible { border-color: var(--frame); outline: none; }
+a.tool b { display: block; font-size: 20px; color: var(--ink); }
+.foot { margin-top: 20px; font-size: 14px; }
+.foot a { color: var(--ink); font-weight: 700; }
+</style>
+</head>
+<body>
+<main class="slip">
+  <h1>My Seasonal Life 도구함</h1>
+  <p>블로그 글과 함께 쓰는 계산기와 테스트예요.</p>
+  <div class="list">
+    <a class="tool" href="electric.html"><b>전기요금 계산기</b>사용량만 넣으면 이번 달 전기요금이 나와요. 히터·전기장판 추가 요금도 계산해요.</a>
+    <a class="tool" href="anger.html"><b>분노관제센터</b>지금 이 분노, 터뜨려도 될까? 13문항 1분 판정.</a>
+  </div>
+  <p class="foot">만든 곳: <a href="https://blog.naver.com/ydnad" target="_blank" rel="noopener">My Seasonal Life 블로그</a></p>
+</main>
+</body>
+</html>

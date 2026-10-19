@@ -1,0 +1,1113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:type" content="website">
+<meta property="og:title" content="분노관제센터">
+<meta property="og:description" content="지금 이 분노, 터뜨려도 될까? 13개 질문으로 1분 만에 판정하고, 상대에 맞는 대사와 참아야 할 말까지 알려 줘요.">
+<meta name="description" content="지금 이 분노, 터뜨려도 될까? 13개 질문으로 1분 만에 판정하고, 상대에 맞는 대사와 참아야 할 말까지 알려 줘요.">
+<meta property="og:url" content="https://dandy-bk.github.io/tools/anger.html">
+<meta property="og:image" content="https://dandy-bk.github.io/tools/og-anger.png">
+<script>window.__SHARE_URL__ = location.href.split("#")[0];</script>
+<style>[hidden]{display:none!important}body{margin:0}</style>
+<title>분노관제센터</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a 1970s plant control desk, one engraved placard at a time; the verdict lands as a rubber stamp with its own pictogram over three analog gauges, then the readout, a script to say, phrases to swallow, and a cooling loop. Single visual world (sea-foam panel paint), light only by choice. */
+:root {
+  color-scheme: light;
+  --paint: #9fc2b1;
+  --paint-deep: #7fa694;
+  --face: #eef0e5;
+  --face-line: #c9d1c3;
+  --paper: #ffffff;
+  --ink: #16231f;
+  --ink-soft: #44574f;
+  --lamp-green: #2c9a58;
+  --green-ink: #1d6e3e;
+  --lamp-amber: #e09a17;
+  --amber-ink: #9a6206;
+  --amber-wash: #fbf4e4;
+  --lamp-blue: #2f7fa8;
+  --blue-ink: #1b4e68;
+  --lamp-red: #cc3a2d;
+  --red-deep: #7d1f17;
+  --rivet: #5c6f67;
+  --quip-ink: #e9f2ec;
+  --font-display: "Black Han Sans", "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --font-readout: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--paint); color: var(--ink); }
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px;
+  background-image: repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 2px, transparent 2px 6px);
+}
+.desk { max-width: 560px; margin: 0 auto; display: grid; gap: 18px; }
+
+.plate, .card {
+  position: relative;
+  background: var(--face);
+  border: 2px solid var(--face-line);
+  border-radius: 10px;
+  box-shadow: 0 3px 0 var(--paint-deep);
+  min-width: 0;
+}
+.plate { padding: 22px 22px 18px; box-shadow: inset 0 -3px 0 var(--face-line), 0 3px 0 var(--paint-deep); }
+.card { padding: 26px 20px 22px; }
+.plate::before, .plate::after, .card::before, .card::after {
+  content: ""; position: absolute; width: 9px; height: 9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #8fa39a 0 30%, var(--rivet) 70%);
+  top: 10px;
+}
+.plate::before, .card::before { left: 10px; }
+.plate::after, .card::after { right: 10px; }
+.lamps { display: flex; gap: 8px; margin-bottom: 10px; }
+.lamp { width: 12px; height: 12px; border-radius: 50%; border: 2px solid rgba(0,0,0,.25); background: #b9c5bd; }
+.lamp.on.g { background: var(--lamp-green); box-shadow: 0 0 8px var(--lamp-green); }
+.lamp.on.a { background: var(--lamp-amber); box-shadow: 0 0 8px var(--lamp-amber); }
+.lamp.on.b { background: var(--lamp-blue); box-shadow: 0 0 8px var(--lamp-blue); }
+.lamp.on.r { background: var(--lamp-red); box-shadow: 0 0 8px var(--lamp-red); }
+h1 {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(40px, 11vw, 58px); line-height: 1.05; letter-spacing: -0.01em;
+  margin: 0; color: var(--ink); text-shadow: 0 1px 0 #fff;
+}
+.sub { margin: 10px 0 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(22px, 6.4vw, 28px); line-height: 1.25; color: var(--red-deep); text-wrap: balance; }
+.lead { margin: 0 0 14px; }
+.lead b { font-weight: 700; }
+.muted { color: var(--ink-soft); font-size: 14px; }
+.example-tag { display: inline-block; font-size: 12px; font-weight: 600; color: var(--ink-soft); border: 1px dashed var(--ink-soft); border-radius: 4px; padding: 1px 6px; margin-bottom: 6px; }
+.chips-label { font-family: var(--font-readout); font-size: 12px; font-weight: 600; color: var(--ink-soft); letter-spacing: .06em; margin: 16px 0 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 13px; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 2px solid currentColor; background: var(--paper); }
+.chip.g { color: var(--green-ink); } .chip.a { color: var(--amber-ink); } .chip.b { color: var(--blue-ink); }
+
+/* gauges */
+.gauges { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.gauge { text-align: center; min-width: 0; }
+.gauge svg { width: 100%; max-width: 150px; height: auto; display: block; margin: 0 auto; }
+.gauge.big svg { max-width: 240px; }
+.zone { fill: none; stroke-width: 7; }
+.z-g { stroke: var(--lamp-green); } .z-a { stroke: var(--lamp-amber); } .z-r { stroke: var(--lamp-red); }
+.tick { stroke: var(--ink-soft); stroke-width: 1; }
+.needle { stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; fill: none; }
+.hub { fill: var(--ink); }
+.needle-g { transform-box: view-box; transform-origin: 60px 60px; transition: transform 1s cubic-bezier(.3,1.4,.5,1); }
+.readout { font-family: var(--font-readout); font-weight: 600; font-size: 22px; font-variant-numeric: tabular-nums; line-height: 1; }
+.gauge.big .readout { font-size: 34px; }
+.glabel { font-size: 13px; font-weight: 700; color: var(--ink-soft); margin-top: 4px; }
+.grade { font-size: 12px; color: var(--ink-soft); line-height: 1.35; margin-top: 2px; text-wrap: balance; }
+
+/* questions */
+.progress { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.step { font-family: var(--font-readout); font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+.bar { height: 6px; background: var(--face-line); border-radius: 3px; overflow: hidden; margin-bottom: 18px; }
+.bar > i { display: block; height: 100%; background: var(--ink); width: 0; transition: width .25s; }
+.qtitle { font-size: 22px; font-weight: 700; line-height: 1.4; margin: 0 0 16px; text-wrap: balance; }
+.opts { display: grid; gap: 10px; }
+.opt {
+  display: flex; gap: 12px; align-items: center; width: 100%; text-align: left;
+  font: inherit; font-size: 16px; color: var(--ink);
+  background: var(--paper); border: 2px solid var(--face-line); border-radius: 8px;
+  padding: 13px 14px; cursor: pointer; box-shadow: 0 2px 0 var(--face-line);
+}
+.opt:hover { border-color: var(--ink-soft); }
+.opt:active { transform: translateY(2px); box-shadow: none; }
+.opt .dot { flex: none; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--ink-soft); background: #dfe5dc; }
+.opt[aria-pressed="true"] { border-color: var(--ink); }
+.opt[aria-pressed="true"] .dot { background: var(--lamp-amber); border-color: #9b6a0d; box-shadow: 0 0 7px var(--lamp-amber); }
+.opt b { font-weight: 700; }
+.opt small { display: block; color: var(--ink-soft); font-size: 14px; }
+
+button:focus-visible, a:focus-visible { outline: 3px solid var(--lamp-amber); outline-offset: 2px; }
+.btn {
+  font: inherit; font-weight: 700; font-size: 16px; cursor: pointer;
+  border-radius: 8px; padding: 12px 18px; border: 2px solid var(--ink);
+  background: var(--paper); color: var(--ink); box-shadow: 0 3px 0 var(--ink);
+}
+.btn:active { transform: translateY(3px); box-shadow: none; }
+.btn.primary { background: var(--lamp-red); border-color: var(--red-deep); color: #fff; box-shadow: 0 3px 0 var(--red-deep); }
+.btn.cool { background: var(--lamp-blue); border-color: var(--blue-ink); color: #fff; box-shadow: 0 3px 0 var(--blue-ink); }
+.btn.ghost { border-color: transparent; box-shadow: none; background: transparent; color: var(--ink-soft); padding-inline: 4px; }
+.btn.small { font-size: 14px; padding: 6px 10px; }
+.btn.block { width: 100%; font-size: 18px; padding-block: 15px; }
+
+/* scan */
+.scanlines { font-family: var(--font-readout); font-weight: 500; display: grid; gap: 6px; margin-top: 14px; min-height: 120px; }
+.scanlines div { opacity: .25; transition: opacity .2s; }
+.scanlines div.done { opacity: 1; }
+
+/* result */
+.docno { font-family: var(--font-readout); font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; font-variant-numeric: tabular-nums; }
+.verdict { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; }
+.vicon { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; border: 3px solid currentColor; background: var(--paper); }
+.vicon svg { width: 40px; height: 40px; }
+.vicon.g { color: var(--green-ink); } .vicon.a { color: var(--amber-ink); } .vicon.b { color: var(--blue-ink); } .vicon.s { color: var(--lamp-red); }
+.ico { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.code { font-family: var(--font-readout); font-weight: 600; font-size: 12px; letter-spacing: .08em; color: var(--ink-soft); }
+.stamp {
+  display: inline-block; font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(32px, 9.5vw, 44px); line-height: 1; padding: 8px 12px 6px;
+  border: 5px solid currentColor; border-radius: 6px; transform: rotate(-5deg);
+  margin: 4px 0 2px; letter-spacing: .02em; white-space: nowrap;
+}
+.stamp.g { color: var(--green-ink); } .stamp.a { color: var(--amber-ink); } .stamp.b { color: var(--blue-ink); } .stamp.s { color: var(--lamp-red); }
+.rtype { margin: 14px 0 0; font-size: 15px; color: var(--ink-soft); }
+.rtype b { color: var(--ink); font-size: 18px; font-weight: 700; }
+.rhead { font-size: 22px; font-weight: 700; line-height: 1.4; margin: 8px 0 6px; text-wrap: balance; }
+.rbody { margin: 0 0 12px; }
+.recheck { margin: 0 0 12px; font-weight: 700; color: var(--blue-ink); }
+.minigauges { margin: 4px 0 6px; }
+.block { border-top: 2px dashed var(--face-line); padding-top: 14px; margin-top: 16px; }
+.blabel { font-family: var(--font-readout); font-size: 13px; font-weight: 600; letter-spacing: .06em; color: var(--ink-soft); margin: 0 0 10px; }
+.reads { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.reads li { display: grid; grid-template-columns: 82px 1fr; gap: 10px; align-items: start; }
+.reads .ax { font-size: 13px; font-weight: 700; text-align: center; padding: 3px 0; border-radius: 4px; background: var(--ink); color: var(--quip-ink); }
+.reads .tx { min-width: 0; font-size: 15px; }
+.reads .tx em { font-style: normal; font-family: var(--font-readout); font-weight: 600; font-variant-numeric: tabular-nums; }
+.rule { margin: 12px 0 0; font-size: 13px; color: var(--ink-soft); }
+.script { background: var(--paper); border: 2px solid var(--ink); border-radius: 8px; padding: 14px 16px; font-size: 17px; font-weight: 500; line-height: 1.65; user-select: text; -webkit-user-select: text; }
+.script-tools { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 6px; }
+.script-tools .muted { font-size: 13px; }
+.dont { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.dont li { display: grid; gap: 2px; }
+.dont .ph { font-weight: 700; text-decoration: line-through; text-decoration-color: var(--lamp-red); text-decoration-thickness: 2px; }
+.dont .why { font-size: 14px; color: var(--ink-soft); }
+.quip {
+  margin: 16px 0 0; padding: 12px 14px; background: var(--ink); color: var(--quip-ink); border-radius: 8px;
+  font-size: 15px; line-height: 1.55;
+}
+.quip .who { display: block; font-family: var(--font-readout); font-size: 12px; color: var(--paint); margin-bottom: 2px; }
+.quip .who + span + .who { margin-top: 8px; }
+.mods { display: grid; gap: 8px; margin: 12px 0 0; }
+.mod { border: 2px dashed var(--amber-ink); border-radius: 8px; padding: 9px 12px; font-size: 15px; background: var(--amber-wash); }
+.mod b { color: var(--amber-ink); margin-right: 6px; }
+.todo { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.todo li { background: var(--paper); border: 1px solid var(--face-line); border-radius: 8px; padding: 10px 12px; }
+.todo li strong { font-family: var(--font-readout); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.next { margin: 14px 0 0; font-size: 15px; }
+.next b { font-family: var(--font-readout); font-size: 12px; letter-spacing: .06em; color: var(--ink-soft); margin-right: 6px; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.actions .btn { flex: 1 1 140px; }
+.sharebox { margin-top: 12px; }
+.sharebox textarea { width: 100%; min-height: 150px; font: inherit; font-size: 14px; padding: 10px; border-radius: 8px; border: 2px solid var(--face-line); background: var(--paper); color: var(--ink); }
+.toast { margin-top: 10px; font-weight: 600; color: var(--green-ink); }
+
+/* cooling */
+.breath { text-align: center; margin: 10px 0 6px; }
+.breath .phase { font-family: var(--font-display); font-weight: 400; font-size: clamp(34px, 10vw, 44px); color: var(--lamp-blue); line-height: 1.1; }
+.breath .count { font-family: var(--font-readout); font-weight: 600; font-size: 20px; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+.cool-note { text-align: center; }
+
+/* dex */
+.dex { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+.tile { position: relative; background: var(--paper); border: 2px solid var(--face-line); border-radius: 8px; padding: 12px 10px 10px; display: grid; gap: 4px; justify-items: start; min-width: 0; }
+.tile.me { border-color: var(--ink); box-shadow: 0 3px 0 var(--ink); }
+.tile .ti { width: 34px; height: 34px; }
+.tile .ti svg { display: block; width: 100%; height: 100%; }
+.tile .ti.g { color: var(--green-ink); } .tile .ti.a { color: var(--amber-ink); } .tile .ti.b { color: var(--blue-ink); } .tile .ti.s { color: var(--lamp-red); }
+.tile .ts { font-family: var(--font-display); font-weight: 400; font-size: 20px; line-height: 1.1; }
+.tile .ts.g { color: var(--green-ink); } .tile .ts.a { color: var(--amber-ink); } .tile .ts.b { color: var(--blue-ink); } .tile .ts.s { color: var(--lamp-red); }
+.tile .tt { font-size: 13px; font-weight: 700; }
+.tile .tl { font-size: 13px; color: var(--ink-soft); line-height: 1.45; }
+.tile .metag { position: absolute; top: 8px; right: 8px; font-size: 11px; font-weight: 700; color: var(--paper); background: var(--ink); border-radius: 4px; padding: 1px 6px; }
+
+footer { font-size: 13px; color: var(--ink); line-height: 1.6; padding: 4px 4px 0; }
+footer p { margin: 0 0 6px; }
+footer a { color: var(--ink); font-weight: 600; }
+.tel { font-family: var(--font-readout); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  .needle-g, .bar > i, .scanlines div { transition: none; }
+}
+</style>
+</head>
+<body>
+<main class="desk">
+  <header class="plate">
+    <div class="lamps" aria-hidden="true"><span class="lamp g" id="l-g"></span><span class="lamp a" id="l-a"></span><span class="lamp b" id="l-b"></span><span class="lamp r" id="l-r"></span></div>
+    <h1>분노관제센터</h1>
+    <p class="sub">지금 이 분노, 터뜨려도 될까?</p>
+  </header>
+
+  <section class="card" id="s-start">
+    <p class="lead"><b>들이받기 전에 딱 1분만.</b> 분노는 켜고 끄는 스위치가 아니라 돌려서 맞추는 다이얼이에요. 13개 질문에 답하면 계기판 세 개로 지금 이 분노를 판정해 드려요.</p>
+    <div class="gauges" id="g-example"></div>
+    <p class="muted" style="margin:10px 0 0"><span class="example-tag">예시 판정</span><br>상대 잘못 90 · 분노 온도 90(압력밥솥 추 회전 중) · 역풍 위험 20 → 화낼 자격은 충분, 딱 하루만 숙성</p>
+    <p class="chips-label">판정 도장 17종</p>
+    <div class="chips" id="start-chips"></div>
+    <div style="margin-top:18px; display:grid; gap:10px">
+      <button class="btn primary block" id="btn-start">판정 시작</button>
+      <p class="muted" style="margin:0">1분이면 끝나요. 답변은 어디에도 저장되지 않아요.</p>
+    </div>
+  </section>
+
+  <section class="card" id="s-q" hidden>
+    <div class="progress"><span class="step" id="q-step">01 / 13</span><button class="btn ghost" id="btn-back">← 이전</button></div>
+    <div class="bar"><i id="q-bar"></i></div>
+    <h2 class="qtitle" id="q-title"></h2>
+    <div class="opts" id="q-opts" role="group" aria-labelledby="q-title"></div>
+  </section>
+
+  <section class="card" id="s-submit" hidden>
+    <h2 class="qtitle">답변 끝. 이제 판정할게요.</h2>
+    <p class="lead">상대 잘못, 내 분노 온도, 지금 맞섰을 때의 역풍. 세 개를 따로 재요.</p>
+    <button class="btn ghost" id="btn-back2">← 답 고치기</button>
+    <button class="btn primary block" id="btn-judge" style="margin-top:8px">터뜨려도 될까? 판정 보기</button>
+  </section>
+
+  <section class="card" id="s-scan" hidden aria-live="polite">
+    <div class="gauges" id="g-scan"></div>
+    <div class="scanlines" id="scanlines"></div>
+  </section>
+
+  <section class="card" id="s-result" hidden aria-live="polite">
+    <div class="docno" id="r-docno"></div>
+    <div class="verdict">
+      <span class="vicon" id="r-icon" aria-hidden="true"></span>
+      <div>
+        <div class="code" id="r-code"></div>
+        <div class="stamp" id="r-stamp"></div>
+      </div>
+    </div>
+    <p class="rtype" id="r-type"></p>
+    <h2 class="rhead" id="r-head"></h2>
+    <p class="rbody" id="r-body"></p>
+    <p class="recheck" id="r-recheck" hidden></p>
+    <div class="gauges minigauges" id="g-result"></div>
+
+    <div class="block" id="b-read">
+      <h3 class="blabel">계기판 판독</h3>
+      <ul class="reads" id="r-reads"></ul>
+      <p class="rule" id="r-rule"></p>
+    </div>
+
+    <div class="block" id="b-script">
+      <h3 class="blabel" id="r-script-title"></h3>
+      <div class="script" id="r-script"></div>
+      <div class="script-tools"><span class="muted" id="r-script-hint"></span><button class="btn ghost small" id="btn-copy-script">대사 복사</button></div>
+    </div>
+
+    <div class="block" id="b-dont">
+      <h3 class="blabel">이 말은 참으세요</h3>
+      <ul class="dont" id="r-dont"></ul>
+    </div>
+
+    <p class="quip" id="r-quip"></p>
+    <div class="mods" id="r-mods"></div>
+
+    <div class="block">
+      <h3 class="blabel">지금 할 일</h3>
+      <ul class="todo" id="r-todo"></ul>
+    </div>
+    <p class="next" id="r-next"></p>
+
+    <div class="actions" id="a-cool">
+      <button class="btn cool" id="btn-cool">냉각 장치 가동 (1분)</button>
+    </div>
+    <div class="actions" style="margin-top:10px">
+      <button class="btn" id="btn-share">결과 복사</button>
+      <button class="btn" id="btn-dex">판정 도감 17종</button>
+      <button class="btn ghost" id="btn-again">다시 판정</button>
+    </div>
+    <div class="sharebox" id="sharebox" hidden>
+      <label class="muted" for="share-text">길게 눌러 복사해서 붙여넣으세요.</label>
+      <textarea id="share-text" readonly></textarea>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+  </section>
+
+  <section class="card" id="s-cool" hidden aria-live="polite">
+    <h2 class="qtitle" style="margin-bottom:6px">냉각 장치 가동 중</h2>
+    <p class="muted" style="margin:0 0 8px">들이쉬기 4초, 내쉬기 6초. 여섯 번만 같이 해요. 길게 내쉬는 쪽이 몸을 가라앉혀요.</p>
+    <div class="gauge big" id="g-cool"></div>
+    <div class="breath"><div class="phase" id="cool-phase">준비</div><div class="count" id="cool-count">0 / 6</div></div>
+    <p class="muted cool-note">바늘은 연출이에요. 진짜 온도는 끝나고 직접 다시 재요.</p>
+    <div id="cool-after" hidden>
+      <h3 class="qtitle" style="font-size:19px; margin-top:12px">냉각 완료. 지금 분노는 몇 도예요?</h3>
+      <div class="opts" id="cool-opts"></div>
+    </div>
+    <div class="actions"><button class="btn ghost" id="btn-cool-stop">그만하고 판정으로</button></div>
+  </section>
+
+  <section class="card" id="s-dex" hidden>
+    <h2 class="qtitle" style="margin-bottom:6px">판정 도감</h2>
+    <p class="muted" style="margin:0">분노관제센터의 판정 도장은 17가지, 여기에 안전 안내가 하나 더 있어요. 다른 일로 다시 판정하면 다른 도장이 나올 수 있어요.</p>
+    <div class="dex" id="dex"></div>
+    <div class="actions">
+      <button class="btn" id="btn-dex-back">내 판정으로</button>
+      <button class="btn ghost" id="btn-again2">다시 판정</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>진단 도구가 아니에요. 생각을 정리하는 도구예요. 분노가 자주 조절되지 않아 힘들다면 정신건강위기상담 <span class="tel">1577-0199</span>에 이야기해 보세요. 지금 위험하면 <span class="tel">112</span>.</p>
+    <p>만든 곳: <a href="https://blog.naver.com/ydnad" target="_blank" rel="noopener">My Seasonal Life 블로그</a></p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  // 독립 사이트 버전은 head에서 window.__SHARE_URL__(자기 주소)을 넣어 준다
+  var SHARE_URL = window.__SHARE_URL__ || "https://claude.ai/artifact/PCz49xkKFZffxjPQ4errFw";
+
+  /* ---------- questions (index matters: see KEY_Q) ---------- */
+  var Q = [
+    { t: "누구 때문에 화났어요?", o: [
+      ["가족", "", { who: "family" }],
+      ["연인·배우자", "", { who: "partner" }],
+      ["친구·지인", "", { who: "friend" }],
+      ["직장 상사", "", { who: "boss" }],
+      ["직장 동료·후배", "", { who: "coworker" }],
+      ["손님·업체·모르는 사람", "", { who: "stranger" }] ] },
+    { t: "이 사람과는 어떤 사이인가요?", o: [
+      ["다시 안 봐도 되는 사이", "", { rel: 10 }],
+      ["가끔 보는 사이", "", { rel: 35 }],
+      ["매일 보는 사이", "직장, 같이 사는 가족", { rel: 70 }],
+      ["절대 잃고 싶지 않은 사이", "", { rel: 90 }] ] },
+    { t: "그 행동이 싫다고 상대에게 말한 적 있나요?", o: [
+      ["말한 적 없어요", "", { bnd: 0, resp: null }],
+      ["돌려서 티만 냈어요", "알아들었겠지 했어요", { bnd: 25, resp: null }],
+      ["분명히 말했더니 고치려고 했어요", "", { bnd: 70, resp: 10 }],
+      ["분명히 말했는데 그대로예요", "", { bnd: 80, resp: 65 }],
+      ["말했더니 오히려 화내거나 무시했어요", "", { bnd: 85, resp: 95 }] ] },
+    { t: "이번이 몇 번째예요?", o: [
+      ["처음이에요", "", { rep: 5 }],
+      ["두 번째예요", "", { rep: 35 }],
+      ["여러 번 반복됐어요", "", { rep: 70 }],
+      ["거의 습관이에요", "이쯤 되면 시즌제 드라마", { rep: 95 }] ] },
+    { t: "실제로 손해 본 게 있나요?", o: [
+      ["기분만 상했어요", "", { harm: 15 }],
+      ["시간이나 일을 손해 봤어요", "", { harm: 50 }],
+      ["돈이나 물건 손해가 있어요", "", { harm: 70 }],
+      ["몸이나 마음을 크게 다쳤어요", "", { harm: 95 }] ] },
+    { t: "상대는 왜 그랬을까요?", o: [
+      ["나 잘되라고 그랬을 거예요", "", { int: 10 }],
+      ["자기 방식이 맞다고 믿어서요", "", { int: 35 }],
+      ["내 생각을 별로 신경 안 써서요", "", { int: 65 }],
+      ["일부러 나를 불편하게 하려고요", "", { int: 90 }],
+      ["솔직히 모르겠어요", "모르겠다도 훌륭한 답이에요", { int: 45, unk: 1 }] ] },
+    { t: "지금 아는 건 얼마나 확실해요?", o: [
+      ["직접 보고 들었어요", "", { cert: 95 }],
+      ["메시지나 기록 같은 증거가 있어요", "", { cert: 90 }],
+      ["다른 사람한테 들었어요", "", { cert: 45 }],
+      ["정황상 그런 것 같아요", "제 촉은 틀린 적이… 가끔 있어요", { cert: 20 }] ] },
+    { t: "지금 분노는 몇 도예요?", o: [
+      ["미지근", "그냥 짜증. 식은 보리차 느낌", { temp: 20 }],
+      ["따뜻", "계속 신경 쓰여요. 데운 우유 느낌", { temp: 45 }],
+      ["뜨거움", "얼굴이 달아올라요. 주전자 휘파람 직전", { temp: 75 }],
+      ["끓는점", "당장 터질 것 같아요. 압력밥솥 추 회전 중", { temp: 95 }] ] },
+    { t: "그 장면, 몇 번이나 다시 떠올렸어요?", o: [
+      ["거의 안 떠올려요", "", { rum: 10 }],
+      ["가끔 생각나요", "", { rum: 35 }],
+      ["계속 되감기 중이에요", "자기 전에도 재생 중", { rum: 70 }],
+      ["머릿속에서 이미 몇 번 싸웠어요", "샤워하면서 이긴 적 있음", { rum: 95 }] ] },
+    { t: "솔직히, 지금 제일 원하는 건요?", o: [
+      ["다시는 안 그러는 것", "", { rev: 10 }],
+      ["내 마음을 알아주는 것", "", { rev: 25 }],
+      ["제대로 된 사과", "", { rev: 40 }],
+      ["똑같이 갚아주는 것", "솔직해서 좋아요", { rev: 90 }] ] },
+    { t: "상대가 나한테 실제로 불이익을 줄 수 있나요?", o: [
+      ["아니요, 비슷한 입장이에요", "", { pow: 10 }],
+      ["좀 불편해질 수는 있어요", "", { pow: 35 }],
+      ["평가나 돈, 자리에 영향이 있어요", "", { pow: 70 }],
+      ["생계나 안전이 걸려 있어요", "", { pow: 95 }] ] },
+    { t: "지금 몸 상태는요?", o: [
+      ["밥도 먹고 잠도 잘 잤어요", "", { cond: "ok" }],
+      ["배고파요", "마지막 끼니가 기억 안 나요", { cond: "hungry" }],
+      ["잠이 부족해요", "눈꺼풀이 결재를 안 해줘요", { cond: "sleepy" }],
+      ["둘 다예요", "배고프고 졸려요", { cond: "both" }] ] },
+    { t: "마지막 안전 체크예요. 지금 해당하는 게 있나요?", o: [
+      ["없어요, 괜찮아요", "", { safe: "ok" }],
+      ["소리치거나 물건에 화풀이할 것 같아요", "", { safe: "phys" }],
+      ["누군가를 다치게 할까 봐 걱정돼요", "", { safe: "harm" }],
+      ["나 자신을 해치고 싶은 마음이 들어요", "", { safe: "self" }],
+      ["상대 때문에 내 몸이 위험해요", "", { safe: "danger" }] ] }
+  ];
+  var KEY_Q = { who: 0, rel: 1, bnd: 2, resp: 2, rep: 3, harm: 4, int: 5, cert: 6, temp: 7, rum: 8, rev: 9, pow: 10, cond: 11, safe: 12 };
+  var TEMP_Q = 7;
+
+  var AXES = [["event", "상대 잘못"], ["heat", "분노 온도"], ["risk", "역풍 위험"]];
+  var GRADES = {
+    event: [[20, "모기 한 방급"], [40, "과태료급"], [60, "경고장급"], [80, "중대 위반급"], [101, "블랙박스 공개급"]],
+    heat: [[30, "식은 보리차"], [50, "데운 우유"], [70, "라면 물 올리는 중"], [90, "주전자 휘파람 직전"], [101, "압력밥솥 추 회전 중"]],
+    risk: [[30, "맨손 가능"], [60, "보호대 착용"], [80, "지뢰밭 주의"], [101, "보스전, 세이브 필수"]]
+  };
+  function gradeIdx(axis, v) { var g = GRADES[axis]; for (var i = 0; i < g.length; i++) { if (v < g[i][0]) return i; } return g.length - 1; }
+  function grade(axis, v) { return GRADES[axis][gradeIdx(axis, v)][1]; }
+
+  var WHO = {
+    family: ["명절까지 남은 날을 세보세요. 생각보다 가까워요.", "가족 단톡방에 쓰려던 장문은 일단 메모장으로.", "가족은 오늘 이겨도 내일 또 밥상에서 봐요."],
+    partner: ["'자니?' 대신 '내일 얘기하자'.", "싸움의 목표는 이기는 게 아니라 내일도 같이 밥 먹는 거예요.", "지금 꺼내는 지난 일은 이자까지 붙어서 돌아와요."],
+    friend: ["단톡방 말고 1:1로.", "친구 사이 서운함은 커피 한 잔 값으로 풀리는 경우가 많아요.", "'너 원래 그래' 금지. '이번엔 이랬어'로."],
+    boss: ["감정도 결재처럼 단계를 거쳐요. 기록, 정리, 그다음 보고.", "퇴근 후 분노에는 야근 수당이 안 나와요.", "상사에게 쓰는 답장은 '임시저장'이 최고의 기능이에요."],
+    coworker: ["메신저 상태를 잠시 '집중 중'으로.", "회의실에서 터지면 회의록에 남아요.", "업무 얘기는 업무로, 감정 얘기는 따로."],
+    stranger: ["다시 볼 일 없는 사람에게 오늘 에너지를 쓰지 마세요.", "상대는 이미 잊었어요. 나만 기억하면 손해예요.", "리뷰는 내일 쓰면 훨씬 공정해져요."]
+  };
+  var REG = { family: "casual", partner: "casual", friend: "casual", boss: "polite", coworker: "polite", stranger: "stranger" };
+
+  /* ---------- pictograms (48x48 line drawings) ---------- */
+  var ICON = {
+    megaphone: '<path d="M7 20h7l20-10v28L14 28H7z"/><path d="M14 28l3 10h6l-2-8"/><path d="M39 19c2 3 2 7 0 10"/>',
+    bubble: '<path d="M7 11h34v21H22l-9 7v-7H7z"/><circle cx="17" cy="21.5" r="1.8" fill="currentColor" stroke="none"/><circle cx="24" cy="21.5" r="1.8" fill="currentColor" stroke="none"/><circle cx="31" cy="21.5" r="1.8" fill="currentColor" stroke="none"/>',
+    hourglass: '<path d="M13 6h22M13 42h22"/><path d="M16 6c0 10 8 12 8 18s-8 8-8 18"/><path d="M32 6c0 10-8 12-8 18s8 8 8 18"/><path d="M19 39h10l-5-6z" fill="currentColor" stroke="none"/>',
+    typhoon: '<circle cx="24" cy="24" r="5"/><path d="M29 24c0-10-7-16-16-15"/><path d="M19 24c0 10 7 16 16 15"/>',
+    thermo: '<path d="M20 29V10a4 4 0 0 1 8 0v19a8 8 0 1 1-8 0z"/><path d="M24 15v18"/><circle cx="24" cy="35" r="3.5" fill="currentColor" stroke="none"/><path d="M33 12h5M33 18h5M33 24h3"/>',
+    replay: '<path d="M13 15a14 14 0 1 1-3 9"/><path d="M13 7v8h8"/><path d="M9 39L39 9"/>',
+    doc: '<path d="M12 6h17l8 8v28H12z"/><path d="M29 6v8h8"/><path d="M18 24l12 12M30 24L18 36"/>',
+    magnifier: '<circle cx="21" cy="21" r="13"/><path d="M31 31l10 10"/><path d="M17 17.5a4 4 0 1 1 5.5 3.7c-1.1.5-1.5 1.3-1.5 2.4v.8"/><circle cx="21" cy="28.5" r="1.7" fill="currentColor" stroke="none"/>',
+    notepad: '<path d="M9 7h21v34H9z"/><path d="M14 15h11M14 21h11M14 27h7"/><path d="M35 15l5 5-12 12h-5v-5z"/>',
+    card: '<rect x="14" y="7" width="20" height="30" rx="3" transform="rotate(12 24 22)" fill="#e09a17"/><path d="M8 42h32"/>',
+    rings: '<circle cx="18" cy="24" r="11"/><circle cx="30" cy="24" r="11"/>',
+    question: '<circle cx="24" cy="24" r="18"/><path d="M19 19a5 5 0 1 1 7 4.6c-1.3.6-2 1.7-2 3V28"/><circle cx="24" cy="34" r="1.8" fill="currentColor" stroke="none"/>',
+    bowl: '<path d="M7 24h34a17 17 0 0 1-34 0z"/><path d="M17 18c-2-3 2-5 0-9M24 18c-2-3 2-5 0-9M31 18c-2-3 2-5 0-9"/>',
+    moon: '<path d="M27 8a16 16 0 1 0 13 24A13 13 0 0 1 27 8z"/><path d="M33 9h7l-7 8h7"/>',
+    battery: '<rect x="5" y="15" width="33" height="18" rx="3"/><path d="M42 21v6"/><rect x="9" y="19" width="6" height="10" rx="1" fill="#cc3a2d" stroke="none"/>',
+    check: '<circle cx="24" cy="24" r="18"/><path d="M16 24.5l6 6 11-12"/>',
+    bellOff: '<path d="M15 31V22a9 9 0 0 1 15-6.7"/><path d="M33 22v9l3 3H12"/><path d="M21 39a3 3 0 0 0 6 0"/><path d="M8 8l32 32"/>',
+    shield: '<path d="M24 6l15 6v10c0 10-7 17-15 20C16 39 9 32 9 22V12z"/><path d="M24 16v13M17.5 22.5h13"/>'
+  };
+  function iconSVG(name) { return '<svg class="ico" viewBox="0 0 48 48" aria-hidden="true">' + ICON[name] + "</svg>"; }
+
+  /* ---------- verdicts ---------- */
+  var R = {
+    ON: { lamp: "g", stamp: "참지 마세요", code: "CLEARED TO SPEAK", type: "참을 만큼 참은형", icon: "megaphone", fam: "speak",
+      heads: ["말해도 돼요. 이미 충분히 참았어요.", "이번엔 참지 않는 게 맞아요."],
+      body: "사실관계도 분명하고 머리도 차가운 편이에요. 이럴 때 계속 참으면 같은 일이 반복돼요.",
+      bodyWarm: "사실관계는 분명해요. 다만 분노 온도가 조금 남아 있어요. 물 한 잔 마시고, 목소리 낮춰서 시작해요.",
+      quips: ["참는 것도 실력이지만, 제때 말하는 것도 실력이에요.", "말하되 '항상', '절대'는 압수예요.", "참을 만큼 참았어요. 이제 말할 차례예요."],
+      todo: ["오늘 안에, 둘만 있을 때 말하기", "요구는 딱 하나만", "지난 일은 꺼내지 않기. 오늘 일만 말해요."],
+      rule: "상대 잘못 65 이상, 분노 온도 68 미만, 역풍 위험 60 미만이면 '참지 마세요'예요.",
+      next: "말하고 나서 일주일 지켜본 뒤",
+      script: { title: "이렇게 말해 보세요",
+        casual: "있잖아, 할 말이 있어. ○○할 때 나 진짜 힘들었어. 앞으로는 □□해 줘.",
+        polite: "잠깐 따로 말씀드려도 될까요? ○○ 때 △△해서 곤란했습니다. 다음부터는 □□로 부탁드립니다.",
+        stranger: "○○ 건으로 연락드렸어요. △△ 상황이라 □□ 처리 부탁드립니다. 언제까지 가능할까요?" } },
+    ON_LOW: { lamp: "g", stamp: "조용히 말하기", code: "SPEAK QUIETLY", type: "외교관형", icon: "bubble", fam: "speak",
+      heads: ["말해도 돼요. 대신 조용히, 정확하게.", "할 말은 하되 볼륨은 낮춰요."],
+      body: "잘못은 분명한데, 정면으로 부딪치면 잃을 것도 커요. 말하되 방식을 골라요.",
+      quips: ["목소리는 50%, 할 말은 100%.", "목소리는 낮추고 기록은 꼼꼼하게.", "작게 말해도 정확하면 세요."],
+      todo: ["여럿 앞 말고 1:1로", "말하기 전에 날짜와 내용을 메모로 남기기", "감정 설명 대신 요구 하나만 분명하게"],
+      rule: "상대 잘못 65 이상인데 역풍 위험이 60 이상이면 '조용히 말하기'예요.",
+      next: "말하고 나서 일주일 지켜본 뒤",
+      script: { title: "1:1로, 이렇게 말해 보세요",
+        casual: "둘이서만 잠깐 얘기하자. ○○ 일은 나한테 좀 컸어. 하나만 부탁할게, □□.",
+        polite: "10분만 따로 시간 괜찮으실까요? ○○ 건은 메모해 둔 대로 말씀드리면 △△였습니다. □□로 조정 부탁드립니다.",
+        stranger: "○○ 건 처리 내용을 문자나 메일로 받을 수 있을까요? 확인하고 다시 연락드릴게요." } },
+    HOT_JUSTIFIED: { lamp: "a", stamp: "하루 숙성", code: "HOLD 24H", type: "정당한 압력밥솥형", icon: "hourglass", fam: "hot",
+      heads: ["화낼 자격은 충분해요. 딱 하루만 숙성시켜요.", "자격증은 발급 완료. 사용 개시일은 내일."],
+      body: "상대 잘못이 큰 건 맞아요. 그런데 지금 말하면 하고 싶은 말보다 더 하게 될 가능성이 높아요. 그러면 내 잘못이 하나 생겨요.",
+      quips: ["관제탑 알림: 지금 이륙하면 착륙지가 '후회'예요.", "정당한 분노도 과열되면 반칙패가 나요.", "지금은 맞는 말도 틀린 말투로 나갈 온도예요."],
+      todo: ["<strong>20</strong>분 동안 몸 쓰기: 걷기, 계단, 달리기", "보낼 메시지는 써두고 전송은 내일", "냉각 장치를 돌리고 다시 판정받기"],
+      rule: "상대 잘못 65 이상인데 분노 온도가 68 이상이면, 자격은 있어도 하루 숙성이에요.",
+      next: "내일 오전 9시 이후",
+      script: { title: "내일 이렇게 시작해 보세요",
+        casual: "어제 일 말인데, 하룻밤 자고 나서 말하는 거야. ○○할 때 정말 속상했어. 앞으로는 □□해 줘.",
+        polite: "어제 ○○ 건은 정리해서 말씀드리려고 합니다. △△ 부분은 꼭 바로잡고 싶습니다.",
+        stranger: "어제 ○○ 건으로 다시 연락드립니다. 처리 결과를 오늘 안에 알려 주세요." } },
+    HOTTER: { lamp: "a", stamp: "과열 경보", code: "OVERHEAT WARNING", type: "태풍형", icon: "typhoon", fam: "hot",
+      heads: ["사건보다 내가 더 뜨거워요.", "사건은 소나기인데 나는 태풍이에요."],
+      body: "상대가 잘했다는 뜻은 아니에요. 다만 지금 싸우면 {E}짜리 일이 {H}짜리 싸움이 될 수 있어요.",
+      quips: ["모기 잡으려고 대포 꺼내는 중이에요.", "현재 분노 온도 {H}도, 사건 온도는 {E}도.", "이 분노의 일부는 오늘 하루 전체가 보낸 거예요."],
+      todo: ["오늘은 대응 보류", "왜 이렇게까지 화가 나는지 한 줄 적어보기. 피곤함, 배고픔, 다른 스트레스가 섞였을 수 있어요.", "냉각 장치를 돌리고 다시 판정"],
+      rule: "분노 온도가 68 이상인데 상대 잘못이 40 미만이면, 분노가 사건보다 커요.",
+      next: "냉각 장치를 돌린 뒤 바로",
+      script: { title: "지금 보낼 메시지: 없음",
+        casual: "대신 메모장에 한 줄만: '내가 이렇게까지 화난 진짜 이유는 ______.'" } },
+    OVERHEAT: { lamp: "a", stamp: "냉각 필요", code: "COOLDOWN REQUIRED", type: "끓는 주전자형", icon: "thermo", fam: "hot",
+      heads: ["온도가 너무 높아요. 식히는 게 먼저예요.", "지금 이 온도에선 판정이 안 나와요."],
+      body: "판단이 맞든 틀리든, 지금 온도에선 말이 세게 나가요.",
+      quips: ["이 온도에선 말 대신 증기가 나가요.", "지금 보내려는 메시지, 내일의 내가 지울 가능성이 높아요.", "냉각수 보충이 필요해요. 일단 물 한 잔."],
+      todo: ["<strong>20</strong>분 넘게 자리를 떠나 몸을 움직이기", "물 한 잔, 숨 길게 내쉬기", "냉각 장치를 돌리고 다시 판정"],
+      rule: "분노 온도가 68 이상이면 상대 잘못 크기와 상관없이 일단 식혀요.",
+      next: "20분 뒤 ({+20m} 이후)",
+      script: { title: "보내기 전에 임시저장",
+        casual: "할 말은 메모장에 다 써 두고, 상대에겐 이 한 줄만: '조금 진정하고 말할게.'",
+        polite: "할 말은 메모장에 다 써 두고, 상대에겐 이 한 줄만: '정리해서 다시 말씀드리겠습니다.'" } },
+    RUMINATION: { lamp: "a", stamp: "재방송 금지", code: "REPLAY STOP", type: "무한 재방송형", icon: "replay", fam: "rum",
+      heads: ["새 증거는 없어요. 같은 사건 재판만 계속 중이에요.", "되감기 버튼이 닳았어요."],
+      body: "되씹을수록 분노는 커지는데 사건은 그대로예요. 지금 필요한 건 판결보다 되감기 정지예요.",
+      quips: ["머릿속 법정은 피고 없이 재판 중이에요.", "샤워하면서 이긴 토론은 기록에 안 남아요.", "같은 장면을 이만큼 봤으면 이제 명장면이에요. 그만 봐도 돼요."],
+      todo: ["떠오를 때마다 메모장에 \"판결 끝\" 쓰기", "생각을 종이에 다 쏟고 접어두기", "새 사실이 생기면 그때 다시 판정"],
+      rule: "같은 장면을 '계속 되감기 중' 이상으로 떠올리고 분노 온도가 높으면 재방송 금지예요.",
+      next: "새 사실이 생겼을 때",
+      script: { title: "머릿속 재판에 이렇게 말해 주세요",
+        casual: "'이 장면은 충분히 봤어. 판결 끝.' 새 사실이 생기면 그때 다시 틀어요." } },
+    REVENGE: { lamp: "a", stamp: "복수 반려", code: "REVENGE DENIED", type: "복수 시나리오 작가형", icon: "doc", fam: "revenge",
+      heads: ["지금 원하는 건 해결보다 응징에 가까워요.", "복수 계획서는 결재 반려됐어요."],
+      body: "갚아주고 싶은 마음은 자연스러워요. 그런데 응징은 상대보다 나를 더 오래 붙잡아요.",
+      quips: ["갚아주는 순간 상대랑 같은 리그가 돼요.", "가장 깔끔한 복수는 오늘 잘 자는 거예요.", "복수극은 드라마로 보는 게 제일 재밌어요."],
+      todo: ["오늘은 메시지와 전화 보내지 않기", "내가 진짜 원하는 결과를 한 줄로 써보기", "그 결과에 가까워지는 행동만 내일 하기"],
+      rule: "'똑같이 갚아주는 것'을 골랐고 분노 온도가 55 이상이면 복수 반려예요.",
+      next: "내일 아침",
+      script: { title: "오늘 보낼 메시지: 없음",
+        casual: "메모장에만 한 줄: '내가 진짜 원하는 결과는 ______.' 내일은 그 결과에 가까워지는 행동 하나만 해요." } },
+    FACT: { lamp: "a", stamp: "증거 부족", code: "EVIDENCE LOW", type: "촉 좋은 탐정형", icon: "magnifier", fam: "fact",
+      heads: ["수상하지만 증거가 부족해요.", "관제센터는 촉을 증거로 채택하지 않아요."],
+      body: "정황만으로 화를 내면, 틀렸을 때 사과할 사람은 내가 돼요.",
+      quips: ["정황 세 개보다 확인 하나가 세요.", "추리는 탐정에게, 확인은 질문으로.", "오해였다면 오늘의 분노는 전액 환불이 안 돼요."],
+      todo: ["단정 대신 질문으로 확인하기", "확인할 수 있는 사실부터 모으기", "확인된 뒤에 다시 판정"],
+      rule: "확실성이 50 미만인데 상대 잘못이 40 이상이면 확인이 먼저예요.",
+      next: "확인 질문의 답을 들은 뒤",
+      script: { title: "단정 말고 질문으로",
+        casual: "혹시 ○○한 거 맞아? 내가 잘못 들었을 수도 있어서 물어보는 거야.",
+        polite: "혹시 ○○ 건이 어떻게 된 건지 여쭤봐도 될까요? 제가 잘못 알고 있을 수도 있어서요.",
+        stranger: "○○ 건 처리 내역을 확인하고 싶어요. 기록을 보내 주실 수 있나요?" } },
+    POWER: { lamp: "a", stamp: "기록 먼저", code: "RECORD MODE", type: "증거 수집가형", icon: "notepad", fam: "power",
+      heads: ["내가 맞더라도 상대가 너무 세요.", "지금은 목소리보다 기록이 세요."],
+      body: "정면 승부는 이겨도 잃는 게 많아요. 분노는 기록으로 바꿔요.",
+      quips: ["계란으로 바위 치지 말고, 계란을 모아 기록하세요.", "상대가 세면 나는 꼼꼼해지면 돼요.", "오늘의 무기는 목소리가 아니라 날짜와 시간이에요."],
+      todo: ["날짜, 시간, 들은 말, 증거를 그날그날 기록", "믿을 만한 사람이나 공식 창구에 먼저 상담", "직장 내 괴롭힘이라면 고용노동부 <strong>1350</strong>"],
+      rule: "힘의 차이가 70 이상이고 상대 잘못이 45 이상이면 기록이 먼저예요.",
+      next: "기록이 쌓이고 상담을 받은 뒤",
+      script: { title: "말 대신 기록은 이렇게",
+        casual: "{today}, 장소: ○○. 들은 말: '○○'. 같이 있던 사람: ○○. 내 대응: ○○." } },
+    FIRST: { lamp: "g", stamp: "옐로카드", code: "FIRST WARNING", type: "말 안 해도 알겠지형", icon: "card", fam: "speak",
+      heads: ["상대는 아직 모를 수도 있어요.", "레드카드 전에 옐로카드부터."],
+      body: "싫다고 분명히 말한 적이 없다면, 이번은 화낼 차례가 아니라 처음 말할 차례예요.",
+      quips: ["독심술 면허는 아무도 없어요. 말해야 알아요.", "옐로카드는 화가 아니라 안내 방송이에요.", "상대 속마음 예상: \"그게 싫었어? 몰랐는데?\""],
+      todo: ["분노 말고 사실로 말하기", "부탁은 하나만", "그래도 반복되면 그때 다시 판정"],
+      rule: "분명히 말한 적이 없고 일부러 한 것도 아니라면 옐로카드(처음 말하기)가 먼저예요.",
+      next: "같은 일이 한 번 더 생기면",
+      script: { title: "처음 말할 땐 이렇게",
+        casual: "있잖아, ○○할 때 나는 좀 불편하더라. 다음엔 □□해 줄 수 있어?",
+        polite: "혹시 다음부터는 □□로 해 주실 수 있을까요? ○○ 때 제가 좀 곤란했어서요.",
+        stranger: "다음에는 □□ 부분을 신경 써 주시면 좋겠어요." } },
+    RELATION: { lamp: "g", stamp: "관계 지키기", code: "RELATION FIRST", type: "소중해서 참는형", icon: "rings", fam: "speak",
+      heads: ["맞고 틀리고보다 관계 비용이 더 커요.", "이기면 혼자 남는 게임은 하지 말아요."],
+      body: "이 사람을 잃고 싶지 않다면, 이기는 대화보다 바뀌는 대화를 해요.",
+      quips: ["관계는 오늘 이기는 것보다 내일 같이 웃는 게 점수예요.", "요구는 하나, 관계는 그대로.", "판결문 말고 부탁문으로 가요."],
+      todo: ["요구사항은 딱 하나만", "\"너는 늘\" 대신 \"나는 이럴 때 힘들어\"", "둘 다 여유 있을 때 꺼내기"],
+      rule: "절대 잃고 싶지 않은 사이이고 상대 잘못이 65 미만이면 관계 지키기예요.",
+      next: "부탁하고 2주쯤 지켜본 뒤",
+      script: { title: "이기는 말 말고 지키는 말",
+        casual: "너랑 계속 잘 지내고 싶어서 하는 말이야. ○○은 나한테 좀 서운했어.",
+        polite: "앞으로도 같이 잘 지내고 싶어서 말씀드려요. ○○ 부분만 조금 조정해 주시면 좋겠습니다." } },
+    GRAY: { lamp: "g", stamp: "질문 먼저", code: "ASK FIRST", type: "물음표형", icon: "question", fam: "speak",
+      heads: ["회색지대예요. 스위치 말고 다이얼로.", "참을 일도 터뜨릴 일도 아니에요."],
+      body: "분노는 절반만 꺼내요. 나머지 절반은 궁금함으로 채워요.",
+      quips: ["분노 50%, 호기심 50%로 시작하세요.", "'왜 그랬어?'는 생각보다 센 질문이에요.", "흑백 버튼은 고장 났어요. 다이얼만 작동해요."],
+      todo: ["분노 대신 질문으로 시작", "답을 듣고 나서 내 기분 말하기", "목소리는 낮게, 내용은 분명하게"],
+      rule: "상대 잘못이 40~64면 회색지대예요. 질문부터 해요.",
+      next: "상대 대답을 들은 뒤",
+      script: { title: "분노 말고 질문부터",
+        casual: "아까 ○○한 거, 무슨 생각이었는지 궁금해서.",
+        polite: "아까 ○○ 건은 어떤 의도였는지 여쭤봐도 될까요?",
+        stranger: "○○ 부분이 왜 그렇게 처리됐는지 설명을 들을 수 있을까요?" } },
+    HANGRY: { lamp: "a", stamp: "밥부터", code: "FUEL LOW", type: "배고픈 사자형", icon: "bowl", fam: "hot",
+      heads: ["일단 뭐라도 드세요. 판정은 그다음에.", "이 분노의 일부는 공복이 보낸 걸 수 있어요."],
+      body: "배고프면 같은 일도 더 크게 느껴져요. 먹고 나서도 화나면, 그때가 진짜 분노예요.",
+      quips: ["배고픈 판사는 판결이 거칠다는 말도 있어요.", "오늘의 첫 번째 대응: 김밥 한 줄.", "배고플 때 내린 판결은 밥 먹고 재심하면 대부분 감형돼요."],
+      todo: ["10분 안에 뭐라도 먹기", "먹는 동안은 그 사람 생각 금지", "배부른 상태로 다시 판정"],
+      rule: "배고프다고 했고, 분노 온도 55 이상, 상대 잘못 65 미만이면 '밥부터'예요.",
+      next: "밥 먹고 나서 ({+40m} 이후)",
+      script: { title: "지금 할 말은 딱 하나",
+        casual: "'나 밥 먹고 다시 얘기할게.'",
+        polite: "'식사하고 다시 말씀드릴게요.'" } },
+    SLEEPY: { lamp: "a", stamp: "잠부터", code: "SLEEP DEBT", type: "졸린 판사형", icon: "moon", fam: "hot",
+      heads: ["수면 부족 상태의 판정은 무효예요.", "자고 일어나서 재심할게요."],
+      body: "잠이 모자라면 작은 일도 크게 확대돼 보여요. 오늘 밤 결론은 잠이에요.",
+      quips: ["졸린 뇌는 돋보기를 끼고 세상을 봐요.", "오늘의 판결: 일찍 자기.", "내일 아침의 내가 훨씬 좋은 판사예요."],
+      todo: ["오늘은 결정 보류", "자기 전 휴대폰은 멀리", "자고 일어나서 다시 판정"],
+      rule: "잠이 부족하다고 했고, 분노 온도 55 이상, 상대 잘못 65 미만이면 '잠부터'예요.",
+      next: "자고 일어나서",
+      script: { title: "지금 할 말은 딱 하나",
+        casual: "'나 오늘 너무 피곤해. 내일 얘기하자.'",
+        polite: "'내일 정리해서 말씀드리겠습니다.'" } },
+    BATTERY: { lamp: "a", stamp: "충전 필요", code: "LOW BATTERY", type: "방전 직전형", icon: "battery", fam: "hot",
+      heads: ["배터리 5%에서 중요한 결정은 금지예요.", "충전 먼저, 판정은 나중."],
+      body: "배고프고 졸린 상태에선 분노가 두 배로 보여요. 밥 먹고 자고, 그다음에 화내도 늦지 않아요.",
+      quips: ["저전력 모드에선 화면 밝기부터 낮춰야 해요. 당신도요.", "오늘의 처방: 밥, 잠, 끝.", "충전 중엔 업데이트 금지예요."],
+      todo: ["먼저 먹기", "오늘은 일찍 자기", "내일 다시 판정"],
+      rule: "배고프고 졸리다고 했고, 분노 온도 55 이상, 상대 잘못 65 미만이면 충전 필요예요.",
+      next: "먹고 자고 나서 내일",
+      script: { title: "지금 할 말은 딱 하나",
+        casual: "'나 지금 방전이야. 내일 얘기해.'",
+        polite: "'내일 다시 말씀드릴게요.'" } },
+    OFF: { lamp: "b", stamp: "그냥 통과", code: "PASS", type: "쿨한 통과형", icon: "check", fam: "pass",
+      heads: ["통과시켜요.", "통과! 오늘 에너지는 더 좋은 데 써요."],
+      body: "이걸 붙잡고 있을 시간값이 사건값보다 비싸요.",
+      quips: ["이 일은 내일의 나에게 인계하지 않아요.", "분노 대신 간식을 꺼내세요.", "오늘의 분노는 여기서 퇴근."],
+      todo: ["오늘 일로 정리하고 내일로 가져가지 않기", "같은 일이 또 생기면 그때 다시 판정"],
+      rule: "상대 잘못 40 미만, 분노 온도도 높지 않으면 통과예요.",
+      next: "필요 없어요. 또 생기면 그때",
+      script: { title: "속으로 한 번만", casual: "'그럴 수도 있지.' 끝." } },
+    OFF_TRIVIAL: { lamp: "b", stamp: "신경 끄기", code: "IGNORE", type: "모기 한 방형", icon: "bellOff", fam: "pass",
+      heads: ["이 테스트까지 올 일도 아니었어요.", "판정 결과: 신경 쓸 가치 미달."],
+      body: "상대에게 5분 더 쓰지 말아요.",
+      quips: ["이 정도는 모기 한 방이에요. 긁지 마세요.", "오늘 판정 중 가장 빠른 통과예요.", "이 분노는 접수와 동시에 종결 처리할게요."],
+      todo: ["대신 나한테 5분 쓰기: 산책, 커피, 좋아하는 노래"],
+      rule: "상대 잘못 20 미만, 분노 온도 35 미만이면 신경 끄기예요.",
+      next: "필요 없어요",
+      script: { title: "속으로 한 번만", casual: "'아, 모기였네.' 그리고 하던 일 계속하기." } },
+    SAFE_DANGER: { lamp: "s", stamp: "안전 먼저", code: "SAFETY FIRST", icon: "shield", safety: true,
+      heads: ["이건 화낼지 말지가 아니라 안전의 문제예요."],
+      body: "몸이 위험하다고 느낀다면 판정보다 안전이 먼저예요.",
+      todo: ["그 자리를 벗어나 안전한 곳으로 가기", "지금 위험하면 경찰 <strong>112</strong>", "가정폭력·성폭력 상담은 여성긴급전화 <strong>1366</strong> (24시간)"],
+      rule: "'상대 때문에 내 몸이 위험해요'를 고르면 판정 대신 안전 안내를 드려요." },
+    SAFE_HARM: { lamp: "s", stamp: "안전 먼저", code: "SAFETY FIRST", icon: "shield", safety: true,
+      heads: ["판정은 멈출게요. 지금은 거리를 두는 게 먼저예요."],
+      body: "누군가를 다치게 할까 걱정될 만큼 화가 났다면, 지금은 아무 결정도 하지 않는 게 가장 좋은 결정이에요.",
+      todo: ["그 사람과 몸이 닿지 않는 거리로 떨어지기", "<strong>20</strong>분 넘게 걸으며 진정하기", "이런 일이 자주 있다면 정신건강위기상담 <strong>1577-0199</strong>"],
+      rule: "'누군가를 다치게 할까 봐 걱정돼요'를 고르면 판정 대신 안전 안내를 드려요." },
+    SAFE_SELF: { lamp: "s", stamp: "안전 먼저", code: "SAFETY FIRST", icon: "shield", safety: true,
+      heads: ["판정보다 당신이 먼저예요."],
+      body: "나 자신을 해치고 싶은 마음이 든다면 혼자 견디지 말고, 지금 이야기할 사람을 찾아 주세요.",
+      todo: ["자살예방상담전화 <strong>109</strong> (24시간)", "정신건강위기상담 <strong>1577-0199</strong>", "가까운 사람에게 지금 연락하기"],
+      rule: "'나 자신을 해치고 싶은 마음이 들어요'를 고르면 판정 대신 도움받을 곳을 안내해요." }
+  };
+  var DEX_ORDER = ["ON", "ON_LOW", "FIRST", "GRAY", "RELATION", "HOT_JUSTIFIED", "HOTTER", "OVERHEAT", "RUMINATION", "REVENGE", "FACT", "POWER", "HANGRY", "SLEEPY", "BATTERY", "OFF", "OFF_TRIVIAL"];
+
+  var DONT_ALL = [
+    ["너는 항상 그래", "'항상'은 반박하기 제일 쉬운 말이에요. 대화가 반례 찾기로 바뀌어요."],
+    ["됐어, 말을 말자", "대화를 닫으면 같은 일이 다음에 더 크게 돌아와요."],
+    ["다른 사람들도 다 그렇게 생각해", "그 자리에 없는 사람을 데려오면 상대는 방어부터 해요."]
+  ];
+  var DONT_WHO = {
+    family: ["이 집 나갈 거야", "협박은 내용은 지우고 감정만 남겨요."],
+    partner: ["그럴 거면 헤어져", "홧김에 꺼낸 이별 얘기는 진짜 문제를 덮어요."],
+    friend: ["너 원래 그렇잖아", "'원래'라는 말은 사람을 고칠 수 없는 걸로 만들어요."],
+    boss: ["이럴 거면 그만둘게요", "진심이 아니라면 내 협상력만 깎여요."],
+    coworker: ["단톡방에 올릴게요", "공개 망신은 일 얘기를 싸움으로 바꿔요."],
+    stranger: ["사장 나오라고 하세요", "처음부터 윗사람을 찾으면 지금 담당자가 도울 이유가 사라져요."]
+  };
+  var DONT_FAM = {
+    speak: ["지난번에도 그랬잖아", "오늘 일 하나만 말해야 오늘 일이 풀려요."],
+    hot: ["지금 당장 얘기해", "끓는 상태로 연 대화는 하고 싶은 말보다 더 나가요."],
+    rum: ["그때 그 말, 아직도 생각나", "되감은 장면을 꺼내면 대화가 과거에 갇혀요."],
+    revenge: ["두고 봐", "예고한 복수는 상대에게 명분만 줘요."],
+    fact: ["너 그랬지? 다 알아", "확인 안 된 단정은 틀렸을 때 내가 사과할 일이 돼요."],
+    power: ["다 신고할 거예요", "준비 전에 꺼낸 카드는 상대가 먼저 대비하게 만들어요."],
+    pass: ["(단톡방에) 오늘 진짜 어이없는 일 있었는데…", "통과시킨 일은 다시 꺼내는 순간 다시 커져요."]
+  };
+  var GENTLE = ["크게 다친 일이라면, 오늘은 판정보다 나를 돌보는 게 먼저예요.", "화가 나는 게 당연한 일이에요. 어떻게 꺼낼지는 몸이 좀 가라앉은 뒤에 정해요."];
+  var SCAN_FIXED = ["상대 잘못 계산 중…", "분노 온도 재는 중…", "역풍 위험 따지는 중…", "판정 도장 찍는 중…"];
+  var SCAN_FUN = ["분노 레이더 회전 중…", "상대 행동 판례 찾는 중…", "관제사 커피 리필 중…", "온도계 한 번 흔들어 보는 중…", "샤워 토론 기록 제외 중…", "관제사도 심호흡하는 중…"];
+  var EVENT_WHY = {
+    bnd: "분명히 말했는지가 점수를 가장 크게 움직였어요.",
+    resp: "말한 뒤 상대 반응이 점수를 가장 크게 올렸어요.",
+    rep: "반복이 점수를 가장 크게 올렸어요.",
+    harm: "실제 피해가 점수를 가장 크게 올렸어요.",
+    int: "상대 의도가 점수를 가장 크게 올렸어요."
+  };
+  var REL_SHORT = ["다시 안 봐도 되는 사이", "가끔 보는 사이", "매일 보는 사이", "절대 잃기 싫은 사이"];
+  var POW_SHORT = ["거의 없음", "조금 불편해지는 정도", "평가·돈·자리", "생계·안전"];
+  var RISK_TAIL = ["지금 말해도 잃을 게 적어요.", "말하되 방식은 골라야 해요.", "정면 승부는 손해가 커요. 1:1로, 기록과 함께.", "정면 승부는 피하세요. 기록과 공식 창구가 먼저예요."];
+
+  var answers = Q.map(function () { return null; });
+  var step = 0;
+  var last = null;
+  var coolTimer = null, advTimer = null, scanTimer = null;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function $(id) { return document.getElementById(id); }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function show(id) {
+    ["s-start", "s-q", "s-submit", "s-scan", "s-result", "s-cool", "s-dex"].forEach(function (s) { $(s).hidden = s !== id; });
+    window.scrollTo(0, 0);
+  }
+  function ampm(d) { var h = d.getHours(); return (h < 12 ? "오전 " : "오후 ") + ((h % 12) || 12) + "시"; }
+  function clockIn(min) { var d = new Date(Date.now() + min * 60000); return ampm(d) + " " + pad(d.getMinutes()) + "분"; }
+  function todayStamp() { var d = new Date(); return (d.getMonth() + 1) + "월 " + d.getDate() + "일(" + "일월화수목금토".charAt(d.getDay()) + ") " + ampm(d); }
+
+  /* ---------- gauges ---------- */
+  function pt(r, v) { var a = (180 - 1.8 * v) * Math.PI / 180; return [60 + r * Math.cos(a), 60 - r * Math.sin(a)]; }
+  function arc(r, v0, v1) {
+    var p0 = pt(r, v0), p1 = pt(r, v1);
+    return "M" + p0[0].toFixed(2) + " " + p0[1].toFixed(2) + " A" + r + " " + r + " 0 0 1 " + p1[0].toFixed(2) + " " + p1[1].toFixed(2);
+  }
+  function gaugeSVG(id) {
+    var s = '<svg viewBox="0 0 120 70" aria-hidden="true">';
+    s += '<path class="zone z-g" d="' + arc(46, 0, 40) + '"/><path class="zone z-a" d="' + arc(46, 40, 70) + '"/><path class="zone z-r" d="' + arc(46, 70, 100) + '"/>';
+    for (var v = 0; v <= 100; v += 10) {
+      var a = pt(37, v), b = pt(41, v);
+      s += '<line class="tick" x1="' + a[0].toFixed(2) + '" y1="' + a[1].toFixed(2) + '" x2="' + b[0].toFixed(2) + '" y2="' + b[1].toFixed(2) + '"/>';
+    }
+    s += '<g class="needle-g" id="' + id + '"><line class="needle" x1="60" y1="60" x2="22" y2="60"/></g><circle class="hub" cx="60" cy="60" r="4"/></svg>';
+    return s;
+  }
+  function renderGauges(el, prefix, vals, withGrades) {
+    el.innerHTML = AXES.map(function (l) {
+      return '<div class="gauge">' + gaugeSVG(prefix + l[0]) +
+        '<div class="readout" id="' + prefix + l[0] + '-n">' + (vals ? vals[l[0]] : "--") + '</div>' +
+        '<div class="glabel">' + l[1] + '</div>' +
+        (withGrades && vals ? '<div class="grade">' + grade(l[0], vals[l[0]]) + '</div>' : "") + '</div>';
+    }).join("");
+    if (vals) setNeedle(prefix, vals, true);
+  }
+  function setNeedle(prefix, vals, instant) {
+    Object.keys(vals).forEach(function (k) {
+      var g = $(prefix + k);
+      if (!g || typeof vals[k] !== "number") return;
+      if (instant || reduce) g.style.transition = "none"; else g.style.transition = "";
+      g.style.transform = "rotate(" + (1.8 * vals[k]) + "deg)";
+      var n = $(prefix + k + "-n"); if (n) n.textContent = vals[k];
+    });
+  }
+
+  /* ---------- scoring ---------- */
+  function merged() {
+    var v = {};
+    answers.forEach(function (a, i) { var o = Q[i].o[a][2]; for (var k in o) v[k] = o[k]; });
+    return v;
+  }
+  function score() {
+    var v = merged();
+    var ew = { bnd: .20, rep: .20, harm: .25, int: .15 };
+    if (v.resp !== null && v.resp !== undefined) ew.resp = .20;
+    var s = 0, w = 0, k;
+    for (k in ew) { s += v[k] * ew[k]; w += ew[k]; }
+    var event = Math.round(s / w);
+    var heat = Math.max(v.temp, v.temp * .45 + v.rum * .30 + v.rev * .25);
+    if (v.safe === "phys") heat += 15;
+    if (v.cond === "hungry" || v.cond === "sleepy") heat += 8;
+    if (v.cond === "both") heat += 15;
+    heat = Math.min(100, Math.round(heat));
+    var risk = Math.round(v.pow * .55 + v.rel * .45);
+    return { v: v, ew: ew, event: event, heat: heat, risk: risk };
+  }
+  function decide(sc) {
+    var v = sc.v, e = sc.event, h = sc.heat, r = sc.risk;
+    if (v.safe === "danger") return "SAFE_DANGER";
+    if (v.safe === "self") return "SAFE_SELF";
+    if (v.safe === "harm") return "SAFE_HARM";
+    var hurt = v.harm >= 95; // 크게 다친 경우엔 '사건보다 내가 더 뜨겁다'·'배고파서 그렇다' 류 판정을 내지 않는다
+    if (v.rev >= 90 && h >= 55) return "REVENGE";
+    if (v.cond !== "ok" && h >= 55 && e < 65 && !hurt) return v.cond === "hungry" ? "HANGRY" : v.cond === "sleepy" ? "SLEEPY" : "BATTERY";
+    if (h >= 68) {
+      if (v.rum >= 70 && v.temp <= 75) return "RUMINATION";
+      if (e >= 65) return "HOT_JUSTIFIED";
+      if (e < 40 && !hurt) return "HOTTER";
+      return "OVERHEAT";
+    }
+    if (v.rum >= 70 && h >= 50) return "RUMINATION";
+    if (v.cert < 50 && e >= 40) return "FACT";
+    if (v.pow >= 70 && e >= 45) return "POWER";
+    if (v.bnd <= 25 && e >= 25 && v.int < 90) return "FIRST";
+    if (v.rel >= 85 && e < 65) return "RELATION";
+    if (e >= 65) return r >= 60 ? "ON_LOW" : "ON";
+    if (e >= 40) return "GRAY";
+    if (e < 20 && h < 35) return "OFF_TRIVIAL";
+    return "OFF";
+  }
+  function modifiers(sc, key) {
+    var v = sc.v, m = [], hr = new Date().getHours();
+    // 우선순위 순서: 안전·회복 > 시간·몸 상태 > 패턴 > 재미
+    if (v.harm >= 95) m.push(["회복 조항", "크게 다친 일이라면 분노보다 회복이 먼저예요. 몸을 다쳤다면 진료 기록부터, 마음이 버겁다면 <span class=\"tel\">1577-0199</span>."]);
+    if (v.safe === "phys") m.push(["화풀이 조항", "물건은 죄가 없어요. 그 손으로 물 한 컵 따라 마셔요."]);
+    if (hr >= 23 || hr < 5) m.push(["심야 조항", "새벽 감성은 판사 자격이 없어요. 중요한 말은 아침 9시 이후에."]);
+    if (v.cond !== "ok" && ["HANGRY", "SLEEPY", "BATTERY"].indexOf(key) < 0) {
+      m.push(["컨디션 조항", v.cond === "hungry" ? "배고프면 분노가 커 보여요. 간식 먼저." : v.cond === "sleepy" ? "잠이 부족하면 분노가 커 보여요. 큰 결정은 자고 나서." : "배고프고 졸리면 분노가 두 배로 보여요. 충전 먼저."]);
+    }
+    if (v.rep === 95) m.push(["상습 조항", "재방송이 이 정도면 편성표를 만들 때예요. 날짜와 내용을 기록해 두세요."]);
+    if (v.rep === 5 && sc.heat >= 68 && v.harm < 95) m.push(["초범 조항", "처음 한 일에 최고형은 과해요."]);
+    if (v.rum === 95 && key !== "RUMINATION") m.push(["샤워 토론 조항", "머릿속 토론은 늘 내가 이겨요. 현실 토론은 대본이 달라요."]);
+    if (v.unk) m.push(["모르겠다 조항", "모르겠다를 고른 덕분에 흑백사고 탈출 점수 +1. 판정에도 반영했어요."]);
+    if (v.rev === 40) m.push(["사과 조항", "사과를 원한다면 \"사과해\"보다 \"이게 속상했어\"가 사과를 더 잘 불러오는 편이에요."]);
+    if (v.rev === 25) m.push(["인정 조항", "알아주길 바라는 마음은 말로 꺼내야 전달돼요. 텔레파시는 아직 상용화 전이에요."]);
+    return m.slice(0, 2);
+  }
+
+  /* ---------- result content ---------- */
+  function ans(qi) { return Q[qi].o[answers[qi]][0]; }
+  function fill(text, sc) { return text.replace(/\{E\}/g, sc.event).replace(/\{H\}/g, sc.heat); }
+  function readsFor(sc) {
+    var v = sc.v, items = [], k;
+    for (k in sc.ew) items.push({ k: k, c: v[k] * sc.ew[k], val: v[k] });
+    items.sort(function (a, b) { return b.c - a.c; });
+    var e;
+    if (sc.event < 40) {
+      var low = items.slice().sort(function (a, b) { return a.val - b.val; })[0];
+      e = "점수가 낮게 나온 건 '" + ans(KEY_Q[low.k]) + "'라는 답 영향이 커요.";
+    } else {
+      var top = items[0];
+      e = "'" + ans(KEY_Q[top.k]) + "'라고 했죠. " + EVENT_WHY[top.k];
+      for (var i = items.length - 1; i > 0; i--) {
+        if (items[i].val <= 25 && KEY_Q[items[i].k] !== KEY_Q[top.k]) { e += " 반대로 '" + ans(KEY_Q[items[i].k]) + "'라는 답은 점수를 낮췄어요."; break; }
+      }
+    }
+    var tw = v.temp * .45 + v.rum * .30 + v.rev * .25, h;
+    if (v.temp >= tw) h = "지금 온도를 '" + ans(KEY_Q.temp) + "'이라고 했어요.";
+    else {
+      var parts = [["temp", v.temp * .45], ["rum", v.rum * .30], ["rev", v.rev * .25]].sort(function (a, b) { return b[1] - a[1]; });
+      if (parts[0][0] === "rum") h = "같은 장면을 두고 '" + ans(KEY_Q.rum) + "'라고 했죠. 온도의 큰 몫이 되감기에서 와요.";
+      else if (parts[0][0] === "rev") h = "'똑같이 갚아주는 것'을 원한다고 했죠. 갚아주고 싶은 마음이 온도를 끌어올렸어요.";
+      else h = "지금 온도는 '" + ans(KEY_Q.temp) + "'이지만, 되감기와 갚아주고 싶은 마음이 온도를 더 올렸어요.";
+    }
+    if (v.cond === "hungry" || v.cond === "sleepy") h += " 몸 상태('" + ans(KEY_Q.cond) + "') 때문에 +8.";
+    if (v.cond === "both") h += " 배고프고 졸려서 +15.";
+    if (v.safe === "phys") h += " 화풀이 충동으로 +15.";
+    var r = "관계는 '" + REL_SHORT[answers[KEY_Q.rel]] + "', 상대가 줄 수 있는 불이익은 '" + POW_SHORT[answers[KEY_Q.pow]] + "' 수준이에요. " + RISK_TAIL[gradeIdx("risk", sc.risk)];
+    return [["상대 잘못", sc.event, grade("event", sc.event), e], ["분노 온도", sc.heat, grade("heat", sc.heat), h], ["역풍 위험", sc.risk, grade("risk", sc.risk), r]];
+  }
+  function scriptFor(r, who) {
+    var s = r.script, reg = REG[who] || "casual";
+    var t = s[reg] || (reg === "stranger" ? s.polite : null) || s.casual;
+    return t.replace("{today}", todayStamp());
+  }
+  function nextFor(r) { return r.next.replace("{+20m}", clockIn(20)).replace("{+40m}", clockIn(40)); }
+  function docNo() {
+    var d = new Date();
+    return "분노관제센터 판정서 제" + d.getFullYear() + "-" + pad(d.getMonth() + 1) + pad(d.getDate()) + "-" + String(Math.floor(1000 + Math.random() * 9000)) + "호";
+  }
+  function buildResult(sc, key, prev) {
+    var r = R[key], hurt = sc.v.harm >= 95, who = sc.v.who;
+    var view = { key: key, sc: sc, prev: prev || null, doc: docNo(), head: fill(hurt ? r.heads[0] : pick(r.heads), sc), body: fill(r.bodyWarm && sc.heat >= 50 ? r.bodyWarm : r.body, sc) };
+    if (r.safety) { view.mods = []; return view; }
+    view.type = hurt ? "다친 마음 보호 중" : r.type;
+    view.quip = hurt ? pick(GENTLE) : fill(pick(r.quips), sc);
+    view.who = hurt ? "" : pick(WHO[who] || [""]);
+    view.mods = modifiers(sc, key);
+    view.reads = readsFor(sc);
+    view.scriptTitle = r.script.title;
+    view.script = scriptFor(r, who);
+    view.scriptHint = /○○|□□|△△/.test(view.script) ? "○○, △△, □□에 내 상황을 넣어 쓰세요." : (/_{3,}/.test(view.script) ? "빈칸은 나만 보는 메모예요." : "");
+    view.dont = [DONT_WHO[who] || DONT_ALL[0], DONT_FAM[r.fam], pick(DONT_ALL)];
+    view.next = nextFor(r);
+    return view;
+  }
+  function renderResult(view) {
+    var r = R[view.key], sc = view.sc, safe = !!r.safety;
+    $("r-docno").textContent = view.doc;
+    var ic = $("r-icon"); ic.className = "vicon " + r.lamp; ic.innerHTML = iconSVG(r.icon);
+    $("r-code").textContent = r.code;
+    var st = $("r-stamp"); st.textContent = r.stamp; st.className = "stamp " + r.lamp;
+    $("r-head").textContent = view.head;
+    $("r-body").textContent = view.body;
+    var rt = $("r-type");
+    if (safe) { rt.hidden = true; } else { rt.hidden = false; rt.innerHTML = "분노 유형 · <b></b>"; rt.querySelector("b").textContent = view.type; }
+    var rc = $("r-recheck");
+    if (view.prev && !safe) {
+      rc.hidden = false;
+      var drop = view.prev.heat - sc.heat;
+      rc.textContent = "냉각 후 재판정: 분노 온도 " + view.prev.heat + " → " + sc.heat + ". " +
+        (drop >= 10 ? "식었어요." : sc.v.rum >= 70 || sc.v.rev >= 90 ? "숨으로는 여기까지예요. 되감기와 갚아주고 싶은 마음은 시간이 식혀요." : "아직 그대로예요. 오늘은 판정보다 휴식이 먼저예요.");
+    } else { rc.hidden = true; }
+    var mg = $("g-result");
+    if (safe) { mg.hidden = true; } else { mg.hidden = false; renderGauges(mg, "rg-", { event: sc.event, heat: sc.heat, risk: sc.risk }, true); }
+    ["b-read", "b-script", "b-dont", "r-quip", "r-next", "btn-share", "btn-dex"].forEach(function (id) { $(id).hidden = safe; });
+    if (!safe) {
+      $("r-reads").innerHTML = view.reads.map(function () { return '<li><span class="ax"></span><span class="tx"><em></em> <span></span></span></li>'; }).join("");
+      Array.prototype.forEach.call($("r-reads").children, function (li, i) {
+        var rd = view.reads[i];
+        li.querySelector(".ax").textContent = rd[0];
+        li.querySelector("em").textContent = rd[1] + " · " + rd[2] + ".";
+        li.querySelector(".tx > span").textContent = rd[3];
+      });
+      $("r-rule").textContent = "판정 규칙: " + r.rule;
+      $("r-script-title").textContent = view.scriptTitle;
+      $("r-script").textContent = view.script;
+      $("r-script-hint").textContent = view.scriptHint;
+      $("r-dont").innerHTML = view.dont.map(function () { return '<li><span class="ph"></span><span class="why"></span></li>'; }).join("");
+      Array.prototype.forEach.call($("r-dont").children, function (li, i) {
+        li.querySelector(".ph").textContent = "“" + view.dont[i][0] + "”";
+        li.querySelector(".why").textContent = view.dont[i][1];
+      });
+      var q = $("r-quip");
+      q.innerHTML = '<span class="who">관제사 한마디</span><span></span>' + (view.who ? '<span class="who">관제사 메모</span><span></span>' : "");
+      var spans = q.querySelectorAll("span:not(.who)");
+      spans[0].textContent = view.quip;
+      if (view.who) spans[1].textContent = view.who;
+      $("r-next").innerHTML = "<b>다음 판정</b><span></span>";
+      $("r-next").querySelector("span").textContent = view.next;
+    }
+    // 조항 문구는 이 파일 안의 고정 문자열뿐이라 innerHTML로 넣어도 안전 (전화번호 줄바꿈 방지용 span)
+    $("r-mods").innerHTML = view.mods.map(function (m) { return '<div class="mod"><b>' + m[0] + "</b><span>" + m[1] + "</span></div>"; }).join("");
+    $("r-mods").hidden = view.mods.length === 0;
+    $("r-todo").innerHTML = r.todo.map(function (t) { return "<li>" + t + "</li>"; }).join("");
+    $("a-cool").hidden = safe || (sc.heat < 50 && r.lamp !== "a");
+    $("sharebox").hidden = true;
+    $("toast").textContent = "";
+    ["l-g", "l-a", "l-b", "l-r"].forEach(function (id) { $(id).classList.remove("on"); });
+    $(r.lamp === "g" ? "l-g" : r.lamp === "a" ? "l-a" : r.lamp === "b" ? "l-b" : "l-r").classList.add("on");
+  }
+  function renderDex() {
+    var box = $("dex");
+    var tiles = DEX_ORDER.map(function (k) { var r = R[k]; return { k: k, lamp: r.lamp, icon: r.icon, stamp: r.stamp, type: r.type, line: r.heads[0] }; });
+    tiles.push({ k: "SAFE", lamp: "s", icon: "shield", stamp: "안전 먼저", type: "판정 중지", line: "안전이 걱정되는 답을 고르면 판정 대신 도움받을 곳부터 안내해요." });
+    box.innerHTML = tiles.map(function (t) {
+      var me = last && last.key === t.k;
+      return '<div class="tile' + (me ? " me" : "") + '">' + (me ? '<span class="metag">내 판정</span>' : "") +
+        '<span class="ti ' + t.lamp + '">' + iconSVG(t.icon) + '</span><span class="ts ' + t.lamp + '"></span><span class="tt"></span><span class="tl"></span></div>';
+    }).join("");
+    Array.prototype.forEach.call(box.children, function (el, i) {
+      el.querySelector(".ts").textContent = tiles[i].stamp;
+      el.querySelector(".tt").textContent = tiles[i].type;
+      el.querySelector(".tl").textContent = tiles[i].line;
+    });
+  }
+  function shareText() {
+    var r = R[last.key], sc = last.sc;
+    var t = "[분노관제센터] 내 판정: " + r.stamp + " (" + last.type + ")\n" + last.head +
+      "\n상대 잘못 " + sc.event + "(" + grade("event", sc.event) + ") · 분노 온도 " + sc.heat + "(" + grade("heat", sc.heat) + ") · 역풍 위험 " + sc.risk + "(" + grade("risk", sc.risk) + ")";
+    if (last.quip) t += "\n관제사: " + last.quip;
+    t += "\n\n지금 이 분노, 터뜨려도 될까? 1분 판정 받아보기\n" + SHARE_URL;
+    return t;
+  }
+  window.__angerTest = { Q: Q, R: R, score: score, decide: decide, build: function (sc, k) { return buildResult(sc, k, null); }, judge: function (p) { judge(p || null); }, setAnswers: function (a) { answers = a.slice(); } };
+
+  /* ---------- question flow ---------- */
+  function renderQ() {
+    var q = Q[step];
+    $("q-step").textContent = pad(step + 1) + " / " + Q.length;
+    $("q-bar").style.width = (step / Q.length * 100) + "%";
+    $("q-title").textContent = q.t;
+    $("btn-back").style.visibility = step === 0 ? "hidden" : "visible";
+    renderOpts($("q-opts"), q, answers[step], "opt-" + step + "-", function (i) {
+      if (advTimer) return; // 두 번 눌러도 질문을 건너뛰지 않게
+      answers[step] = i;
+      advTimer = setTimeout(function () { advTimer = null; next(); }, reduce ? 0 : 160);
+    });
+  }
+  function renderOpts(box, q, selected, idPrefix, onPick) {
+    box.innerHTML = "";
+    q.o.forEach(function (o, i) {
+      var b = document.createElement("button");
+      b.className = "opt"; b.type = "button"; b.id = idPrefix + i;
+      b.setAttribute("aria-pressed", selected === i ? "true" : "false");
+      b.innerHTML = '<span class="dot" aria-hidden="true"></span><span><b></b>' + (o[1] ? "<small></small>" : "") + "</span>";
+      b.querySelector("b").textContent = o[0];
+      if (o[1]) b.querySelector("small").textContent = o[1];
+      b.addEventListener("click", function () {
+        Array.prototype.forEach.call(box.children, function (c, j) { c.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+        onPick(i);
+      });
+      box.appendChild(b);
+    });
+  }
+  function next() {
+    if (step < Q.length - 1) { step++; renderQ(); }
+    else { $("q-bar").style.width = "100%"; show("s-submit"); }
+  }
+
+  function judge(prev) {
+    var miss = answers.indexOf(null);
+    if (miss >= 0) { step = miss; renderQ(); show("s-q"); return; }
+    if (scanTimer) { clearInterval(scanTimer); scanTimer = null; }
+    var sc = score(), key = decide(sc);
+    last = buildResult(sc, key, prev);
+    show("s-scan");
+    renderGauges($("g-scan"), "sg-", null, false);
+    var lines = [SCAN_FIXED[0], pick(SCAN_FUN), SCAN_FIXED[1], SCAN_FIXED[2], SCAN_FIXED[3]];
+    var box = $("scanlines");
+    box.innerHTML = lines.map(function () { return "<div></div>"; }).join("");
+    Array.prototype.forEach.call(box.children, function (d, i) { d.textContent = lines[i]; });
+    if (reduce) { setNeedle("sg-", { event: sc.event, heat: sc.heat, risk: sc.risk }, true); renderResult(last); show("s-result"); return; }
+    var i = 0;
+    scanTimer = setInterval(function () {
+      if (i < box.children.length) { box.children[i].classList.add("done"); i++; }
+      if (i === 2) setNeedle("sg-", { event: sc.event, heat: sc.heat, risk: sc.risk }, false);
+      if (i >= box.children.length) { clearInterval(scanTimer); scanTimer = null; setTimeout(function () { renderResult(last); show("s-result"); }, 600); }
+    }, 300);
+  }
+
+  /* ---------- cooling loop ---------- */
+  function startCooling() {
+    if (coolTimer) { clearInterval(coolTimer); coolTimer = null; }
+    show("s-cool");
+    $("cool-after").hidden = true;
+    var g = $("g-cool");
+    g.innerHTML = gaugeSVG("cg-heat") + '<div class="readout" id="cg-heat-n">' + last.sc.heat + '</div><div class="glabel">분노 온도</div><div class="grade" id="cg-grade">' + grade("heat", last.sc.heat) + '</div>';
+    setNeedle("cg-", { heat: last.sc.heat }, true);
+    var cycle = 0, start = last.sc.heat, floor = Math.max(20, start - 36);
+    $("cool-count").textContent = "0 / 6";
+    function phase(name, secs, then) {
+      var left = secs;
+      $("cool-phase").textContent = name + " " + left;
+      coolTimer = setInterval(function () {
+        left--;
+        if (left > 0) { $("cool-phase").textContent = name + " " + left; }
+        else { clearInterval(coolTimer); coolTimer = null; then(); }
+      }, 1000);
+    }
+    function loop() {
+      if (cycle >= 6) {
+        $("cool-phase").textContent = "냉각 완료";
+        $("cool-after").hidden = false;
+        var picked = false;
+        renderOpts($("cool-opts"), Q[TEMP_Q], null, "cool-opt-", function (i) {
+          if (picked) return;
+          picked = true;
+          var prev = { heat: last.sc.heat };
+          answers[TEMP_Q] = i;
+          judge(prev);
+        });
+        return;
+      }
+      phase("들이쉬기", 4, function () {
+        phase("내쉬기", 6, function () {
+          cycle++;
+          $("cool-count").textContent = cycle + " / 6";
+          var shown = Math.max(floor, Math.round(start - (start - floor) * cycle / 6));
+          setNeedle("cg-", { heat: shown }, false);
+          $("cg-grade").textContent = grade("heat", shown);
+          loop();
+        });
+      });
+    }
+    loop();
+  }
+  function stopCooling() { if (coolTimer) { clearInterval(coolTimer); coolTimer = null; } show("s-result"); }
+
+  /* ---------- copy helpers ---------- */
+  function copyText(text, onOk, onFail) {
+    try { navigator.clipboard.writeText(text).then(onOk, onFail); } catch (e) { onFail(); }
+  }
+
+  /* ---------- wiring ---------- */
+  renderGauges($("g-example"), "ex-", { event: 90, heat: 90, risk: 20 }, false);
+  $("start-chips").innerHTML = DEX_ORDER.map(function (k) { return '<span class="chip ' + R[k].lamp + '"></span>'; }).join("");
+  Array.prototype.forEach.call($("start-chips").children, function (el, i) { el.textContent = R[DEX_ORDER[i]].stamp; });
+  $("btn-start").addEventListener("click", function () { step = 0; renderQ(); show("s-q"); });
+  $("btn-back").addEventListener("click", function () {
+    if (advTimer) { clearTimeout(advTimer); advTimer = null; }
+    if (step > 0) { step--; renderQ(); }
+  });
+  $("btn-back2").addEventListener("click", function () { step = Q.length - 1; renderQ(); show("s-q"); });
+  $("btn-judge").addEventListener("click", function () { judge(null); });
+  $("btn-cool").addEventListener("click", startCooling);
+  $("btn-cool-stop").addEventListener("click", stopCooling);
+  $("btn-dex").addEventListener("click", function () { renderDex(); show("s-dex"); });
+  $("btn-dex-back").addEventListener("click", function () { show("s-result"); });
+  function again() {
+    [coolTimer, scanTimer].forEach(function (t) { if (t) clearInterval(t); });
+    if (advTimer) clearTimeout(advTimer);
+    coolTimer = scanTimer = advTimer = null;
+    answers = Q.map(function () { return null; }); step = 0; renderQ(); show("s-q");
+  }
+  $("btn-again").addEventListener("click", again);
+  $("btn-again2").addEventListener("click", again);
+  $("btn-share").addEventListener("click", function () {
+    var t = shareText(), box = $("sharebox"), ta = $("share-text");
+    copyText(t, function () { $("toast").textContent = "결과를 복사했어요. 카톡이나 메신저에 붙여넣으세요."; },
+      function () { ta.value = t; box.hidden = false; ta.focus(); ta.select(); });
+  });
+  $("btn-copy-script").addEventListener("click", function () {
+    var t = last && last.script ? last.script : "";
+    copyText(t, function () { $("r-script-hint").textContent = "대사를 복사했어요."; },
+      function () {
+        var el = $("r-script"), sel = window.getSelection(), rg = document.createRange();
+        rg.selectNodeContents(el); sel.removeAllRanges(); sel.addRange(rg);
+        $("r-script-hint").textContent = "대사를 선택해 뒀어요. 길게 눌러 복사하세요.";
+      });
+  });
+})();
+</script>
+</body>
+</html>

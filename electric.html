@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:type" content="website">
+<meta property="og:title" content="전기요금 계산기">
+<meta property="og:description" content="사용량만 넣으면 2026년 10~12월 주택용 전기요금을 고지서 순서대로 계산하고, 히터·전기장판을 더 쓰면 얼마 늘지도 보여 줘요.">
+<meta name="description" content="사용량만 넣으면 2026년 10~12월 주택용 전기요금을 고지서 순서대로 계산하고, 히터·전기장판을 더 쓰면 얼마 늘지도 보여 줘요.">
+<meta property="og:url" content="https://dandy-bk.github.io/tools/electric.html">
+<meta property="og:image" content="https://dandy-bk.github.io/tools/og-electric.png">
+<script>window.__SHARE_URL__ = location.href.split("#")[0];</script>
+<style>[hidden]{display:none!important}body{margin:0}</style>
+<title>전기요금 계산기</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: the blog's utility-bill slip. A blue frame holds one white bill with a perforated cut line; you fill the bill (kWh or a heater) and the line items settle into the same order KEPCO prints them. */
+:root {
+  color-scheme: light;
+  --frame: #2152C4;
+  --ink: #14306F;
+  --soft: #DCE6FA;
+  --paper: #ffffff;
+  --line: #c9d5f0;
+  --text: #1b2333;
+  --muted: #5a6680;
+  --warn: #b3261e;
+  --warn-wash: #fdecea;
+  --ok: #1d6e3e;
+  --accent: #2152C4;
+  --total-bg: #2152C4;
+  --font-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-sign: "Noto Serif KR", "AppleMyungjo", "Batang", serif;
+  --font-num: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --frame: #0e1b3d; --ink: #c9d8ff; --soft: #1d2a4d; --paper: #121a2e; --line: #2a3a63;
+    --text: #e6ebf7; --muted: #9aa8c7; --warn: #ff8a80; --warn-wash: #3a1d1d; --ok: #7ed6a0; --accent: #7aa2ff; --total-bg: #1f3c8f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --frame: #0e1b3d; --ink: #c9d8ff; --soft: #1d2a4d; --paper: #121a2e; --line: #2a3a63;
+  --text: #e6ebf7; --muted: #9aa8c7; --warn: #ff8a80; --warn-wash: #3a1d1d; --ok: #7ed6a0; --accent: #7aa2ff; --total-bg: #1f3c8f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--frame); color: var(--text);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  word-break: keep-all; overflow-wrap: break-word;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 40px;
+}
+.slip { position: relative; max-width: 560px; margin: 0 auto; background: var(--paper); border-radius: 18px; padding: 26px 22px 24px; }
+.eyebrow { font-family: var(--font-num); font-size: 12px; font-weight: 600; letter-spacing: .08em; color: var(--muted); margin: 0; }
+h1 { font-weight: 900; font-size: clamp(30px, 8.5vw, 40px); line-height: 1.15; color: var(--ink); margin: 6px 0 4px; letter-spacing: -0.01em; }
+.sub { margin: 0; color: var(--muted); font-size: 15px; }
+.cut { position: relative; display: flex; align-items: center; gap: 8px; margin: 18px -22px; padding: 0 22px; color: var(--frame); }
+.cut::before, .cut::after { content: ""; position: absolute; top: 50%; width: 22px; height: 22px; border-radius: 50%; background: var(--frame); transform: translateY(-50%); }
+.cut::before { left: -11px; } .cut::after { right: -11px; }
+.cut svg { flex: none; width: 18px; height: 18px; color: var(--ink); }
+.cut span { flex: 1; border-top: 2px dashed var(--line); }
+
+.tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--soft); padding: 4px; border-radius: 12px; }
+.tab { font: inherit; font-weight: 700; font-size: 15px; border: 0; border-radius: 9px; padding: 10px 6px; background: transparent; color: var(--ink); cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--paper); box-shadow: 0 1px 0 var(--line); }
+.panel { margin-top: 16px; display: grid; gap: 14px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > label, .field > .lbl { font-weight: 700; font-size: 14px; color: var(--ink); }
+.hint { font-size: 13px; color: var(--muted); margin: 0; }
+.inrow { display: flex; align-items: center; gap: 8px; }
+input[type=number] {
+  width: 100%; min-width: 0; font: inherit; font-family: var(--font-num); font-weight: 600; font-size: 20px;
+  padding: 10px 12px; border: 2px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+input[type=number]:focus { outline: none; border-color: var(--accent); }
+.unit { flex: none; font-weight: 700; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: inherit; font-size: 13px; font-weight: 700; padding: 5px 10px; border-radius: 999px; border: 2px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--soft); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.seg { display: inline-flex; border: 2px solid var(--line); border-radius: 10px; overflow: hidden; width: fit-content; }
+.seg button { font: inherit; font-size: 14px; font-weight: 700; border: 0; padding: 8px 14px; background: var(--paper); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--total-bg); color: #fff; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #f2b705; outline-offset: 2px; }
+
+.total { background: var(--total-bg); color: #fff; border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px; }
+.total .k { font-size: 13px; opacity: .9; }
+.total .v { font-family: var(--font-num); font-weight: 600; font-size: clamp(28px, 8vw, 36px); line-height: 1.15; font-variant-numeric: tabular-nums; }
+.total .v small { font-family: var(--font-body); font-size: 16px; font-weight: 700; margin-left: 4px; }
+.total .d { font-size: 14px; }
+.items { width: 100%; border-collapse: collapse; font-size: 14px; }
+.items td { padding: 7px 0; border-bottom: 1px dotted var(--line); vertical-align: top; }
+.items td:last-child { text-align: right; font-family: var(--font-num); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 10px; }
+.items tr.sum td { font-weight: 700; border-bottom: 2px solid var(--ink); color: var(--ink); }
+.items .note { display: block; font-size: 12px; color: var(--muted); font-weight: 400; }
+.flag { border-radius: 10px; padding: 10px 12px; font-size: 14px; background: var(--soft); color: var(--ink); }
+.flag.warn { background: var(--warn-wash); color: var(--warn); }
+.flag b { font-family: var(--font-num); }
+.meter { display: grid; gap: 6px; }
+.meter .bar { position: relative; height: 12px; border-radius: 6px; background: var(--soft); overflow: hidden; }
+.meter .fill { position: absolute; inset: 0 auto 0 0; background: var(--accent); border-radius: 6px; }
+.meter .tick { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); opacity: .55; }
+.meter .scale { display: flex; justify-content: space-between; font-family: var(--font-num); font-size: 11px; color: var(--muted); }
+
+.foot { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
+.foot p { margin: 0; }
+.sign { font-family: var(--font-sign); font-weight: 600; color: var(--ink); text-align: right; margin-top: 10px; }
+.sign a { color: inherit; }
+</style>
+</head>
+<body>
+<main class="slip">
+  <p class="eyebrow">주택용 저압 · 2026년 10~12월 요금</p>
+  <h1>전기요금 계산기</h1>
+  <p class="sub">사용량만 넣으면 고지서 순서대로 계산해요. 난방기기를 더 쓰면 얼마 늘지도 볼 수 있어요.</p>
+
+  <div class="cut" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg><span></span></div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-a" aria-selected="true" aria-controls="p-a">사용량으로 계산</button>
+    <button class="tab" role="tab" id="tab-b" aria-selected="false" aria-controls="p-b">난방기기 추가 요금</button>
+  </div>
+
+  <section class="panel" id="p-a" role="tabpanel" aria-labelledby="tab-a">
+    <div class="field">
+      <label for="kwh">이번 달 사용량</label>
+      <div class="inrow"><input type="number" id="kwh" value="300" min="0" max="5000" step="1" inputmode="numeric"><span class="unit">kWh</span></div>
+      <div class="chips" id="kwh-chips"></div>
+      <p class="hint">고지서의 '사용량'이나 한전ON 앱에서 볼 수 있어요.</p>
+    </div>
+    <div class="field">
+      <span class="lbl">어느 달 요금이에요?</span>
+      <div class="seg" id="season"><button type="button" data-s="n" aria-pressed="true">7~8월 말고 다른 달</button><button type="button" data-s="s" aria-pressed="false">7~8월</button></div>
+    </div>
+    <div class="total" aria-live="polite"><span class="k">예상 청구액</span><span class="v"><span id="a-total">0</span><small>원</small></span><span class="d" id="a-tier"></span></div>
+    <div class="meter" aria-hidden="true"><div class="bar"><span class="fill" id="a-fill"></span><span class="tick" id="a-t1"></span><span class="tick" id="a-t2"></span></div><div class="scale"><span>0</span><span id="a-s1"></span><span id="a-s2"></span><span id="a-smax"></span></div></div>
+    <p class="flag" id="a-flag" hidden></p>
+    <table class="items"><tbody id="a-items"></tbody></table>
+  </section>
+
+  <section class="panel" id="p-b" role="tabpanel" aria-labelledby="tab-b" hidden>
+    <div class="field">
+      <label for="base">평소 한 달 사용량 (난방기기 빼고)</label>
+      <div class="inrow"><input type="number" id="base" value="300" min="0" max="5000" step="1" inputmode="numeric"><span class="unit">kWh</span></div>
+      <p class="hint">난방을 시작하기 전 달 고지서의 사용량을 넣으면 돼요.</p>
+    </div>
+    <div class="field">
+      <label for="watt">기기 소비전력</label>
+      <div class="inrow"><input type="number" id="watt" value="2000" min="1" max="10000" step="10" inputmode="numeric"><span class="unit">W</span></div>
+      <div class="chips" id="watt-chips"></div>
+      <p class="hint">버튼은 예시예요. 정확한 값은 제품 라벨의 '정격 소비전력'을 보세요.</p>
+    </div>
+    <div class="two">
+      <div class="field">
+        <label for="hours">하루 사용 시간</label>
+        <div class="inrow"><input type="number" id="hours" value="2" min="0" max="24" step="0.5" inputmode="decimal"><span class="unit">시간</span></div>
+      </div>
+      <div class="field">
+        <label for="days">사용 일수</label>
+        <div class="inrow"><input type="number" id="days" value="30" min="1" max="31" step="1" inputmode="numeric"><span class="unit">일</span></div>
+      </div>
+    </div>
+    <div class="total" aria-live="polite"><span class="k">한 달에 늘어나는 전기요금</span><span class="v">+<span id="b-diff">0</span><small>원</small></span><span class="d" id="b-detail"></span></div>
+    <p class="flag" id="b-flag" hidden></p>
+    <table class="items"><tbody id="b-items"></tbody></table>
+  </section>
+
+  <div class="cut" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg><span></span></div>
+
+  <div class="foot">
+    <p>계산 기준: 기본요금 910 / 1,600 / 7,300원, 전력량요금 kWh당 120.0 / 214.6 / 307.3원(7~8월이 아닌 달은 200·400kWh, 7~8월은 300·450kWh에서 단계가 바뀌어요), 기후환경요금 kWh당 9.0원, 연료비조정요금 kWh당 5.0원, 부가가치세 10%, 전력산업기반기금 2.7%. 2026년 4분기(10~12월)까지 동결된 단가예요.</p>
+    <p>원 단위 처리는 고지서 방식대로 했어요(부가세 반올림, 기금 10원 미만 버림, 청구액 10원 미만 버림). 복지할인, TV 수신료 같은 별도 항목은 빠져 있고, 아파트처럼 관리비로 내는 집은 계약 방식에 따라 다를 수 있어요. 참고용 계산이에요.</p>
+    <p class="sign">My Seasonal Life · <a href="https://blog.naver.com/ydnad" target="_blank" rel="noopener">블로그에서 계산법 자세히 보기</a></p>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var RATE10 = [1200, 2146, 3073]; // 전력량요금 kWh당, 0.1원 단위
+  var BASE = [910, 1600, 7300];
+  function $(id) { return document.getElementById(id); }
+  function won(n) { return n.toLocaleString("ko-KR"); }
+  function intOf(id, lo, hi, dflt) {
+    var v = parseFloat($(id).value);
+    if (!isFinite(v)) return dflt;
+    return Math.min(hi, Math.max(lo, v));
+  }
+  // 고지서 계산: 전기요금계 원 미만 버림 → 부가세 반올림 → 기금 10원 미만 버림 → 청구액 10원 미만 버림
+  function bill(kwh, summer) {
+    kwh = Math.max(0, Math.round(kwh));
+    var t1 = summer ? 300 : 200, t2 = summer ? 450 : 400;
+    var tier = kwh <= t1 ? 0 : kwh <= t2 ? 1 : 2;
+    var k = [Math.min(kwh, t1), Math.max(0, Math.min(kwh, t2) - t1), Math.max(0, kwh - t2)];
+    var e10 = k[0] * RATE10[0] + k[1] * RATE10[1] + k[2] * RATE10[2];
+    var energy = Math.floor(e10 / 10);
+    var climate = kwh * 9, fuel = kwh * 5;
+    var sub = BASE[tier] + energy + climate + fuel;
+    var vat = Math.floor((sub * 10 + 50) / 100);
+    var fund = Math.floor(Math.floor(sub * 27 / 1000) / 10) * 10;
+    var total = Math.floor((sub + vat + fund) / 10) * 10;
+    return { kwh: kwh, t1: t1, t2: t2, tier: tier, k: k, base: BASE[tier], energy: energy, climate: climate, fuel: fuel, sub: sub, vat: vat, fund: fund, total: total };
+  }
+  window.__bill = bill;
+
+  function rowsHTML(b) {
+    var r = [
+      ["기본요금", b.tier + 1 + "단계 (" + (b.tier === 0 ? b.t1 + "kWh 이하" : b.tier === 1 ? (b.t1 + 1) + "~" + b.t2 + "kWh" : b.t2 + "kWh 초과") + ")", b.base],
+      ["전력량요금", "1단계 " + b.k[0] + "kWh" + (b.k[1] ? " · 2단계 " + b.k[1] + "kWh" : "") + (b.k[2] ? " · 3단계 " + b.k[2] + "kWh" : ""), b.energy],
+      ["기후환경요금", "kWh당 9.0원", b.climate],
+      ["연료비조정요금", "kWh당 5.0원", b.fuel],
+      ["전기요금계", "", b.sub, "sum"],
+      ["부가가치세", "10%", b.vat],
+      ["전력산업기반기금", "2.7%", b.fund],
+      ["청구금액", "10원 미만 버림", b.total, "sum"]
+    ];
+    return r.map(function (x) {
+      return '<tr' + (x[3] ? ' class="sum"' : "") + "><td>" + x[0] + (x[1] ? '<span class="note">' + x[1] + "</span>" : "") + "</td><td>" + won(x[2]) + "원</td></tr>";
+    }).join("");
+  }
+
+  /* ---------- 탭 1: 사용량 ---------- */
+  var summer = false;
+  function renderA() {
+    var kwh = Math.round(intOf("kwh", 0, 5000, 0));
+    var b = bill(kwh, summer);
+    $("a-total").textContent = won(b.total);
+    var tierName = ["1단계", "2단계", "3단계"][b.tier];
+    var nextLine = b.tier === 0 ? b.t1 : b.tier === 1 ? b.t2 : null;
+    $("a-tier").textContent = kwh + "kWh · 누진 " + tierName + (nextLine !== null ? " · " + nextLine + "kWh까지 " + (nextLine - kwh) + "kWh 남음" : "");
+    var max = Math.max(600, Math.ceil(kwh / 100) * 100);
+    $("a-fill").style.width = Math.min(100, kwh / max * 100) + "%";
+    $("a-t1").style.left = (b.t1 / max * 100) + "%"; $("a-t2").style.left = (b.t2 / max * 100) + "%";
+    $("a-s1").textContent = b.t1; $("a-s2").textContent = b.t2; $("a-smax").textContent = max;
+    $("a-items").innerHTML = rowsHTML(b);
+    var flag = $("a-flag"), msg = "", warn = false;
+    if (kwh > 1000) { msg = "7~8월과 12~2월에 1,000kWh를 넘으면, 넘는 부분에 '슈퍼유저 요금'이 따로 붙어 이 계산보다 더 나와요."; warn = true; }
+    else if (nextLine !== null && nextLine - kwh <= 30) {
+      var jump = bill(nextLine + 1, summer).total - bill(nextLine, summer).total;
+      msg = "곧 다음 단계예요. " + nextLine + "kWh에서 1kWh만 넘어도 청구액이 <b>" + won(jump) + "원</b> 늘어요.";
+    } else if (b.tier === 2) {
+      var save = b.total - bill(b.t2, summer).total;
+      msg = b.t2 + "kWh 안으로만 줄여도 <b>" + won(save) + "원</b> 덜 나와요.";
+    }
+    flag.hidden = !msg; flag.className = "flag" + (warn ? " warn" : ""); flag.innerHTML = msg;
+  }
+
+  /* ---------- 탭 2: 난방기기 ---------- */
+  function renderB() {
+    var base = Math.round(intOf("base", 0, 5000, 0));
+    var watt = intOf("watt", 0, 10000, 0), hours = intOf("hours", 0, 24, 0), days = Math.round(intOf("days", 1, 31, 30));
+    var add = Math.round(watt / 1000 * hours * days);
+    var b0 = bill(base, false), b1 = bill(base + add, false);
+    var diff = b1.total - b0.total;
+    $("b-diff").textContent = won(diff);
+    $("b-detail").textContent = "한 달에 " + add + "kWh 더 써요 · 청구액 " + won(b0.total) + "원 → " + won(b1.total) + "원";
+    var flag = $("b-flag"), msg = "", warn = false;
+    if (base + add > 1000) { msg = "합계가 1,000kWh를 넘어요. 12~2월이라면 넘는 부분에 슈퍼유저 요금이 붙어 이보다 더 나와요."; warn = true; }
+    else if (base <= 400 && base + add > 400) {
+      var room = 400 - base;
+      var perDay = watt > 0 ? room / (watt / 1000 * days) : 0;
+      var h = Math.floor(perDay), m = Math.round((perDay - h) * 60); if (m === 60) { h++; m = 0; }
+      msg = "400kWh를 넘어서 3단계 요금이 붙어요. 이 기기로 400kWh를 넘지 않으려면 하루 <b>" + h + "시간" + (m ? " " + m + "분" : "") + "</b> 안쪽이에요.";
+      warn = true;
+    } else if (base + add <= 400 && watt > 0) {
+      var room2 = 400 - base - add;
+      msg = "400kWh까지 " + room2 + "kWh 여유가 있어요.";
+    }
+    flag.hidden = !msg; flag.className = "flag" + (warn ? " warn" : ""); flag.innerHTML = msg;
+    $("b-items").innerHTML =
+      '<tr><td>평소 청구액<span class="note">' + base + "kWh</span></td><td>" + won(b0.total) + "원</td></tr>" +
+      '<tr><td>난방기기를 더하면<span class="note">' + (base + add) + "kWh · 누진 " + (b1.tier + 1) + "단계</span></td><td>" + won(b1.total) + "원</td></tr>" +
+      '<tr class="sum"><td>늘어나는 금액<span class="note">' + watt + "W × 하루 " + hours + "시간 × " + days + "일</span></td><td>+" + won(diff) + "원</td></tr>";
+  }
+
+  /* ---------- 칩·탭 ---------- */
+  function chips(boxId, inputId, list, render) {
+    var box = $(boxId);
+    box.innerHTML = list.map(function (c) { return '<button type="button" class="chip" aria-pressed="false" data-v="' + c[0] + '"></button>'; }).join("");
+    Array.prototype.forEach.call(box.children, function (el, i) {
+      el.textContent = list[i][1];
+      el.addEventListener("click", function () { $(inputId).value = list[i][0]; sync(); render(); });
+    });
+    function sync() {
+      Array.prototype.forEach.call(box.children, function (el) { el.setAttribute("aria-pressed", String(parseFloat(el.dataset.v) === parseFloat($(inputId).value))); });
+    }
+    $(inputId).addEventListener("input", function () { sync(); render(); });
+    sync();
+  }
+  chips("kwh-chips", "kwh", [[200, "200kWh"], [300, "300kWh"], [400, "400kWh"], [500, "500kWh"]], renderA);
+  chips("watt-chips", "watt", [[200, "전기장판 200W"], [300, "전기매트 300W"], [1000, "히터 1,000W"], [2000, "온풍기 2,000W"]], renderB);
+  ["base", "hours", "days"].forEach(function (id) { $(id).addEventListener("input", renderB); });
+  Array.prototype.forEach.call($("season").children, function (btn) {
+    btn.addEventListener("click", function () {
+      summer = btn.dataset.s === "s";
+      Array.prototype.forEach.call($("season").children, function (b) { b.setAttribute("aria-pressed", String(b === btn)); });
+      renderA();
+    });
+  });
+  function selectTab(which) {
+    var a = which === "a";
+    $("tab-a").setAttribute("aria-selected", String(a)); $("tab-b").setAttribute("aria-selected", String(!a));
+    $("p-a").hidden = !a; $("p-b").hidden = a;
+  }
+  $("tab-a").addEventListener("click", function () { selectTab("a"); });
+  $("tab-b").addEventListener("click", function () { selectTab("b"); });
+  if (location.hash === "#heater") selectTab("b");
+  renderA(); renderB();
+})();
+</script>
+</body>
+</html>
