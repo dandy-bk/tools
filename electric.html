@@ -112,6 +112,12 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .foot p { margin: 0; }
 .sign { font-family: var(--font-sign); font-weight: 600; color: var(--ink); text-align: right; margin-top: 10px; }
 .sign a { color: inherit; }
+.post { display: grid; gap: 3px; text-decoration: none; color: var(--ink); background: var(--soft); border: 2px dashed var(--line); border-radius: 12px; padding: 12px 14px; }
+.post .pk { font-size: 12px; font-weight: 700; color: var(--muted); }
+.post .pt { font-weight: 900; font-size: 16px; line-height: 1.4; }
+.post .pt::after { content: " →"; }
+.post .pd { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.post:hover { border-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -142,6 +148,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
     <div class="meter" aria-hidden="true"><div class="bar"><span class="fill" id="a-fill"></span><span class="tick" id="a-t1"></span><span class="tick" id="a-t2"></span></div><div class="scale"><span>0</span><span id="a-s1"></span><span id="a-s2"></span><span id="a-smax"></span></div></div>
     <p class="flag" id="a-flag" hidden></p>
     <table class="items"><tbody id="a-items"></tbody></table>
+    <a class="post" id="a-post" href="https://blog.naver.com/ydnad/224447773860"><span class="pk">블로그 글</span><span class="pt">전기요금 300kWh면 얼마? 100~600kWh 청구액 표</span><span class="pd">사용량별 청구액을 표로 정리했어요. 400kWh에서 1kWh만 넘어도 6천 원 넘게 뛰는 이유도 있어요.</span></a>
   </section>
 
   <section class="panel" id="p-b" role="tabpanel" aria-labelledby="tab-b" hidden>
@@ -169,6 +176,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
     <div class="total" aria-live="polite"><span class="k">한 달에 늘어나는 전기요금</span><span class="v">+<span id="b-diff">0</span><small>원</small></span><span class="d" id="b-detail"></span></div>
     <p class="flag" id="b-flag" hidden></p>
     <table class="items"><tbody id="b-items"></tbody></table>
+    <a class="post" id="b-post" href="https://blog.naver.com/ydnad/224447773860"><span class="pk">블로그 글</span><span class="pt">전기요금 300kWh면 얼마? 100~600kWh 청구액 표</span><span class="pd">난방기기로 400kWh를 넘기면 요금이 얼마나 뛰는지, 사용량별 청구액 표로 확인할 수 있어요.</span></a>
   </section>
 
   <div class="cut" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg><span></span></div>
@@ -176,7 +184,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
   <div class="foot">
     <p>계산 기준: 기본요금 910 / 1,600 / 7,300원, 전력량요금 kWh당 120.0 / 214.6 / 307.3원(7~8월이 아닌 달은 200·400kWh, 7~8월은 300·450kWh에서 단계가 바뀌어요), 기후환경요금 kWh당 9.0원, 연료비조정요금 kWh당 5.0원, 부가가치세 10%, 전력산업기반기금 2.7%. 2026년 4분기(10~12월)까지 동결된 단가예요.</p>
     <p>원 단위 처리는 고지서 방식대로 했어요(부가세 반올림, 기금 10원 미만 버림, 청구액 10원 미만 버림). 복지할인, TV 수신료 같은 별도 항목은 빠져 있고, 아파트처럼 관리비로 내는 집은 계약 방식에 따라 다를 수 있어요. 참고용 계산이에요.</p>
-    <p class="sign">My Seasonal Life · <a href="https://blog.naver.com/ydnad" target="_blank" rel="noopener">블로그에서 계산법 자세히 보기</a></p>
+    <p class="sign">My Seasonal Life · <a href="https://blog.naver.com/ydnad">블로그 가기</a></p>
   </div>
 </main>
 
