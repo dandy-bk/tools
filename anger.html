@@ -201,6 +201,12 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--lamp-amber); ou
 .todo li strong { font-family: var(--font-readout); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .next { margin: 14px 0 0; font-size: 15px; }
 .next b { font-family: var(--font-readout); font-size: 12px; letter-spacing: .06em; color: var(--ink-soft); margin-right: 6px; }
+.postcard { display: grid; gap: 3px; margin-top: 16px; padding: 12px 14px; border: 2px dashed var(--face-line); border-radius: 10px; background: var(--paper); color: var(--ink); text-decoration: none; }
+.postcard .pk { font-size: 12px; font-weight: 600; color: var(--ink-soft); }
+.postcard .pt { font-weight: 700; font-size: 16px; line-height: 1.4; }
+.postcard .pt::after { content: " →"; }
+.postcard .pd { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+.postcard:hover { border-color: var(--ink-soft); }
 .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
 .actions .btn { flex: 1 1 140px; }
 .sharebox { margin-top: 12px; }
@@ -315,6 +321,7 @@ footer a { color: var(--ink); font-weight: 600; }
       <ul class="todo" id="r-todo"></ul>
     </div>
     <p class="next" id="r-next"></p>
+    <a class="postcard" id="r-post" href="https://blog.naver.com/ydnad/224449157019"><span class="pk">블로그 글</span><span class="pt">화날 때 참아야 할까, 터뜨려야 할까? 1분 분노 판정 테스트</span><span class="pd">계기판 읽는 법, 기다리라는 판정이 나왔을 때 할 일, 30초 판정표까지 정리했어요.</span></a>
 
     <div class="actions" id="a-cool">
       <button class="btn cool" id="btn-cool">냉각 장치 가동 (1분)</button>
@@ -363,8 +370,8 @@ footer a { color: var(--ink); font-weight: 600; }
 <script>
 (function () {
   "use strict";
-  // 독립 사이트 버전은 head에서 window.__SHARE_URL__(자기 주소)을 넣어 준다
-  var SHARE_URL = window.__SHARE_URL__ || "https://claude.ai/artifact/PCz49xkKFZffxjPQ4errFw";
+  // 결과 공유 링크는 블로그 14번 글로 보낸다(공유받은 사람이 블로그를 거쳐 가게). 글 안에 30초 판정표와 이 테스트 링크가 있다.
+  var POST_URL = "https://blog.naver.com/ydnad/224449157019";
 
   /* ---------- questions (index matters: see KEY_Q) ---------- */
   var Q = [
@@ -937,7 +944,7 @@ footer a { color: var(--ink); font-weight: 600; }
     } else { rc.hidden = true; }
     var mg = $("g-result");
     if (safe) { mg.hidden = true; } else { mg.hidden = false; renderGauges(mg, "rg-", { event: sc.event, heat: sc.heat, risk: sc.risk }, true); }
-    ["b-read", "b-script", "b-dont", "r-quip", "r-next", "btn-share", "btn-dex"].forEach(function (id) { $(id).hidden = safe; });
+    ["b-read", "b-script", "b-dont", "r-quip", "r-next", "r-post", "btn-share", "btn-dex"].forEach(function (id) { $(id).hidden = safe; });
     if (!safe) {
       $("r-reads").innerHTML = view.reads.map(function () { return '<li><span class="ax"></span><span class="tx"><em></em> <span></span></span></li>'; }).join("");
       Array.prototype.forEach.call($("r-reads").children, function (li, i) {
@@ -993,7 +1000,7 @@ footer a { color: var(--ink); font-weight: 600; }
     var t = "[분노관제센터] 내 판정: " + r.stamp + " (" + last.type + ")\n" + last.head +
       "\n상대 잘못 " + sc.event + "(" + grade("event", sc.event) + ") · 분노 온도 " + sc.heat + "(" + grade("heat", sc.heat) + ") · 역풍 위험 " + sc.risk + "(" + grade("risk", sc.risk) + ")";
     if (last.quip) t += "\n관제사: " + last.quip;
-    t += "\n\n지금 이 분노, 터뜨려도 될까? 1분 판정 받아보기\n" + SHARE_URL;
+    t += "\n\n지금 이 분노, 터뜨려도 될까? 30초 판정표와 1분 테스트\n" + POST_URL;
     return t;
   }
   window.__angerTest = { Q: Q, R: R, score: score, decide: decide, build: function (sc, k) { return buildResult(sc, k, null); }, judge: function (p) { judge(p || null); }, setAnswers: function (a) { answers = a.slice(); } };
