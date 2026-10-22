@@ -176,7 +176,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
     <div class="total" aria-live="polite"><span class="k">한 달에 늘어나는 전기요금</span><span class="v">+<span id="b-diff">0</span><small>원</small></span><span class="d" id="b-detail"></span></div>
     <p class="flag" id="b-flag" hidden></p>
     <table class="items"><tbody id="b-items"></tbody></table>
-    <a class="post" id="b-post" href="https://blog.naver.com/ydnad/224447773860"><span class="pk">블로그 글</span><span class="pt">전기요금 300kWh면 얼마? 100~600kWh 청구액 표</span><span class="pd">난방기기로 400kWh를 넘기면 요금이 얼마나 뛰는지, 사용량별 청구액 표로 확인할 수 있어요.</span></a>
+    <a class="post" id="b-post" href="https://blog.naver.com/ydnad/224450151217"><span class="pk">블로그 글</span><span class="pt" id="b-post-t">전기히터·온풍기 하루 몇 시간 쓰면 전기요금 얼마 늘까?</span><span class="pd" id="b-post-d">1,000W·2,000W를 하루 1~8시간 켤 때 한 달에 얼마 늘어나는지 시간별 표로 정리했어요.</span></a>
   </section>
 
   <div class="cut" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg><span></span></div>
@@ -285,7 +285,14 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
       '<tr><td>평소 청구액<span class="note">' + base + "kWh</span></td><td>" + won(b0.total) + "원</td></tr>" +
       '<tr><td>난방기기를 더하면<span class="note">' + (base + add) + "kWh · 누진 " + (b1.tier + 1) + "단계</span></td><td>" + won(b1.total) + "원</td></tr>" +
       '<tr class="sum"><td>늘어나는 금액<span class="note">' + watt + "W × 하루 " + hours + "시간 × " + days + "일</span></td><td>+" + won(diff) + "원</td></tr>";
+    // 아래 블로그 글 카드: 500W 이하(전기장판·매트)는 16번, 그보다 크면(히터·온풍기) 15번
+    var p = watt > 0 && watt <= 500 ? POSTS.mat : POSTS.heater;
+    $("b-post").href = p.url; $("b-post-t").textContent = p.t; $("b-post-d").textContent = p.d;
   }
+  var POSTS = {
+    heater: { url: "https://blog.naver.com/ydnad/224450151217", t: "전기히터·온풍기 하루 몇 시간 쓰면 전기요금 얼마 늘까?", d: "1,000W·2,000W를 하루 1~8시간 켤 때 한 달에 얼마 늘어나는지 시간별 표로 정리했어요." },
+    mat: { url: "https://blog.naver.com/ydnad/224450804133", t: "전기장판 하루 종일 켜면 전기요금 얼마?", d: "100~300W를 하루 8·12·24시간 켤 때 한 달에 얼마 늘어나는지 정리했어요." }
+  };
 
   /* ---------- 칩·탭 ---------- */
   function chips(boxId, inputId, list, render) {
