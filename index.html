@@ -16,9 +16,14 @@ body { margin: 0; background: var(--frame); color: #1b2333; font-family: "Apple 
 h1 { margin: 0 0 4px; font-size: 30px; color: var(--ink); }
 p { margin: 0; color: var(--muted); }
 .list { display: grid; gap: 12px; margin-top: 20px; }
-a.tool { display: block; text-decoration: none; color: inherit; border: 2px solid var(--line); border-radius: 12px; padding: 16px; }
-a.tool:hover, a.tool:focus-visible { border-color: var(--frame); outline: none; }
+.item { border: 2px solid var(--line); border-radius: 12px; overflow: hidden; }
+.item:hover, .item:focus-within { border-color: var(--frame); }
+a.tool { display: block; text-decoration: none; color: inherit; padding: 16px 16px 12px; outline: none; }
 a.tool b { display: block; font-size: 20px; color: var(--ink); }
+a.post { display: block; text-decoration: none; color: var(--ink); font-size: 14px; font-weight: 700; padding: 10px 16px 12px; border-top: 1px dashed var(--line); background: #f4f7fe; outline: none; }
+a.post span { display: block; font-size: 12px; font-weight: 400; color: var(--muted); }
+a.post::after { content: " →"; }
+a.tool:focus-visible, a.post:focus-visible { box-shadow: inset 0 0 0 3px var(--frame); }
 .foot { margin-top: 20px; font-size: 14px; }
 .foot a { color: var(--ink); font-weight: 700; }
 </style>
@@ -28,8 +33,14 @@ a.tool b { display: block; font-size: 20px; color: var(--ink); }
   <h1>My Seasonal Life 도구함</h1>
   <p>블로그 글과 함께 쓰는 계산기와 테스트예요.</p>
   <div class="list">
-    <a class="tool" href="electric.html"><b>전기요금 계산기</b>사용량만 넣으면 이번 달 전기요금이 나와요. 히터·전기장판 추가 요금도 계산해요.</a>
-    <a class="tool" href="anger.html"><b>분노관제센터</b>지금 이 분노, 터뜨려도 될까? 13문항 1분 판정.</a>
+    <div class="item">
+      <a class="tool" href="electric.html"><b>전기요금 계산기</b>사용량만 넣으면 이번 달 전기요금이 나와요. 히터·전기장판 추가 요금도 계산해요.</a>
+      <a class="post" href="https://blog.naver.com/ydnad/224447773860"><span>블로그 글</span>전기요금 300kWh면 얼마? 100~600kWh 청구액 표</a>
+    </div>
+    <div class="item">
+      <a class="tool" href="anger.html"><b>분노관제센터</b>지금 이 분노, 터뜨려도 될까? 13문항 1분 판정.</a>
+      <a class="post" href="https://blog.naver.com/ydnad/224449157019"><span>블로그 글</span>화날 때 참아야 할까, 터뜨려야 할까? 1분 분노 판정 테스트</a>
+    </div>
   </div>
   <p class="foot">만든 곳: <a href="https://blog.naver.com/ydnad" target="_blank" rel="noopener">My Seasonal Life 블로그</a></p>
 </main>
