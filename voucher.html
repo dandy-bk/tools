@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:type" content="website">
+<meta property="og:title" content="에너지바우처 1분 확인">
+<meta property="og:description" content="수급자인지, 세대원 조건, 겹치는 지원까지 질문 몇 개로 확인하고 금액·신청·쓰는 법을 바로 알려 줘요. 2026년도 기준.">
+<meta name="description" content="수급자인지, 세대원 조건, 겹치는 지원까지 질문 몇 개로 확인하고 금액·신청·쓰는 법을 바로 알려 줘요. 2026년도 기준.">
+<meta property="og:url" content="https://dandy-bk.github.io/tools/voucher.html">
+<meta property="og:image" content="https://dandy-bk.github.io/tools/og-voucher.png">
+<script>window.__SHARE_URL__ = location.href.split("#")[0];</script>
+<style>[hidden]{display:none!important}body{margin:0}</style>
+<title>에너지바우처 1분 확인</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: the blog's bill slip again (same frame as the electricity calculator), but this one is a form you tick top to bottom. Each answer opens the next question; the last answer prints a 확인 결과 under the cut line. */
+:root {
+  color-scheme: light;
+  --frame: #2152C4;
+  --ink: #14306F;
+  --soft: #DCE6FA;
+  --paper: #ffffff;
+  --line: #c9d5f0;
+  --text: #1b2333;
+  --muted: #5a6680;
+  --accent: #2152C4;
+  --total-bg: #2152C4;
+  --yes: #1d6e3e; --yes-wash: #e3f3e8;
+  --part: #8a5300; --part-wash: #fdf0d9;
+  --no: #b3261e; --no-wash: #fdecea;
+  --font-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-sign: "Noto Serif KR", "AppleMyungjo", "Batang", serif;
+  --font-num: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --frame: #0e1b3d; --ink: #c9d8ff; --soft: #1d2a4d; --paper: #121a2e; --line: #2a3a63;
+    --text: #e6ebf7; --muted: #9aa8c7; --accent: #7aa2ff; --total-bg: #1f3c8f;
+    --yes: #7ed6a0; --yes-wash: #15301f; --part: #f2c26b; --part-wash: #33270f; --no: #ff8a80; --no-wash: #3a1d1d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --frame: #0e1b3d; --ink: #c9d8ff; --soft: #1d2a4d; --paper: #121a2e; --line: #2a3a63;
+  --text: #e6ebf7; --muted: #9aa8c7; --accent: #7aa2ff; --total-bg: #1f3c8f;
+  --yes: #7ed6a0; --yes-wash: #15301f; --part: #f2c26b; --part-wash: #33270f; --no: #ff8a80; --no-wash: #3a1d1d; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--frame); color: var(--text);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  word-break: keep-all; overflow-wrap: break-word;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 40px;
+}
+.slip { position: relative; max-width: 560px; margin: 0 auto; background: var(--paper); border-radius: 18px; padding: 26px 22px 24px; }
+.eyebrow { font-family: var(--font-num); font-size: 12px; font-weight: 600; letter-spacing: .08em; color: var(--muted); margin: 0; }
+h1 { font-weight: 900; font-size: clamp(28px, 8vw, 38px); line-height: 1.2; color: var(--ink); margin: 6px 0 6px; letter-spacing: -0.01em; }
+.sub { margin: 0; color: var(--muted); font-size: 15px; }
+.cut { position: relative; display: flex; align-items: center; gap: 8px; margin: 18px -22px; padding: 0 22px; color: var(--frame); }
+.cut::before, .cut::after { content: ""; position: absolute; top: 50%; width: 22px; height: 22px; border-radius: 50%; background: var(--frame); transform: translateY(-50%); }
+.cut::before { left: -11px; } .cut::after { right: -11px; }
+.cut svg { flex: none; width: 18px; height: 18px; color: var(--ink); }
+.cut span { flex: 1; border-top: 2px dashed var(--line); }
+
+.q { border: 0; margin: 0 0 22px; padding: 0; min-width: 0; }
+.q[hidden] { display: none; }
+.q legend { display: flex; gap: 10px; align-items: flex-start; padding: 0; font-weight: 900; font-size: 18px; line-height: 1.4; color: var(--ink); margin-bottom: 4px; }
+.qn { flex: none; display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--paper); font-family: var(--font-num); font-size: 13px; font-weight: 600; margin-top: 1px; }
+.q .hint { margin: 0 0 10px 36px; font-size: 13px; color: var(--muted); }
+.opts { display: grid; gap: 8px; }
+.opt { position: relative; display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: start; padding: 11px 12px; border: 2px solid var(--line); border-radius: 10px; cursor: pointer; background: var(--paper); }
+.opt:hover { border-color: var(--accent); }
+.opt input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.opt .mk { width: 22px; height: 22px; margin-top: 1px; border: 2px solid var(--ink); border-radius: 5px; display: grid; place-items: center; background: var(--paper); }
+.opt input[type=radio] + .mk { border-radius: 50%; }
+.opt input:checked + .mk { background: var(--ink); }
+.opt input:checked + .mk::after { content: ""; width: 10px; height: 6px; border-left: 3px solid var(--paper); border-bottom: 3px solid var(--paper); transform: translateY(-1px) rotate(-45deg); }
+.opt:has(input:checked) { border-color: var(--ink); background: var(--soft); }
+.opt:has(input:focus-visible) { outline: 3px solid #f2b705; outline-offset: 2px; }
+.opt .t { display: grid; gap: 1px; min-width: 0; }
+.opt .t b { font-weight: 700; font-size: 15px; line-height: 1.45; color: var(--text); }
+.opt .t small { font-size: 13px; color: var(--muted); line-height: 1.45; }
+
+.result[hidden] { display: none; }
+.verdict { border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px; margin-top: 8px; border: 2px solid currentColor; }
+.verdict .vt { font-weight: 900; font-size: clamp(24px, 7vw, 30px); line-height: 1.25; }
+.verdict .vs { font-size: 14px; color: var(--text); }
+.tone-yes { color: var(--yes); background: var(--yes-wash); }
+.tone-part { color: var(--part); background: var(--part-wash); }
+.tone-no { color: var(--no); background: var(--no-wash); }
+.total { background: var(--total-bg); color: #fff; border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px; margin-top: 12px; }
+.total[hidden] { display: none; }
+.total .k { font-size: 13px; opacity: .9; }
+.total .v { font-family: var(--font-num); font-weight: 600; font-size: clamp(28px, 8vw, 36px); line-height: 1.15; font-variant-numeric: tabular-nums; }
+.total .v small { font-family: var(--font-body); font-size: 16px; font-weight: 700; margin-left: 4px; }
+.total .d { font-size: 14px; }
+.blk { margin-top: 16px; }
+.blk h2 { font-size: 15px; font-weight: 900; color: var(--ink); margin: 0 0 4px; }
+.blk p { margin: 0 0 6px; font-size: 15px; }
+.blk.alert { background: var(--no-wash); color: var(--no); border-radius: 10px; padding: 12px 14px; }
+.blk.alert h2 { color: var(--no); }
+.blk.alert p { color: var(--text); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.btn { font: inherit; font-weight: 700; font-size: 15px; border-radius: 10px; padding: 10px 16px; cursor: pointer; border: 2px solid var(--ink); background: var(--ink); color: var(--paper); }
+.btn.ghost { background: var(--paper); color: var(--ink); }
+.copied { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
+button:focus-visible, a:focus-visible { outline: 3px solid #f2b705; outline-offset: 2px; }
+
+.foot { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
+.foot p { margin: 0; }
+.sign { font-family: var(--font-sign); font-weight: 600; color: var(--ink); text-align: right; margin-top: 10px; }
+.sign a { color: inherit; }
+</style>
+</head>
+<body>
+<main class="slip">
+  <p class="eyebrow">2026년도 기준 · 신청 마감 12월 31일</p>
+  <h1>에너지바우처, 우리 집도 받을까?</h1>
+  <p class="sub">위에서부터 하나씩 답하면 대상인지, 얼마인지, 어떻게 신청하고 쓰는지 바로 알려 줘요. 1분이면 돼요.</p>
+
+  <div class="cut" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg><span></span></div>
+
+  <fieldset class="q" id="q1">
+    <legend><span class="qn">1</span><span>지금 받고 있는 걸 골라 주세요</span></legend>
+    <p class="hint">세대가 받는 급여 기준이에요. 부모님 대신 확인한다면 부모님 세대 기준으로 골라 주세요.</p>
+    <div class="opts">
+      <label class="opt"><input type="radio" name="q1" value="basic"><span class="mk"></span><span class="t"><b>생계·의료·주거·교육급여 중 하나 이상</b><small>국민기초생활보장 수급자예요</small></span></label>
+      <label class="opt"><input type="radio" name="q1" value="pension"><span class="mk"></span><span class="t"><b>기초연금만 받아요</b></span></label>
+      <label class="opt"><input type="radio" name="q1" value="near"><span class="mk"></span><span class="t"><b>차상위 지원만 받아요</b></span></label>
+      <label class="opt"><input type="radio" name="q1" value="none"><span class="mk"></span><span class="t"><b>받는 게 없거나 잘 모르겠어요</b></span></label>
+    </div>
+  </fieldset>
+
+  <fieldset class="q" id="q2" hidden>
+    <legend><span class="qn">2</span><span>주민등록상 같은 세대에 이런 분이 있나요?</span></legend>
+    <p class="hint">본인 포함, 해당하는 걸 모두 골라 주세요.</p>
+    <div class="opts">
+      <label class="opt"><input type="checkbox" name="q2" value="old"><span class="mk"></span><span class="t"><b>1961년 12월 31일 이전에 태어난 분</b></span></label>
+      <label class="opt"><input type="checkbox" name="q2" value="baby"><span class="mk"></span><span class="t"><b>2019년 1월 1일 이후에 태어나 아직 학교에 안 들어간 아이</b></span></label>
+      <label class="opt"><input type="checkbox" name="q2" value="disabled"><span class="mk"></span><span class="t"><b>등록 장애인</b></span></label>
+      <label class="opt"><input type="checkbox" name="q2" value="preg"><span class="mk"></span><span class="t"><b>임신 중이거나 출산한 지 6개월이 안 된 분</b></span></label>
+      <label class="opt"><input type="checkbox" name="q2" value="ill"><span class="mk"></span><span class="t"><b>중증·희귀·중증난치질환이 있는 분</b><small>건강보험 산정특례 대상 질환이에요</small></span></label>
+      <label class="opt"><input type="checkbox" name="q2" value="single"><span class="mk"></span><span class="t"><b>한부모가족 지원 대상</b></span></label>
+      <label class="opt"><input type="checkbox" name="q2" value="youth"><span class="mk"></span><span class="t"><b>소년소녀가정</b></span></label>
+      <label class="opt"><input type="checkbox" name="q2" value="multi"><span class="mk"></span><span class="t"><b>19세 미만 자녀가 2명 이상</b><small>그 자녀의 부 또는 모와 같은 세대여야 해요</small></span></label>
+      <label class="opt"><input type="checkbox" name="q2" value="nobody"><span class="mk"></span><span class="t"><b>해당하는 분이 없어요</b></span></label>
+    </div>
+  </fieldset>
+
+  <fieldset class="q" id="q3" hidden>
+    <legend><span class="qn">3</span><span>주민등록상 세대원은 몇 명인가요?</span></legend>
+    <p class="hint">본인 포함이에요. 금액이 세대원 수로 정해져요.</p>
+    <div class="opts">
+      <label class="opt"><input type="radio" name="q3" value="1"><span class="mk"></span><span class="t"><b>1명</b></span></label>
+      <label class="opt"><input type="radio" name="q3" value="2"><span class="mk"></span><span class="t"><b>2명</b></span></label>
+      <label class="opt"><input type="radio" name="q3" value="3"><span class="mk"></span><span class="t"><b>3명</b></span></label>
+      <label class="opt"><input type="radio" name="q3" value="4"><span class="mk"></span><span class="t"><b>4명 이상</b></span></label>
+    </div>
+  </fieldset>
+
+  <fieldset class="q" id="q4" hidden>
+    <legend><span class="qn">4</span><span>올해(2026년도) 이런 지원을 받았거나 받기로 했나요?</span></legend>
+    <p class="hint">해당하는 걸 모두 골라 주세요. 겨울 지원은 겹쳐서 받을 수 없는 게 있어요.</p>
+    <div class="opts">
+      <label class="opt"><input type="checkbox" name="q4" value="coal"><span class="mk"></span><span class="t"><b>연탄쿠폰</b></span></label>
+      <label class="opt"><input type="checkbox" name="q4" value="emergency"><span class="mk"></span><span class="t"><b>긴급복지 동절기 연료비</b></span></label>
+      <label class="opt"><input type="checkbox" name="q4" value="coalswitch"><span class="mk"></span><span class="t"><b>연탄전환 에너지바우처</b></span></label>
+      <label class="opt"><input type="checkbox" name="q4" value="facility"><span class="mk"></span><span class="t"><b>세대원 모두 보장시설에서 생활하며 급여를 받아요</b><small>사회복지시설에서 생활하며 기초생활보장 급여를 받는 경우예요</small></span></label>
+      <label class="opt"><input type="checkbox" name="q4" value="none"><span class="mk"></span><span class="t"><b>해당 없어요</b></span></label>
+    </div>
+  </fieldset>
+
+  <fieldset class="q" id="q5" hidden>
+    <legend><span class="qn">5</span><span>난방비는 어떻게 내고 있나요?</span></legend>
+    <p class="hint">바우처를 쓰는 방법이 여기서 갈려요.</p>
+    <div class="opts">
+      <label class="opt"><input type="radio" name="q5" value="bill"><span class="mk"></span><span class="t"><b>전기·도시가스·지역난방 요금을 내요</b></span></label>
+      <label class="opt"><input type="radio" name="q5" value="fuel"><span class="mk"></span><span class="t"><b>등유·LPG·연탄을 사서 써요</b></span></label>
+      <label class="opt"><input type="radio" name="q5" value="included"><span class="mk"></span><span class="t"><b>난방비를 따로 내지 않아요</b><small>월세에 포함, 중앙난방, 고시원·쪽방 등</small></span></label>
+    </div>
+  </fieldset>
+
+  <fieldset class="q" id="q7" hidden>
+    <legend><span class="qn">6</span><span>올해(2026년도) 바우처를 조금이라도 썼나요?</span></legend>
+    <p class="hint">현금으로 받는 '사전 예외지급'은 한 번도 안 쓴 집만 돼요.</p>
+    <div class="opts">
+      <label class="opt"><input type="radio" name="q7" value="unused"><span class="mk"></span><span class="t"><b>아직 한 번도 안 썼어요</b></span></label>
+      <label class="opt"><input type="radio" name="q7" value="used"><span class="mk"></span><span class="t"><b>조금이라도 썼어요</b></span></label>
+      <label class="opt"><input type="radio" name="q7" value="notyet"><span class="mk"></span><span class="t"><b>올해는 아직 신청 전이에요</b></span></label>
+    </div>
+  </fieldset>
+
+  <fieldset class="q" id="q6" hidden>
+    <legend><span class="qn" id="q6n">6</span><span>2025년에도 에너지바우처를 받았나요?</span></legend>
+    <p class="hint">신청을 새로 해야 하는지가 여기서 갈려요.</p>
+    <div class="opts">
+      <label class="opt"><input type="radio" name="q6" value="auto"><span class="mk"></span><span class="t"><b>받았고, 그 뒤로 이사나 세대원 변동이 없어요</b></span></label>
+      <label class="opt"><input type="radio" name="q6" value="changed"><span class="mk"></span><span class="t"><b>받았는데 이사했거나 세대원이 바뀌었어요</b></span></label>
+      <label class="opt"><input type="radio" name="q6" value="new"><span class="mk"></span><span class="t"><b>안 받았거나 잘 모르겠어요</b></span></label>
+    </div>
+  </fieldset>
+
+  <section class="result" id="result" hidden aria-live="polite">
+    <div class="cut" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg><span></span></div>
+    <p class="eyebrow">확인 결과</p>
+    <div class="verdict" id="r-verdict"><span class="vt" id="r-title"></span><span class="vs" id="r-sub"></span></div>
+    <div class="total" id="r-total" hidden><span class="k" id="r-tk"></span><span class="v"><span id="r-tv"></span><small>원</small></span><span class="d" id="r-td"></span></div>
+    <div id="r-blocks"></div>
+    <div class="actions">
+      <button type="button" class="btn" id="btn-copy">결과 복사</button>
+      <button type="button" class="btn ghost" id="btn-reset">처음부터</button>
+    </div>
+    <p class="copied" id="copied" hidden>복사했어요. 가족 단톡방에 붙여 넣으면 돼요.</p>
+  </section>
+
+  <div class="cut" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg><span></span></div>
+
+  <div class="foot">
+    <p>기준: 에너지바우처 누리집 '2026년도 에너지바우처 지원 대상 및 금액', 2026년도 사업 안내, 2026년 9~10월 기사. 참고용 확인이고, 최종 판정은 주민등록상 주소지 주민센터(행정복지센터)에서 해요.</p>
+    <p>문의: 에너지바우처 상담센터 1600-3190 (평일 9~18시, 점심 12~13시 제외). 입력한 답은 어디에도 저장하지 않아요.</p>
+    <p class="sign">My Seasonal Life · <a href="https://blog.naver.com/ydnad" id="sign-link">블로그 가기</a></p>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var AMT = { 1: 295200, 2: 407500, 3: 532700, 4: 701300 };
+  var SUMMER = { 1: 40700, 2: 58800, 3: 75800, 4: 102000 };
+  // 공유 링크: 짝 글 주소를 받으면 POST_URL에 넣는다(그 전에는 이 페이지 주소).
+  var POST_URL = "";
+  var SHARE_URL = POST_URL || window.__SHARE_URL__ || location.href.split("#")[0];
+  var SPECIAL = ["old", "baby", "disabled", "preg", "ill", "single", "youth", "multi"];
+  var DUP = { coal: "연탄쿠폰", emergency: "긴급복지 동절기 연료비", coalswitch: "연탄전환 에너지바우처" };
+
+  function $(id) { return document.getElementById(id); }
+  function won(n) { return n.toLocaleString("ko-KR"); }
+  function now() { return window.__voucherNow ? new Date(window.__voucherNow) : new Date(); }
+  // 날짜 비교는 하루 단위(그날 23:59까지 포함)
+  function onOrBefore(d, y, m, day) { return d.getTime() <= new Date(y, m - 1, day, 23, 59, 59, 999).getTime(); }
+
+  function read() {
+    function one(n) { var el = document.querySelector('input[name="' + n + '"]:checked'); return el ? el.value : null; }
+    function many(n) { return Array.prototype.map.call(document.querySelectorAll('input[name="' + n + '"]:checked'), function (x) { return x.value; }); }
+    return { q1: one("q1"), q2: many("q2"), q3: one("q3"), q4: many("q4"), q5: one("q5"), q6: one("q6"), q7: one("q7") };
+  }
+
+  // 어떤 질문을 보여 줄지
+  function flow(s) {
+    var v = { q2: false, q3: false, q4: false, q5: false, q7: false, q6: false };
+    if (s.q1 !== "basic") return v;
+    v.q2 = true;
+    var special = s.q2.some(function (x) { return SPECIAL.indexOf(x) >= 0; });
+    if (!special) return v;
+    v.q3 = true;
+    if (!s.q3) return v;
+    v.q4 = true;
+    if (!s.q4.length) return v;
+    if (s.q4.indexOf("facility") >= 0) return v;
+    if (s.q4.some(function (x) { return DUP[x]; })) return v;
+    v.q5 = true;
+    if (!s.q5) return v;
+    if (s.q5 === "included") { v.q7 = true; if (!s.q7) return v; }
+    v.q6 = true;
+    return v;
+  }
+
+  var COAL_NOTE = "연탄보일러를 쓰다가 2026년 1월 이후 다른 연료 보일러로 바꿨다면, 기초생활수급자나 차상위계층 등은 '연탄전환 에너지바우처'로 새 연료 구입비를 지원받을 수 있어요. 해당하면 주민센터에 물어보세요.";
+  var RULE = "에너지바우처는 생계·의료·주거·교육급여 중 하나를 받는 수급자만 받을 수 있어요.";
+
+  // 받침 따라 조사 고르기: josa("연탄쿠폰", "을", "를") → "연탄쿠폰을"
+  function josa(word, withFinal, noFinal, rieulAsNo) {
+    var c = word.charCodeAt(word.length - 1);
+    if (c < 0xAC00 || c > 0xD7A3) return word + noFinal;
+    var jong = (c - 0xAC00) % 28;
+    if (jong === 0 || (rieulAsNo && jong === 8)) return word + noFinal;
+    return word + withFinal;
+  }
+
+  // 결과 만들기. 완성되지 않았으면 null.
+  function decide(s, d) {
+    d = d || now();
+    if (!s.q1) return null;
+    if (s.q1 === "pension") return no("기초연금만으로는 어려워요", RULE,
+      [blk("확인해 볼 것", ["기초연금은 이 네 가지 급여에 들어가지 않아요. 기초연금과 함께 생계·의료·주거·교육급여 중 하나라도 받고 있다면 대상일 수 있어요. 받는 급여를 주민센터에서 확인하고 1번을 다시 골라 보세요."]),
+       blk("다른 지원", [COAL_NOTE])], "기초연금만으로는 대상이 아니에요.");
+    if (s.q1 === "near") return no("차상위 지원만으로는 어려워요", RULE,
+      [blk("다른 지원", [COAL_NOTE])], "차상위 지원만으로는 대상이 아니에요.");
+    if (s.q1 === "none") return no("수급자가 아니면 어려워요", RULE,
+      [blk("확인해 볼 것", ["받는 급여가 있는지 헷갈리면 주민센터에 물어보세요. 수급자 증명서를 떼어 보면 바로 알 수 있어요."]),
+       blk("다른 지원", [COAL_NOTE])], "수급자가 아니면 대상이 아니에요.");
+    // 수급자
+    if (!s.q2.length) return null;
+    var special = s.q2.some(function (x) { return SPECIAL.indexOf(x) >= 0; });
+    if (!special) return no("세대원 조건이 하나 더 필요해요", "수급자여도 2번에 있는 분이 세대에 한 명은 있어야 해요. 소득 조건과 세대원 조건을 둘 다 채워야 받아요.",
+      [blk("확인해 볼 것", ["세대원 조건은 주민등록상 같은 세대 기준이에요. 함께 사는데 세대가 따로 되어 있다면 주민센터에 확인해 보세요."])], "세대원 조건에 해당하는 분이 없어 대상이 아니에요.");
+    if (!s.q3) return null;
+    var n = +s.q3;
+    if (!s.q4.length) return null;
+    if (s.q4.indexOf("facility") >= 0) return no("시설에서 급여를 받으면 어려워요", "세대원 모두가 보장시설에서 생활하며 급여를 받으면 대상에서 빠져요.",
+      [blk("확인해 볼 것", ["세대원 중 한 명이라도 시설 밖 집에서 산다면 경우가 다를 수 있어요. 주민센터에 물어보세요."])], "세대원 모두 보장시설에서 급여를 받으면 대상이 아니에요.");
+    var dups = s.q4.filter(function (x) { return DUP[x]; }).map(function (x) { return DUP[x]; });
+    if (dups.length) {
+      var names = dups.join("·");
+      return {
+        tone: "part", title: "겨울분은 같이 못 받아요",
+        sub: josa(names, "을", "를") + " 받는 집은 에너지바우처를 여름분만 받아요.",
+        total: { k: n + "인 세대 여름분", v: SUMMER[n], d: "여름(7~9월)에만 쓸 수 있는 금액이에요." },
+        blocks: [
+          blk("왜 그런가요", ["겨울 난방 지원은 겹쳐서 받을 수 없어요. 그래서 겨울 난방은 " + josa(names, "으로", "로", true) + " 지원받아요."]),
+          blk("알아 둘 것", ["여름에 바우처를 쓴 집이 겨울에 " + josa(names, "을", "를") + " 신청하면, 주민센터에서 바우처를 먼저 멈춘 뒤 진행해요. 어느 쪽으로 받는 게 맞는지 헷갈리면 주민센터에 물어보세요."])
+        ],
+        share: "겨울 난방은 " + josa(names, "으로", "로", true) + " 받아요. 에너지바우처는 여름분 " + won(SUMMER[n]) + "원만 나와요."
+      };
+    }
+    // 대상: 쓰는 법과 신청을 마저 묻는다
+    if (!s.q5) return null;
+    if (s.q5 === "included" && !s.q7) return null;
+    if (!s.q6) return null;
+
+    var blocks = [];
+    var applyOpen = onOrBefore(d, 2026, 12, 31);
+    if (!applyOpen && s.q6 !== "auto") return {
+      tone: "part", title: "2026년도 신청은 끝났어요",
+      sub: "조건은 맞지만 2026년도 신청 기간(12월 31일까지)이 지났어요.",
+      total: null,
+      blocks: [blk("다음에", ["다음 해 신청 일정과 조건은 주민센터나 에너지바우처 상담센터(1600-3190)에 물어보세요."])],
+      share: "조건은 맞지만 2026년도 신청 기간(12월 31일까지)이 지났어요."
+    };
+    var where = "주민등록상 주소지 주민센터(행정복지센터)에 가거나 복지로에서 온라인으로 신청해요. 가족이 위임장과 신분증을 챙겨 대신 신청할 수 있고, 담당 공무원이 본인 동의를 받아 대신 신청해 줄 수도 있어요.";
+    var closed = "2026년도 신청은 12월 31일에 끝났어요. 다음 해 신청 일정은 주민센터에 물어보세요.";
+    if (s.q6 === "auto") blocks.push(blk("신청", ["작년에 받았고 이사나 세대원 변동이 없으면, 보통 따로 신청하지 않아도 올해도 이어져요. 주민센터나 상담센터에 올해 등록됐는지 한 번 확인하세요.",
+      applyOpen ? "등록이 안 되어 있으면 12월 31일까지 신청하세요. " + where : closed]));
+    else if (s.q6 === "changed") blocks.push(blk("신청", applyOpen ? ["이사했거나 세대원이 바뀌었으면 올해는 새로 신청해야 해요. 마감은 12월 31일이에요.", where] : ["이사했거나 세대원이 바뀌었으면 새로 신청해야 했어요.", closed]));
+    else blocks.push(blk("신청", applyOpen ? ["12월 31일까지 신청해야 받을 수 있어요.", where] : [closed]));
+
+    if (s.q5 === "bill") {
+      blocks.push(blk("쓰는 법", ["신청할 때 요금차감과 국민행복카드 중 하나를 골라요.",
+        "요금차감은 전기·도시가스·지역난방 중 한 가지 고지서에서 자동으로 빠져요. 겨울분은 10월 1일 이후 발행된 고지서부터예요. 국민행복카드는 10월 3일부터 카드로 직접 결제해요. 둘 다 2027년 5월 31일까지 쓸 수 있어요."]));
+    } else if (s.q5 === "fuel") {
+      blocks.push(blk("쓰는 법", ["등유·LPG·연탄은 고지서에서 빠지는 방식이 없어서 국민행복카드로 사야 해요. 신청할 때 국민행복카드를 고르고, 카드를 받은 뒤 에너지바우처 가맹점에서 결제해요.",
+        "가맹점 목록은 실시간으로 바뀌지 않으니, 가기 전에 전화로 '에너지바우처 국민행복카드 되나요?'라고 확인하세요. 카드는 10월 3일부터 2027년 5월 31일까지 써요."]));
+      if (onOrBefore(d, 2026, 10, 25)) blocks.push(blk("작년 선불카드가 있다면", ["2025년도에 등유·LPG 추가지원 선불카드(모두 19만7천 원)를 받았다면, 남은 금액은 10월 25일까지 써야 해요. 그 뒤엔 사라져요. 올해 바우처와는 다른 돈이에요."], "alert"));
+    } else {
+      var p = ["난방비를 따로 낼 곳이 없는 집은 바우처를 고지서나 카드로 쓰기 어려워요. 그래서 2026년부터 지원금 일부를 현금으로 주는 '사전 예외지급'이 생겼어요. 금액은 전년도 세대원 수별 평균 사용액을 기준으로 정해요."];
+      var when;
+      if (onOrBefore(d, 2026, 10, 31)) when = "10월 31일까지 신청하면 11월 10일에 받고, 11월부터 신청하면 2027년 6~9월에 받아요.";
+      else if (onOrBefore(d, 2027, 5, 31)) when = "지금 신청하면 2027년 6~9월에 받아요. 신청은 2027년 5월 31일까지예요.";
+      else when = "2026년도 사전 예외지급 신청 기간(2027년 5월 31일까지)은 끝났어요.";
+      if (s.q7 === "unused") p.push("아직 한 번도 안 썼다면 받을 수 있어요. " + when);
+      else if (s.q7 === "used") p.push("다만 바우처를 조금이라도 썼다면 사전 예외지급은 받을 수 없어요. 남은 금액을 어떻게 쓸지 주민센터에 물어보세요.");
+      else p.push("바우처를 신청할 때 사전 예외지급도 같이 물어보세요. 바우처를 한 번도 안 쓴 상태여야 해요. " + when);
+      if (s.q7 !== "used") p.push("돈은 본인 계좌로만 들어오고, 압류방지계좌로는 못 받아요. 챙길 서류는 가기 전에 주민센터에 물어보세요.");
+      blocks.push(blk("쓰는 법", p));
+    }
+    blocks.push(blk("헷갈리면", ["주민센터나 에너지바우처 상담센터(1600-3190, 평일 9~18시)에 '수급 자격이랑 세대원 조건으로 대상인지 확인하고 싶어요'라고 물어보세요."]));
+
+    var shareLine = n + "인 세대 1년 " + won(AMT[n]) + "원.";
+    if (s.q6 === "auto") shareLine += " 작년에 받았고 변동이 없어서 보통 자동으로 이어져요(올해 등록 확인 필요).";
+    else if (applyOpen) shareLine += " 12월 31일까지 신청해야 해요.";
+    return {
+      tone: "yes", title: "받을 수 있어요",
+      sub: "공식 기준으로는 대상이에요. 최종 확인은 주민센터에서 해요.",
+      total: { k: n + "인 세대 1년 지원금", v: AMT[n], d: "2026년 7월부터 2027년 5월까지 쓰는 금액이에요. 여름(7~9월)에 쓴 만큼 빼고 남은 금액을 겨울에 써요." },
+      blocks: blocks, share: shareLine
+    };
+  }
+  function blk(h, ps, cls) { return { h: h, p: ps, cls: cls || "" }; }
+  function no(title, sub, blocks, shareLine) { return { tone: "no", title: title, sub: sub, total: null, blocks: blocks, share: shareLine }; }
+
+  var shownOnce = false;
+  function render() {
+    var s = read(), v = flow(s);
+    ["q2", "q3", "q4", "q5", "q7", "q6"].forEach(function (id) { $(id).hidden = !v[id]; });
+    $("q6n").textContent = v.q7 ? "7" : "6";
+    var r = decide(s);
+    var box = $("result");
+    if (!r) { box.hidden = true; shownOnce = false; return; }
+    box.hidden = false;
+    var vd = $("r-verdict");
+    vd.className = "verdict tone-" + r.tone;
+    $("r-title").textContent = r.title;
+    $("r-sub").textContent = r.sub;
+    if (r.total) { $("r-total").hidden = false; $("r-tk").textContent = r.total.k; $("r-tv").textContent = won(r.total.v); $("r-td").textContent = r.total.d; }
+    else $("r-total").hidden = true;
+    var wrap = $("r-blocks"); wrap.innerHTML = "";
+    r.blocks.forEach(function (b) {
+      var div = document.createElement("div"); div.className = "blk" + (b.cls ? " " + b.cls : "");
+      var h = document.createElement("h2"); h.textContent = b.h; div.appendChild(h);
+      b.p.forEach(function (t) { var p = document.createElement("p"); p.textContent = t; div.appendChild(p); });
+      wrap.appendChild(div);
+    });
+    $("copied").hidden = true;
+    if (!shownOnce) { shownOnce = true; scrollIntoViewIfNeeded(box); }
+  }
+  function scrollIntoViewIfNeeded(el) {
+    var r = el.getBoundingClientRect();
+    if (r.top > innerHeight - 80) { try { el.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) { el.scrollIntoView(); } }
+  }
+
+  // '해당 없음'은 다른 칸과 같이 고를 수 없게
+  function exclusive(name, solo) {
+    document.querySelectorAll('input[name="' + name + '"]').forEach(function (el) {
+      el.addEventListener("change", function () {
+        if (!el.checked) return;
+        document.querySelectorAll('input[name="' + name + '"]').forEach(function (o) {
+          if (o === el) return;
+          if (el.value === solo || o.value === solo) o.checked = false;
+        });
+      });
+    });
+  }
+  exclusive("q2", "nobody");
+  exclusive("q4", "none");
+
+  // 앞 질문 답이 바뀌면 숨겨지는 뒤 질문의 답은 지운다(숨은 답이 결과에 섞이지 않게)
+  function clearHidden() {
+    var v = flow(read());
+    ["q2", "q3", "q4", "q5", "q7", "q6"].forEach(function (id) {
+      if (!v[id]) document.querySelectorAll('input[name="' + id + '"]').forEach(function (o) { o.checked = false; });
+    });
+  }
+  document.querySelectorAll(".q input").forEach(function (el) {
+    el.addEventListener("change", function () {
+      var before = flow(read());
+      clearHidden(); clearHidden();
+      render();
+      var after = flow(read());
+      // 새로 나타난 질문이 화면 아래에 있으면 살짝 보여 준다
+      ["q2", "q3", "q4", "q5", "q7", "q6"].some(function (id) {
+        if (after[id] && !before[id]) { scrollIntoViewIfNeeded($(id)); return true; }
+        return false;
+      });
+    });
+  });
+
+  function shareText() {
+    var s = read(), r = decide(s);
+    if (!r) return "";
+    var lines = ["[에너지바우처 1분 확인] " + r.title, r.share, "", "우리 집도 받는지 1분 확인", SHARE_URL];
+    return lines.join("\n");
+  }
+  $("btn-copy").addEventListener("click", function () {
+    var t = shareText(); if (!t) return;
+    function done() { $("copied").hidden = false; }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, fallback);
+    else fallback();
+    function fallback() {
+      var ta = document.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  });
+  $("btn-reset").addEventListener("click", function () {
+    document.querySelectorAll(".q input").forEach(function (o) { o.checked = false; });
+    render();
+    try { $("q1").scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) { $("q1").scrollIntoView(); }
+  });
+
+  window.__voucherTest = { decide: decide, flow: flow, shareText: shareText, AMT: AMT, SUMMER: SUMMER };
+  render();
+})();
+</script>
+</body>
+</html>
