@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>도마공방 — 숫자와 판정 규칙을 쓰는 화면으로</title>
+<meta name="description" content="전기요금 계산기·에너지바우처 확인기·연금 환급 계산기·분노 판정 테스트를 직접 만들어 운영합니다. 계산기·유형 테스트·엑셀 모델 제작, 자동 검증 보고서 포함.">
+<meta property="og:title" content="도마공방 — 계산기·확인기·유형 테스트 제작">
+<meta property="og:description" content="숫자 넣으면 답이 나오는 페이지. 입력 전 조합 자동 검증 보고서를 함께 드립니다.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dandy-bk.github.io/tools/work.html">
+<meta property="og:image" content="https://dandy-bk.github.io/tools/og-work.png">
+<link rel="canonical" href="https://dandy-bk.github.io/tools/work.html">
+<style>
+:root{
+  --bg:#F6F7F9; --card:#FFFFFF; --ink:#1B2430; --muted:#5B6672; --line:#E2E6EB;
+  --calc:#2152C4; --test:#C4661A; --xls:#11735F; --accent:#2152C4;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#111419; --card:#1A1F27; --ink:#ECEFF3; --muted:#A3ACB8; --line:#2A313B; --accent:#7FA3FF; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"맑은 고딕","Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;line-height:1.6;-webkit-text-size-adjust:100%}
+main{max-width:860px;margin:0 auto;padding:32px 16px 64px}
+h1{font-size:clamp(22px,4.6vw,32px);line-height:1.3;margin:0 0 8px;letter-spacing:-.01em}
+h2{font-size:18px;margin:40px 0 12px;padding-bottom:8px;border-bottom:2px dashed var(--line)}
+h3{font-size:16px;margin:0 0 6px}
+p{margin:0 0 10px}
+.lead{color:var(--muted);font-size:15px}
+.grid{display:grid;gap:12px;grid-template-columns:1fr}
+@media (min-width:640px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:1fr 1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;position:relative}
+.card .tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff;margin-bottom:8px}
+.tag.calc{background:var(--calc)}.tag.test{background:var(--test)}.tag.xls{background:var(--xls)}
+.meta{font-size:13px;color:var(--muted)}
+.proof{font-size:13px;margin-top:8px;padding:8px 10px;border-left:3px solid var(--accent);background:rgba(33,82,196,.06);border-radius:4px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.btn.soon{opacity:.55;border-style:dashed;cursor:default}
+.btn{display:inline-block;margin-top:10px;padding:8px 14px;border:1px solid var(--accent);border-radius:8px;font-size:14px;font-weight:700}
+.price{font-weight:700;font-size:15px;margin-top:6px}
+ul{margin:0;padding-left:18px}
+li{margin:4px 0}
+.steps li{margin:6px 0}
+.no{color:var(--muted)}
+footer{margin-top:48px;padding-top:16px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted)}
+.cut{position:relative;height:0;border-top:2px dashed var(--line);margin:28px 0}
+.cut::before,.cut::after{content:"";position:absolute;top:-9px;width:16px;height:16px;border-radius:50%;background:var(--bg)}
+.cut::before{left:-8px}.cut::after{right:-8px}
+html,body{overflow-x:hidden}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>도마공방 — 숫자와 판정 규칙을 '쓰는 화면'으로 만듭니다.</h1>
+    <p class="lead">요금·세금·지원금 계산기, 자격 확인기, 결과가 여러 갈래로 나오는 유형 테스트, 값만 바꾸면 다시 계산되는 엑셀 모델. 아래는 전부 직접 만들어 지금 공개 운영 중인 것입니다.</p>
+  </header>
+
+  <h2>공개 운영 중인 도구 4개</h2>
+  <div class="grid two">
+    <article class="card">
+      <span class="tag calc">계산기</span>
+      <h3><a href="https://dandy-bk.github.io/tools/electric.html">전기요금 계산기</a></h3>
+      <p class="meta">주택용 누진 3단계·기후환경요금·연료비조정·부가세·전력기금, 절사·반올림 규칙까지 공식 그대로. 난방기기 추가 비용 탭.</p>
+      <div class="proof">0~2,000kWh 전 구간 정수 계산 재검증 · 360/1280px 넘침 0 · 콘솔 오류 0</div>
+    </article>
+    <article class="card">
+      <span class="tag calc">확인기</span>
+      <h3><a href="https://dandy-bk.github.io/tools/voucher.html">에너지바우처 1분 확인기</a></h3>
+      <p class="meta">질문 7단계 → 결과 3종. 신청 기간·지급 시점에 따라 안내 문구가 날짜별로 자동 바뀜. 가족 단톡방용 결과 복사.</p>
+      <div class="proof">도달 가능한 답 조합 × 날짜 10개 = 8,360건 규칙 검사, 위반 0 · 독립 검수 2회</div>
+    </article>
+    <article class="card">
+      <span class="tag calc">계산기</span>
+      <h3><a href="https://dandy-bk.github.io/tools/pension.html">연금저축·IRP 환급 계산기</a></h3>
+      <p class="meta">공제 한도(600/900만)·ISA 만기 전환·결정세액 한도·추가 납입 시 늘어나는 환급액. 계산 규칙은 소득세법 조문으로 확인.</p>
+      <div class="proof">63,000 조합 규칙 검사, 위반 0 · 320~1280px · 다크 모드</div>
+    </article>
+    <article class="card">
+      <span class="tag test">유형 테스트</span>
+      <h3><a href="https://dandy-bk.github.io/tools/anger.html">분노관제센터 — 1분 분노 판정</a></h3>
+      <p class="meta">계기판 3개(상대 잘못·분노 온도·역풍 위험) → 판정 도장 17종. 상대별 대사, '이 말은 참으세요', 다음 판정 시각, 판정 도감.</p>
+      <div class="proof">1,310만 전 조합에서 판정 규칙 문장 ↔ 실제 점수 불일치 0 · 결과 복사 공유</div>
+    </article>
+  </div>
+
+  <div class="cut"></div>
+
+  <h2>맡길 수 있는 일 3가지</h2>
+  <div class="grid three">
+    <article class="card">
+      <span class="tag calc">서비스</span>
+      <h3>계산기·확인기 웹페이지 제작</h3>
+      <p class="meta">견적·요금·세금·지원금·자격 확인. 입력 넣으면 답이 나오는 페이지를 모바일·공유 최적화로.</p>
+      <p class="price">250,000원~</p>
+      <span class="btn soon">크몽 등록 준비 중</span>
+    </article>
+    <article class="card">
+      <span class="tag test">서비스</span>
+      <h3>브랜드 맞춤 유형 테스트 제작</h3>
+      <p class="meta">질문 설계·결과 12종+·공유 카드·결과별 CTA. 답과 결과 문장이 어긋나지 않게 자동 검사.</p>
+      <p class="price">500,000원~</p>
+      <span class="btn soon">크몽 등록 준비 중</span>
+    </article>
+    <article class="card">
+      <span class="tag xls">서비스</span>
+      <h3>엑셀 계산표·자동화 시트</h3>
+      <p class="meta">수식 살아있는 모델, 시나리오·민감도, 검산 시트. 반복 작업은 파이썬으로.</p>
+      <p class="price">50,000원~</p>
+      <span class="btn soon">크몽 등록 준비 중</span>
+    </article>
+  </div>
+
+  <h2>일하는 방식</h2>
+  <ol class="steps">
+    <li><strong>원문부터.</strong> 요율·금액·기간이 들어가면 법령·공식 누리집 원문을 확인합니다. 다른 블로그·계산기를 베껴 만들지 않습니다.</li>
+    <li><strong>자동 검증 보고서.</strong> 입력 전 조합(또는 대표 10만 표본)으로 규칙 위반·빈칸·넘침을 검사한 결과표를 납품물에 붙입니다.</li>
+    <li><strong>모바일 먼저.</strong> 360px에서 넘침 0, 다크 모드, 결과 복사, 카카오톡 공유 카드.</li>
+    <li><strong>파일 1개.</strong> 서버·DB·월 비용 없는 정적 HTML. 올리는 방법 안내서 포함.</li>
+    <li><strong>30일 무상 수정.</strong> 납품 후 계산 오류는 30일 안에 고칩니다.</li>
+  </ol>
+
+  <h2>하지 않는 것</h2>
+  <ul class="no">
+    <li>고객 계정·비밀번호를 받아 하는 호스팅 대행</li>
+    <li>결제·회원·주문이 붙는 상거래 기능</li>
+    <li>금융상품(카드·보험·대출) 가입 유도 화면 — 금융소비자보호법 광고 주체 제한</li>
+  </ul>
+
+  <footer>
+    주문·문의는 크몽에서(등록 준비 중). 글은 <a href="https://blog.naver.com/ydnad">블로그</a>, 도구 전체는 <a href="https://dandy-bk.github.io/tools/">도구함</a>에 있습니다.
+  </footer>
+</main>
+</body>
+</html>
