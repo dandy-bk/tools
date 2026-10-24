@@ -115,6 +115,12 @@ button:focus-visible, a:focus-visible { outline: 3px solid #f2b705; outline-offs
 .foot p { margin: 0; }
 .sign { font-family: var(--font-sign); font-weight: 600; color: var(--ink); text-align: right; margin-top: 10px; }
 .sign a { color: inherit; }
+.post { display: grid; gap: 3px; text-decoration: none; color: var(--ink); background: var(--soft); border: 2px dashed var(--line); border-radius: 12px; padding: 12px 14px; margin-top: 18px; }
+.post .pk { font-size: 12px; font-weight: 700; color: var(--muted); }
+.post .pt { font-weight: 900; font-size: 16px; line-height: 1.4; }
+.post .pt::after { content: " →"; }
+.post .pd { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.post:hover { border-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -220,6 +226,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid #f2b705; outline-offs
     <div class="verdict" id="r-verdict"><span class="vt" id="r-title"></span><span class="vs" id="r-sub"></span></div>
     <div class="total" id="r-total" hidden><span class="k" id="r-tk"></span><span class="v"><span id="r-tv"></span><small>원</small></span><span class="d" id="r-td"></span></div>
     <div id="r-blocks"></div>
+    <a class="post" id="r-post" href="https://blog.naver.com/ydnad/224452033974"><span class="pk">블로그 글</span><span class="pt">에너지바우처 우리 집도 받을까? 대상 조건 4가지 1분 확인</span><span class="pd">조건 4가지를 하나씩 풀어 쓰고, 종이로 보는 30초 확인표도 넣었어요. 부모님께 보여 드리기 좋아요.</span></a>
     <div class="actions">
       <button type="button" class="btn" id="btn-copy">결과 복사</button>
       <button type="button" class="btn ghost" id="btn-reset">처음부터</button>
@@ -232,7 +239,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid #f2b705; outline-offs
   <div class="foot">
     <p>기준: 에너지바우처 누리집 '2026년도 에너지바우처 지원 대상 및 금액', 2026년도 사업 안내, 2026년 6~10월 기사. 참고용 확인이고, 최종 판정은 주민등록상 주소지 주민센터(행정복지센터)에서 해요.</p>
     <p>문의: 에너지바우처 상담센터 1600-3190 (평일 9~18시, 점심 12~13시 제외). 입력한 답은 어디에도 저장하지 않아요.</p>
-    <p class="sign">My Seasonal Life · <a href="https://blog.naver.com/ydnad" id="sign-link">블로그 가기</a></p>
+    <p class="sign">My Seasonal Life · <a href="https://blog.naver.com/ydnad/224452033974" id="sign-link">블로그에서 대상 조건 4가지 글 보기</a></p>
   </div>
 </main>
 
@@ -241,8 +248,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid #f2b705; outline-offs
   "use strict";
   var AMT = { 1: 295200, 2: 407500, 3: 532700, 4: 701300 };
   var SUMMER = { 1: 40700, 2: 58800, 3: 75800, 4: 102000 };
-  // 공유 링크: 짝 글 주소를 받으면 POST_URL에 넣는다(그 전에는 이 페이지 주소).
-  var POST_URL = "";
+  // 공유 링크는 블로그 17번 글로 보낸다(받은 사람이 블로그를 거쳐 가게). 글 안에 30초 확인표와 이 확인기 링크가 있다.
+  var POST_URL = "https://blog.naver.com/ydnad/224452033974";
   var SHARE_URL = POST_URL || window.__SHARE_URL__ || location.href.split("#")[0];
   var SPECIAL = ["old", "baby", "disabled", "preg", "ill", "single", "youth", "multi"];
   var DUP = { coal: "연탄쿠폰", emergency: "긴급복지 동절기 연료비", coalswitch: "연탄전환 에너지바우처" };
@@ -480,7 +487,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid #f2b705; outline-offs
   function shareText() {
     var r = decide(read());
     if (!r) return "";
-    return ["[에너지바우처 1분 확인] " + r.title, r.share, "", "우리 집도 받는지 1분 확인", SHARE_URL].join("\n");
+    return ["[에너지바우처 1분 확인] " + r.title, r.share, "", "에너지바우처 대상 조건 4가지와 30초 확인표", SHARE_URL].join("\n");
   }
   $("btn-copy").addEventListener("click", function () {
     var t = shareText(); if (!t) return;
