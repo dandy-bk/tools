@@ -1,0 +1,1040 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:type" content="website">
+<meta property="og:title" content="행복관측소">
+<meta property="og:description" content="남의 별만 보다가 내 하늘을 못 본 날. 질문 12개로 내가 매긴 별점과 생활 신호로 잰 실제 밝기를 1분 만에 비교해요. 답은 저장되지 않아요.">
+<meta name="description" content="남의 별만 보다가 내 하늘을 못 본 날. 질문 12개로 내가 매긴 별점과 생활 신호로 잰 실제 밝기를 1분 만에 비교해요. 답은 저장되지 않아요.">
+<meta property="og:url" content="https://dandy-bk.github.io/tools/happy.html">
+<meta property="og:image" content="https://dandy-bk.github.io/tools/og-happy.png">
+<script>window.__SHARE_URL__ = location.href.split("#")[0];</script>
+<style>[hidden]{display:none!important}body{margin:0}</style>
+<title>행복관측소</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Hahmlet:wght@500;700;800&family=IBM+Plex+Mono:wght@500&family=Nanum+Pen+Script&display=swap">
+<style>
+/* Layout: a hilltop observatory at night. One column of log pages over a star chart; the result arrives in a round eyepiece, then two star rows compare how bright life looks (self-rated) with how bright it measures (meals, sleep, people, good moments). Ends with a hand-written log of three good things as dawn glows at the bottom. Single visual world (night sky), dark by choice. */
+:root {
+  color-scheme: dark;
+  --sky: #0a1122;
+  --sky-hi: #14223f;
+  --chart: #1a2845;
+  --panel: #0f1930;
+  --panel-2: #14213d;
+  --line: #2a3a5e;
+  --ink: #edf1fa;
+  --ink-soft: #b3bdd4;
+  --ink-faint: #8591ad;
+  --star: #f4cf73;
+  --star-ink: #1c1606;
+  --moon: #e4e9f5;
+  --teal: #86d3c4;
+  --dawn: #ffb48a;
+  --dawn-glow: rgba(255, 168, 120, 0.20);
+  --red: #ff8070;
+  --red-wash: #2b1720;
+  --font-display: "Hahmlet", "Noto Serif KR", "AppleMyungjo", "Batang", serif;
+  --font-body: "Gowun Dodum", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-hand: "Nanum Pen Script", "Gowun Dodum", cursive;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--sky); color: var(--ink); }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 56px;
+}
+#sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+body::after {
+  content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: 50vh; z-index: 0; pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 100%, var(--dawn-glow), transparent 70%);
+  opacity: 0; transition: opacity 1.4s ease;
+}
+body.dawn::after { opacity: 1; }
+.deck { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
+.screen { display: grid; gap: 20px; }
+h1, h2, h3, p { margin: 0; }
+h1, h2 { text-wrap: balance; }
+a { color: var(--teal); }
+:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 6px; }
+
+/* ---------- type ---------- */
+.eyebrow { font-size: 13px; letter-spacing: .02em; color: var(--ink-faint); }
+.sub, .head, .typename, .qtitle { text-wrap: balance; }
+.title { font-family: var(--font-display); font-weight: 800; font-size: clamp(38px, 11vw, 52px); line-height: 1.1; letter-spacing: -0.01em; display: flex; align-items: center; gap: 12px; }
+.title svg { width: 0.9em; height: 0.9em; flex: none; }
+.sub { font-family: var(--font-display); font-weight: 500; font-size: 21px; line-height: 1.45; color: var(--star); }
+.lead { color: var(--ink-soft); }
+.muted { color: var(--ink-faint); font-size: 14px; }
+.label { font-size: 13px; letter-spacing: .02em; color: var(--ink-faint); }
+
+/* ---------- panels ---------- */
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px 18px 16px; min-width: 0; }
+.panel h3 { font-family: var(--font-display); font-weight: 700; font-size: 16px; margin-bottom: 10px; color: var(--ink); }
+
+/* ---------- buttons ---------- */
+.btn {
+  display: block; width: 100%; padding: 15px 18px; border-radius: 14px; border: 1px solid transparent;
+  font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1.25;
+  text-align: center; text-decoration: none; cursor: pointer; color: var(--ink); background: none;
+}
+.btn.primary { background: var(--star); color: var(--star-ink); }
+.btn.ghost { border-color: var(--line); background: var(--panel); }
+.btn.text { font-family: var(--font-body); font-weight: 400; font-size: 16px; color: var(--ink-soft); padding: 10px; }
+.actions { display: grid; gap: 10px; }
+
+/* ---------- start ---------- */
+.example { display: grid; gap: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 13px; line-height: 1.4; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-soft); background: var(--panel); }
+.foot { font-size: 13px; color: var(--ink-faint); display: grid; gap: 6px; padding-top: 4px; }
+.foot b { color: var(--ink-soft); font-weight: 400; }
+
+/* ---------- questions ---------- */
+.qhead { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-family: var(--font-mono); font-size: 13px; color: var(--ink-faint); }
+.bar { height: 3px; background: var(--chart); border-radius: 2px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--star); transition: width .3s ease; }
+.qtitle { font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1.4; }
+.qsub { color: var(--ink-faint); font-size: 15px; margin-top: -10px; }
+.opts { display: grid; gap: 10px; }
+.opt {
+  display: flex; align-items: flex-start; gap: 12px; width: 100%; text-align: left;
+  padding: 14px 16px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line);
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5; cursor: pointer;
+}
+.opt .dot { width: 18px; height: 18px; flex: none; margin-top: 3px; }
+.opt .dot polygon { fill: none; stroke: var(--ink-faint); stroke-width: 1.6; stroke-linejoin: round; }
+.opt[aria-pressed="true"] { border-color: var(--star); background: var(--panel-2); }
+.opt[aria-pressed="true"] .dot polygon { fill: var(--star); stroke: var(--star); }
+.opt small { display: block; color: var(--ink-faint); font-size: 14px; }
+.opt .rate { color: var(--star); letter-spacing: 3px; font-size: 18px; }
+.backrow { display: flex; justify-content: space-between; align-items: center; }
+.linkbtn { background: none; border: 0; color: var(--ink-soft); font-family: var(--font-body); font-size: 15px; padding: 8px 4px; cursor: pointer; }
+
+/* ---------- eyepiece ---------- */
+.eyepiece {
+  width: 184px; max-width: 100%; aspect-ratio: 1; border-radius: 50%; margin: 6px auto 0; position: relative;
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 50% 42%, var(--sky-hi), var(--sky) 72%);
+  border: 2px solid var(--line); box-shadow: 0 0 0 7px var(--panel), 0 0 0 8px var(--line);
+}
+.eyepiece::before, .eyepiece::after { content: ""; position: absolute; background: var(--chart); }
+.eyepiece::before { left: 10%; right: 10%; top: 50%; height: 1px; }
+.eyepiece::after { top: 10%; bottom: 10%; left: 50%; width: 1px; }
+.eyepiece svg { position: relative; z-index: 1; width: 88px; height: 88px; }
+.eyepiece.small { width: 120px; }
+.eyepiece.small svg { width: 60px; height: 60px; }
+.eyepiece.red { background: radial-gradient(circle at 50% 42%, var(--red-wash), var(--sky) 72%); }
+.ring { position: absolute; inset: -9px; border-radius: 50%; border: 1px dashed var(--line); }
+.scanning .ring { animation: spin 7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* icon paints */
+.ico .a { fill: var(--star); }
+.ico .m { fill: var(--moon); }
+.ico .b { fill: var(--ink-faint); }
+.ico .c { fill: var(--sky-hi); }
+.ico .t { fill: var(--teal); }
+.ico .r { fill: var(--red); }
+.ico .s { fill: none; stroke: var(--ink-soft); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ico .sa { fill: none; stroke: var(--star); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ico .f { opacity: .35; }
+
+/* ---------- scan ---------- */
+.scanlines { display: grid; gap: 6px; font-family: var(--font-mono); font-size: 14px; }
+.scanlines div { color: var(--ink-faint); opacity: .35; transition: opacity .3s ease; }
+.scanlines div.done { opacity: 1; color: var(--ink-soft); }
+.scanlines div.done::before { content: "✓ "; color: var(--teal); }
+
+/* ---------- result ---------- */
+.logline { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
+.typehead { text-align: center; display: grid; gap: 8px; }
+.typename { font-family: var(--font-display); font-weight: 800; font-size: 32px; line-height: 1.2; color: var(--star); }
+.head { font-family: var(--font-display); font-weight: 500; font-size: 19px; line-height: 1.55; }
+.bright { display: grid; gap: 12px; }
+.brow { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.blabel { font-family: var(--font-display); font-weight: 700; font-size: 16px; display: grid; }
+.blabel small { font-family: var(--font-body); font-weight: 400; font-size: 13px; color: var(--ink-faint); }
+.stars { display: inline-flex; gap: 6px; }
+.stars span { width: 26px; height: 26px; display: block; }
+.stars svg { width: 100%; height: 100%; display: block; }
+.stars polygon { fill: none; stroke: var(--line); stroke-width: 1.6; stroke-linejoin: round; transition: fill .35s ease, stroke .35s ease; }
+.stars .on polygon { fill: var(--star); stroke: var(--star); }
+.stars.t .on polygon { fill: var(--teal); stroke: var(--teal); }
+.gap { font-family: var(--font-display); font-weight: 700; font-size: 16px; line-height: 1.55; padding-top: 10px; border-top: 1px solid var(--line); }
+.gap.up { color: var(--dawn); }
+.gap.even { color: var(--ink-soft); }
+.gap.down { color: var(--teal); }
+.prose { display: grid; gap: 12px; color: var(--ink); }
+.two { display: grid; gap: 12px; }
+@media (min-width: 520px) { .two { grid-template-columns: 1fr 1fr; } }
+.marks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 15px; line-height: 1.55; }
+.marks li { position: relative; padding-left: 20px; }
+.marks li::before { content: ""; position: absolute; left: 2px; top: 8px; width: 8px; height: 8px; border-radius: 50%; }
+.marks.light li::before { background: var(--star); box-shadow: 0 0 8px var(--star); }
+.marks.cloud li::before { background: var(--ink-faint); }
+.marks.todo li::before { border-radius: 2px; background: none; border: 1.5px solid var(--teal); width: 9px; height: 9px; top: 7px; }
+.fact { background: var(--panel-2); }
+.fact p + p { margin-top: 10px; }
+.src { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); line-height: 1.5; }
+.wish { color: var(--ink-soft); }
+.hint { color: var(--ink-faint); font-size: 14px; margin: -6px 0 10px; }
+.quip { display: grid; gap: 2px; padding: 4px 4px 0; }
+.quip p { font-family: var(--font-hand); font-size: 27px; line-height: 1.35; color: var(--star); }
+.sharebox { display: grid; gap: 6px; }
+.sharebox textarea, .field input {
+  width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+}
+.toast { min-height: 1.6em; color: var(--teal); text-align: center; font-size: 15px; }
+
+/* ---------- safe ---------- */
+.safe { border-color: var(--red); display: grid; gap: 14px; }
+.safe h2 { font-family: var(--font-display); font-weight: 800; font-size: 26px; color: var(--ink); text-align: center; }
+.lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.lines li { display: grid; gap: 2px; padding: 12px 14px; border-radius: 12px; background: var(--red-wash); }
+.lines b { font-family: var(--font-mono); font-weight: 500; font-size: 22px; color: var(--ink); letter-spacing: .02em; user-select: all; }
+.lines span { color: var(--ink-soft); font-size: 15px; }
+
+/* ---------- log ---------- */
+.field { display: grid; gap: 6px; }
+.field label { font-family: var(--font-display); font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+.field label svg { width: 18px; height: 18px; }
+.field label svg polygon { fill: var(--star); }
+.field input.why { color: var(--ink-soft); }
+.logcard {
+  border-radius: 16px; padding: 18px 20px 20px; background-color: var(--panel-2);
+  background-image: repeating-linear-gradient(to bottom, transparent 0 41px, var(--chart) 41px 42px);
+  border: 1px solid var(--line); display: grid; gap: 6px;
+}
+.logcard .when { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
+.entry { display: grid; grid-template-columns: 22px 1fr; gap: 8px; align-items: start; }
+.entry svg { width: 20px; height: 20px; margin-top: 10px; }
+.entry svg polygon { fill: var(--star); }
+.entry .txt { font-family: var(--font-hand); font-size: 28px; line-height: 42px; color: var(--ink); min-width: 0; }
+.entry .txt em { font-style: normal; color: var(--ink-soft); font-size: 24px; }
+.logcard .sign { font-family: var(--font-hand); font-size: 24px; color: var(--dawn); text-align: right; }
+
+/* ---------- dex ---------- */
+.dex { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: grid; gap: 4px; align-content: start; position: relative; min-width: 0; }
+.tile svg { width: 40px; height: 40px; }
+.tile .tn { font-family: var(--font-display); font-weight: 700; font-size: 15px; line-height: 1.35; }
+.tile .tl { font-size: 13px; line-height: 1.5; color: var(--ink-faint); }
+.tile.me { border-color: var(--star); background: var(--panel-2); }
+.tile .metag { position: absolute; top: 10px; right: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--star-ink); background: var(--star); border-radius: 999px; padding: 1px 8px; }
+.tile.safe-tile { border-color: var(--red); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<main class="deck">
+
+  <!-- start -->
+  <section id="s-start" class="screen">
+    <p class="eyebrow">질문 12개 · 1분 · 답은 어디에도 저장되지 않아요</p>
+    <h1 class="title"><span id="title-icon"></span>행복관측소</h1>
+    <p class="sub">남의 별만 보다가, 내 하늘을 못 본 날</p>
+    <p class="lead">SNS를 닫고 나면 괜히 작아지는 날이 있어요. 망원경이 남의 하늘만 비추고 있어서 그래요. 질문 12개로 내 쪽 하늘을 1분만 관측해요.</p>
+    <div class="panel example">
+      <p class="label">예시 관측 기록</p>
+      <div class="brow"><span class="blabel">겉보기 밝기<small>내가 매긴 별점</small></span><span class="stars" id="ex-p"></span></div>
+      <div class="brow"><span class="blabel">실제 밝기<small>끼니·잠·사람·좋았던 순간 등으로 계산</small></span><span class="stars t" id="ex-a"></span></div>
+      <p class="gap up">관측 오차 +2 · 실제보다 별 2개만큼 어둡게 보고 있어요.</p>
+    </div>
+    <button class="btn primary" id="btn-start" type="button">관측 시작</button>
+    <div class="panel">
+      <p class="label" style="margin-bottom:10px">관측 결과 13가지</p>
+      <div class="chips" id="start-chips"></div>
+    </div>
+    <div class="foot">
+      <p>진단 도구가 아니에요. 생각을 정리하는 관측 도구예요.</p>
+      <p>마음이 계속 무겁다면 정신건강위기상담 <b>1577-0199</b>(365일 24시간)나 자살예방상담 <b>109</b>에 이야기해 보세요.</p>
+      <p>만든 곳: <a href="https://blog.naver.com/ydnad" target="_blank" rel="noopener">My Seasonal Life 블로그</a></p>
+    </div>
+  </section>
+
+  <!-- question -->
+  <section id="s-q" class="screen" hidden>
+    <div class="qhead"><span id="q-step">01 / 12</span><span>행복관측소</span></div>
+    <div class="bar"><i id="q-bar"></i></div>
+    <h2 class="qtitle" id="q-title"></h2>
+    <p class="qsub" id="q-sub" hidden></p>
+    <div class="opts" id="q-opts"></div>
+    <div class="backrow"><button class="linkbtn" id="btn-back" type="button">← 이전 질문</button></div>
+  </section>
+
+  <!-- scanning -->
+  <section id="s-scan" class="screen" hidden>
+    <div class="eyepiece scanning"><span class="ring"></span><span id="scan-icon"></span></div>
+    <p class="typename" style="text-align:center;font-size:24px">관측 중</p>
+    <div class="scanlines" id="scanlines"></div>
+  </section>
+
+  <!-- result -->
+  <section id="s-result" class="screen" hidden>
+    <div class="logline"><span id="r-no"></span><span id="r-when"></span></div>
+    <div class="eyepiece"><span class="ring"></span><span id="r-icon"></span></div>
+    <div class="typehead">
+      <p class="label">관측 결과</p>
+      <h2 class="typename" id="r-name"></h2>
+      <p class="head" id="r-head"></p>
+    </div>
+    <div class="panel bright">
+      <div class="brow"><span class="blabel">겉보기 밝기<small>내가 매긴 별점</small></span><span class="stars" id="r-p"></span></div>
+      <div class="brow"><span class="blabel">실제 밝기<small>끼니·잠·사람·좋았던 순간·1년 전·버티는 힘</small></span><span class="stars t" id="r-a"></span></div>
+      <p class="gap" id="r-gap"></p>
+    </div>
+    <div class="prose" id="r-body"></div>
+    <div class="two">
+      <div class="panel"><h3>찾은 빛</h3><ul class="marks light" id="r-lights"></ul></div>
+      <div class="panel"><h3>구름 낀 곳</h3><ul class="marks cloud" id="r-clouds"></ul></div>
+    </div>
+    <div class="panel fact"><h3>알고 보면</h3><p id="r-fact"></p><p class="src" id="r-src"></p></div>
+    <div class="panel"><h3>오늘 해 볼 것</h3><p class="hint">하나만 골라도 돼요.</p><ul class="marks todo" id="r-todo"></ul></div>
+    <p class="wish" id="r-wish"></p>
+    <div class="quip"><span class="label">관측소장 한마디</span><p id="r-quip"></p></div>
+    <div class="actions">
+      <button class="btn primary" id="btn-log" type="button">오늘의 별 3개 적기</button>
+      <button class="btn ghost" id="btn-share" type="button">결과 복사</button>
+      <button class="btn ghost" id="btn-dex" type="button">관측 도감 보기</button>
+      <button class="btn text" id="btn-again" type="button">다시 관측</button>
+    </div>
+    <div class="sharebox" id="sharebox" hidden>
+      <label class="muted" for="share-text">복사가 막혀 있어요. 아래 내용을 길게 눌러 복사하세요.</label>
+      <textarea id="share-text" rows="8" readonly></textarea>
+    </div>
+    <p class="toast" id="toast" role="status" aria-live="polite"></p>
+  </section>
+
+  <!-- safety -->
+  <section id="s-safe" class="screen" hidden>
+    <div class="panel safe">
+      <div class="eyepiece small red"><span id="safe-icon"></span></div>
+      <h2>관측은 잠시 멈출게요</h2>
+      <p>사라지고 싶을 때가 있다고 답했어요. 이건 별점으로 정리할 일이 아니라, 지금 사람과 이야기해야 하는 일이에요.</p>
+      <ul class="lines">
+        <li><b>109</b><span>자살예방상담전화. 말을 고르기 어려우면 “그냥 힘들어서 전화했어요”라고만 해도 돼요.</span></li>
+        <li><b>1577-0199</b><span>정신건강위기상담전화. 365일 24시간.</span></li>
+        <li><b>112 · 119</b><span>지금 당장 위험하다면.</span></li>
+      </ul>
+      <p>가까운 사람 한 명에게 “오늘 좀 힘들어”라고만 보내도 돼요. 설명은 나중에 해도 돼요.</p>
+      <div class="actions">
+        <a class="btn primary" href="tel:109">109에 전화하기</a>
+        <button class="btn ghost" id="btn-safe-back" type="button">처음으로</button>
+      </div>
+      <p class="muted">전화 버튼이 안 눌리면 위 번호를 직접 눌러 주세요. 이 테스트는 진단이 아니에요.</p>
+    </div>
+  </section>
+
+  <!-- three good things -->
+  <section id="s-log" class="screen" hidden>
+    <p class="label">관측 일지</p>
+    <h2 class="typename">오늘의 별 3개</h2>
+    <p class="lead">오늘(또는 이번 주) 좋았던 일 세 가지와, 그 일이 왜 일어났는지 한 줄씩 적어요. 2005년 미국 연구에서 이걸 일주일 동안 매일 밤 적은 사람들은 행복감이 올라갔고, 6개월 뒤 확인에서도 이어졌어요. 오늘이 첫날이에요.</p>
+    <form id="log-form" class="screen" novalidate>
+      <div class="field">
+        <label for="g1"><span class="mini-star"></span>좋았던 일 1</label>
+        <input id="g1" type="text" maxlength="60" placeholder="점심 김치찌개가 맛있었다" autocomplete="off">
+        <input id="w1" class="why" type="text" maxlength="60" placeholder="왜? (선택) 내가 그 집을 골랐으니까" autocomplete="off" aria-label="좋았던 일 1의 이유">
+      </div>
+      <div class="field">
+        <label for="g2"><span class="mini-star"></span>좋았던 일 2</label>
+        <input id="g2" type="text" maxlength="60" placeholder="버스를 딱 맞춰 탔다" autocomplete="off">
+        <input id="w2" class="why" type="text" maxlength="60" placeholder="왜? (선택) 5분 일찍 나왔으니까" autocomplete="off" aria-label="좋았던 일 2의 이유">
+      </div>
+      <div class="field">
+        <label for="g3"><span class="mini-star"></span>좋았던 일 3</label>
+        <input id="g3" type="text" maxlength="60" placeholder="동료가 고맙다고 했다" autocomplete="off">
+        <input id="w3" class="why" type="text" maxlength="60" placeholder="왜? (선택) 어제 그 일을 도와줬으니까" autocomplete="off" aria-label="좋았던 일 3의 이유">
+      </div>
+      <p class="toast" id="log-msg" role="status" aria-live="polite"></p>
+      <button class="btn primary" type="submit">관측 일지에 적기</button>
+    </form>
+    <div id="log-out" class="screen" hidden>
+      <div class="logcard" id="logcard"></div>
+      <p class="muted">적은 내용은 이 화면에만 있어요. 어디에도 저장되지 않으니, 남기고 싶으면 캡처하거나 복사하세요.</p>
+      <div class="actions">
+        <button class="btn primary" id="btn-log-copy" type="button">일지 복사</button>
+        <button class="btn ghost" id="btn-log-edit" type="button">고쳐 쓰기</button>
+      </div>
+    </div>
+    <button class="btn text" id="btn-log-back" type="button">← 관측 결과로</button>
+  </section>
+
+  <!-- dex -->
+  <section id="s-dex" class="screen" hidden>
+    <p class="label">관측 도감</p>
+    <h2 class="typename">관측 결과 13가지</h2>
+    <p class="muted">어떤 밤이든 이름이 있어요. 마지막 칸 ‘관측 중지’는 결과가 아니에요. 안전이 걱정되는 답을 고르면 결과 대신 도움받을 곳을 먼저 안내해요.</p>
+    <div class="dex" id="dex"></div>
+    <div class="actions">
+      <button class="btn ghost" id="btn-dex-back" type="button">← 관측 결과로</button>
+      <button class="btn text" id="btn-again2" type="button">다시 관측</button>
+    </div>
+  </section>
+
+</main>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<script>
+(function () {
+  "use strict";
+  // 독립 사이트 버전은 head에서 window.__SHARE_URL__(자기 주소)을 넣어 준다
+  var SHARE_URL = window.__SHARE_URL__ || "https://dandy-bk.github.io/tools/happy.html";
+
+  /* ---------- questions ---------- */
+  // o: [label, small]
+  var Q = [
+    { k: "rate", t: "요즘 내 삶에 별점을 준다면?", s: "깊게 생각하지 말고 첫 느낌으로요.", stars: true,
+      o: [["1개", "많이 어두워요"], ["2개", "어두운 편이에요"], ["3개", "그럭저럭이에요"], ["4개", "밝은 편이에요"], ["5개", "아주 밝아요"]] },
+    { k: "after", t: "SNS나 커뮤니티에서 남의 소식을 보고 나면?",
+      o: [["별생각 없어요"], ["잠깐 부럽고 끝나요"], ["한동안 내가 초라해 보여요"], ["그날 기분이 가라앉아요"]] },
+    { k: "cmp", t: "요즘 가장 자주 비교하게 되는 건?",
+      o: [["돈·집"], ["일·커리어"], ["외모·몸"], ["연애·결혼·가족"], ["여행·취미 같은 일상"], ["딱히 없어요"]] },
+    { k: "time", t: "하루에 SNS·커뮤니티를 보는 시간은?",
+      o: [["30분 안쪽"], ["30분~1시간"], ["1~2시간"], ["2시간 넘게"], ["모르겠어요, 틈날 때마다"]] },
+    { k: "meal", t: "최근 일주일, 끼니는 어땠어요?",
+      o: [["대체로 챙겨 먹었어요"], ["대충이라도 먹었어요"], ["자주 걸렀어요"]] },
+    { k: "sleep", t: "잠은 어때요?",
+      o: [["푹 자는 편이에요"], ["그럭저럭 자요"], ["자주 모자라요"], ["거의 못 자요"]] },
+    { k: "people", t: "힘들 때 연락할 수 있는 사람은?",
+      o: [["두 명 이상"], ["한 명"], ["있지만 연락하기가 어려워요"], ["떠오르는 사람이 없어요"]] },
+    { k: "joy", t: "이번 주에 ‘아, 좋다’ 싶었던 순간은?", s: "맛있는 거, 날씨, 누군가의 말 한마디도 들어가요.",
+      o: [["여러 번 있었어요"], ["한두 번 있었어요"], ["기억이 안 나요"]] },
+    { k: "voice", t: "실수했을 때 머릿속 목소리는?",
+      o: [["“그럴 수 있지”"], ["“다음엔 이렇게 해 보자”"], ["“역시 난 안 돼”"], ["“다들 날 한심하게 봤을 거야”"]] },
+    { k: "year", t: "1년 전의 나와 비교하면?",
+      o: [["나아진 게 있어요"], ["비슷해요"], ["더 힘들어졌어요"], ["잘 모르겠어요"]] },
+    { k: "power", t: "요즘 하루를 버티는 힘은?",
+      o: [["넉넉해요"], ["그럭저럭 버텨요"], ["바닥이에요"], ["다 의미 없게 느껴지고, 사라지고 싶을 때가 있어요"]] },
+    { k: "wish", t: "요즘 가장 바라는 건?",
+      o: [["푹 쉬고 싶어요"], ["인정받고 싶어요"], ["방향을 찾고 싶어요"], ["누군가와 가까워지고 싶어요"], ["지금 이대로 좋아요"]] }
+  ];
+  var I = { rate: 0, after: 1, cmp: 2, time: 3, meal: 4, sleep: 5, people: 6, joy: 7, voice: 8, year: 9, power: 10, wish: 11 };
+
+  /* ---------- scoring ---------- */
+  var AFTER_V = [0, 30, 70, 100], TIME_V = [0, 25, 55, 85, 100];
+  var MEAL_P = [2, 1, 0], SLEEP_P = [2, 1.5, 0.5, 0], PEOPLE_P = [2, 1.5, 0.5, 0], JOY_P = [2, 1, 0], YEAR_P = [1, 0.5, 0, 0.5], POWER_P = [1, 0.5, 0, 0];
+  function score(a) {
+    a = a || answers;
+    var tele = Math.round(0.6 * AFTER_V[a[I.after]] + 0.4 * TIME_V[a[I.time]]);
+    if (a[I.cmp] === 5) tele = Math.max(0, tele - 15);
+    var total = MEAL_P[a[I.meal]] + SLEEP_P[a[I.sleep]] + PEOPLE_P[a[I.people]] + JOY_P[a[I.joy]] + YEAR_P[a[I.year]] + POWER_P[a[I.power]];
+    var actual = Math.max(1, Math.min(5, 1 + Math.round(total * 0.4)));
+    var perceived = a[I.rate] + 1;
+    return { a: a.slice(), tele: tele, total: total, actual: actual, perceived: perceived, gap: actual - perceived };
+  }
+  function decide(sc) {
+    var a = sc.a;
+    if (a[I.power] === 3) return "SAFE";
+    if (a[I.sleep] === 3 || (a[I.sleep] === 2 && a[I.power] === 2)) return "SLEEP";
+    if (a[I.power] === 2 || (a[I.meal] === 2 && a[I.power] === 1)) return "CLOUD";
+    if (a[I.people] === 3 || (a[I.people] === 2 && (a[I.wish] === 3 || a[I.joy] === 2))) return "LONELY";
+    if (a[I.voice] === 3) return "SPOTLIGHT";
+    if (sc.gap >= 2 && sc.actual >= 4) return "HIDDEN";
+    if (a[I.voice] === 2) return "CRITIC";
+    if (sc.tele >= 60) return "TELESCOPE";
+    if (a[I.time] >= 3 && a[I.after] <= 1) return "LIGHT";
+    if (a[I.wish] === 2) return "NORTH";
+    if (a[I.wish] === 1 || (a[I.year] === 0 && a[I.rate] <= 2)) return "WAXING";
+    if (a[I.joy] === 0 && sc.tele < 40) return "COLLECTOR";
+    if (sc.actual >= 4 && a[I.rate] >= 3) return "CLEAR";
+    return "HALF";
+  }
+
+  /* ---------- answer sentences ---------- */
+  var S_AFTER = ["남의 소식을 봐도 별생각 없다고 했어요.", "남의 소식을 보면 잠깐 부럽고 끝난다고 했어요.", "남의 소식을 보고 나면 한동안 내가 초라해 보인다고 했어요.", "남의 소식을 보고 나면 그날 기분이 가라앉는다고 했어요."];
+  var S_TIME = ["SNS는 하루 30분 안쪽으로 본다고 했어요.", "SNS는 하루 30분에서 1시간쯤 본다고 했어요.", "SNS는 하루 1~2시간 본다고 했어요.", "SNS는 하루 2시간 넘게 본다고 했어요.", "SNS는 틈날 때마다 본다고 했어요."];
+  var CMP_NAME = ["돈·집", "일·커리어", "외모·몸", "연애·결혼·가족", "여행·취미 같은 일상", ""];
+  var CMP_LINE = [
+    "피드에는 결제한 순간이 올라오고, 할부 문자는 안 올라와요.",
+    "승진 소식은 올라와도, 그 전의 야근과 그 뒤의 불안은 안 올라와요.",
+    "올라오는 사진은 여러 장 중에 고른 한 장이에요. 내 얼굴은 고르기 전의 모든 장을 다 보고 있고요.",
+    "기념일 사진은 올라와도, 그날 밤 다툰 얘기는 안 올라와요.",
+    "여행 사진은 1년 중 며칠의 기록이에요. 나머지 날엔 그 사람도 출근하고, 장 보고, 빨래해요.",
+    "딱히 비교하는 건 없다고 했지만, 오래 보다 보면 기준이 모르는 사이 남의 하늘로 옮겨 가요."
+  ];
+  var S_SLEEP = ["잠은 푹 자는 편이라고 했어요.", "잠은 그럭저럭 잔다고 했어요.", "잠이 자주 모자라다고 했어요.", "잠을 거의 못 잔다고 했어요."];
+  var S_PEOPLE = ["힘들 때 연락할 사람이 두 명 이상 있다고 했어요.", "힘들 때 연락할 사람이 한 명 있다고 했어요.", "힘들 때 연락할 사람은 있지만 연락하기가 어렵다고 했어요.", "힘들 때 떠오르는 사람이 없다고 했어요."];
+  var S_VOICE = ["실수하면 스스로에게 ‘그럴 수 있지’라고 해 준다고 했어요.", "실수하면 ‘다음엔 이렇게 해 보자’고 한다고 했어요.", "실수하면 머릿속에서 ‘역시 난 안 돼’라는 목소리가 난다고 했어요.", "실수하고 나면 ‘다들 날 한심하게 봤을 거야’라는 생각이 든다고 했어요."];
+  function hasBatchim(w) { var c = w.charCodeAt(w.length - 1); return c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 !== 0; }
+  function iraGo(w) { return w + (hasBatchim(w) ? "이라고" : "라고"); }
+
+  /* ---------- results ---------- */
+  function hurt(a) { return a[I.after] >= 2; }   // 남의 소식을 보면 작아진다고 답함
+  function heavy(a) { return a[I.time] >= 3; }   // SNS 하루 2시간 넘게
+  var R = {
+    HIDDEN: {
+      name: "숨은 보름달형", icon: "full", line: "괜찮은데 본인만 어둡게 보는 밤",
+      head: function () { return "보름달이 떠 있는데, 구름 쪽만 보고 있었어요."; },
+      body: function (sc) {
+        var a = sc.a, out = ["내가 매긴 별점은 " + sc.perceived + "개인데, 끼니·잠·사람·좋았던 순간 같은 생활 신호로 잰 밝기는 " + sc.actual + "개예요. 하늘은 밝은데 망원경이 다른 쪽을 보고 있었어요."];
+        if (hurt(a)) {
+          out.push(S_AFTER[a[I.after]] + (a[I.cmp] < 5 ? " 요즘은 " + CMP_NAME[a[I.cmp]] + " 쪽을 자주 비교한다고 했고요. " + CMP_LINE[a[I.cmp]] : "") + " 그렇게 남의 하늘을 보는 동안, 내 쪽 하늘은 관측 기록에 들어가지 않았어요.");
+        } else if (a[I.voice] >= 2) {
+          out.push(S_VOICE[a[I.voice]] + " 그 목소리가 별점을 깎고 있어요.");
+        } else {
+          out.push("남의 소식에 크게 흔들리는 편도 아니라서, 비교 때문은 아닌 것 같아요. 원래 별점을 짜게 주는 관측자일 수도 있어요. 그렇다면 별점과 별개로, 좋았던 일을 따로 적어 두는 게 좋아요.");
+        }
+        return out;
+      },
+      fact: ["미국 대학생 약 2천 명에게 물었더니, 중서부 학생도 캘리포니아 학생도 ‘캘리포니아 쪽이 더 만족하며 살 것’이라고 예상했어요. 실제로 잰 삶의 만족도는 두 지역이 같았어요. 날씨처럼 눈에 잘 띄는 한 가지를 볼 때 그게 실제보다 크게 보여서예요.", "연구진의 결론은 이랬어요. “지금 집중하고 있는 것은 생각만큼 큰 차이를 만들지 않는다.”"],
+      src: "Schkade & Kahneman (1998), Psychological Science · 대학생 1,993명",
+      todo: function (sc) {
+        var a = sc.a, t = ["오늘 좋았던 순간 하나를 사진 말고 글로 한 줄 남기기"];
+        if (hurt(a)) t.push("피드를 보다 내가 작아지는 순간이 오면, 그 자리에서 앱을 닫고 위의 ‘찾은 빛’을 한 번 읽기");
+        else if (a[I.voice] >= 2) t.push("오늘 머릿속에서 나를 깎는 말이 나오면, 같은 일을 친구가 했을 때 해 줄 말로 바꿔 보기");
+        else t.push("자기 전에 오늘 하루에 별점을 다시 매겨 보기. 이번엔 끼니·잠·사람부터 떠올리고요.");
+        return t;
+      },
+      quip: function (sc) { return hurt(sc.a) ? "오늘 관측을 가린 구름의 이름은 ‘피드’였어요. 다행히 지나가는 구름이에요." : "관측소 규정상 별점은 짜게 매겨도 되지만, 밝기는 정확히 적어야 해요."; }
+    },
+    TELESCOPE: {
+      name: "남의 별 관측 과다형", icon: "scope", line: "망원경이 남의 하늘에 고정된 밤",
+      head: function (sc) { return sc.a[I.time] >= 2 ? "망원경이 계속 남의 하늘을 향해 있어요." : "잠깐 본 남의 하늘이 오래 남는 밤이에요."; },
+      body: function (sc) {
+        var a = sc.a, c = a[I.cmp];
+        return [
+          S_AFTER[a[I.after]] + " " + S_TIME[a[I.time]],
+          (c < 5 ? "요즘 자주 비교하는 건 " + iraGo(CMP_NAME[c]) + " 했어요. " : "") + CMP_LINE[c],
+          "남의 별이 밝아 보이는 건, 가장 밝게 나온 장면만 골라서 오기 때문이에요. 내 하늘은 흐린 날까지 다 보고 있고요."
+        ];
+      },
+      fact: ["미국 대학생 143명에게 페이스북·인스타그램·스냅챗을 앱마다 하루 10분까지만 쓰게 했더니, 3주 뒤 외로움과 우울감이 평소대로 쓴 사람들보다 눈에 띄게 줄었어요. 처음에 우울감이 컸던 사람일수록 효과가 컸어요."],
+      src: "Hunt 외 (2018), Journal of Social and Clinical Psychology · 143명",
+      todo: function (sc) {
+        var t = ["볼 때마다 내가 작아지는 계정 하나를 피드에서 숨기기(뮤트). 친구를 끊는 것보다 가벼워요."];
+        if (sc.a[I.time] >= 2) { t.push("SNS 앱을 홈 화면 두 번째 페이지로 옮기기. 한 번 더 넘겨야 열리게요."); t.push("오늘은 앱마다 10분 타이머를 맞추고 보기"); }
+        else t.push("비교하고 싶어질 땐 사진첩에서 1년 전 오늘 사진 열어 보기. 비교 상대는 1년 전의 나로요.");
+        return t;
+      },
+      quip: function () { return "남의 별은 원래 밝게 찍혀서 와요. 보정을 세 번쯤 거쳐서요."; }
+    },
+    SLEEP: {
+      name: "새벽 관측자형", icon: "sleep", line: "잠이 모자라 모든 게 더 어두운 밤",
+      head: function () { return "오늘 밤 내린 결론은, 자고 나서 다시 봐요."; },
+      body: function (sc) {
+        var a = sc.a, out = [S_SLEEP[a[I.sleep]] + " 잠이 모자라면 같은 장면도 더 아프게 들어와요. 지금 ‘나만 뒤처졌다’는 느낌이 있다면, 그 느낌이 실제보다 크게 들리고 있을 수 있어요."];
+        if (hurt(a) || heavy(a)) out.push("자기 전에 피드를 본다면, 가장 지친 시간에 가장 밝게 찍힌 사진을 보는 셈이에요.");
+        out.push(a[I.sleep] === 3 ? "거의 못 자는 날이 이어지고 있다면, 혼자 버티기보다 병원에서 잠 문제부터 이야기해 보는 게 좋아요." : "잠이 채워지면 같은 하늘도 다르게 보여요. 푹 잔 다음 날 이 관측을 다시 해 보면 결과가 달라질 수 있어요.");
+        return out;
+      },
+      fact: ["35시간 동안 잠을 못 잔 사람들에게 불쾌한 사진을 보여 줬더니, 뇌의 감정 중추(편도체)가 충분히 잔 사람들보다 60% 넘게 더 크게 반응했어요. 감정을 진정시키는 앞쪽 뇌와의 연결도 약해져 있었어요."],
+      src: "Yoo 외 (2007), Current Biology · 26명",
+      todo: ["오늘은 휴대폰을 침대에서 팔이 닿지 않는 곳에 두고 자기", "‘나는 왜 이럴까’ 같은 큰 질문은 오늘 밤 말고, 자고 일어나서 하기", "잠들기 전 30분은 피드 대신 씻기·스트레칭·음악처럼 화면 없는 일 하기"],
+      quip: function () { return "새벽 2시의 관측 결과는 공식 기록에 안 남아요. 관측소 규정이에요."; }
+    },
+    CLOUD: {
+      name: "구름 낀 밤형", icon: "cloud", line: "배터리가 바닥난 흐린 밤",
+      head: function () { return "별이 없는 게 아니라, 구름이 두꺼운 밤이에요."; },
+      body: function (sc) {
+        var a = sc.a, out = [];
+        if (a[I.power] === 2) out.push("하루를 버티는 힘이 바닥이라고 했어요." + (a[I.meal] === 2 ? " 끼니도 자주 걸렀고요." : ""));
+        else out.push("끼니를 자주 걸렀다고 했어요. 하루를 버티는 힘도 그럭저럭이고요.");
+        out.push("이런 밤엔 하늘을 분석하지 않아요. 관측소도 구름이 두꺼운 날엔 장비를 덮어 두고 쉬어요. 행복을 찾는 것보다 배터리를 채우는 게 먼저예요.");
+        if (a[I.power] === 2) out.push("이런 상태가 2주 넘게 이어진다면, 혼자 버티지 말고 정신건강위기상담(1577-0199)에 이야기해 보세요.");
+        return out;
+      },
+      fact: ["영국 성인 약 2만 명을 조사했더니, 일주일에 공원·숲·물가 같은 자연에서 120분 이상 보낸 사람들이 건강하고 만족스럽다고 답한 비율이 높았어요. 한 번에 몰아서든 여러 번 나눠서든 차이가 없었어요.", "다만 ‘관련이 있다’는 조사라, 원인까지 밝힌 건 아니에요."],
+      src: "White 외 (2019), Scientific Reports · 19,806명",
+      todo: ["오늘 20분, 가까운 공원이나 하천 길에 나가 있기. 걷지 않고 벤치에 앉아만 있어도 돼요. 위 연구의 기준은 일주일 합계 120분이에요.", "할 일 목록에서 이번 주에 안 해도 되는 것 하나를 지우기", "오늘 끼니 하나는 따뜻한 걸로 챙겨 먹기"],
+      quip: function () { return "구름 낀 날은 관측 일지에 ‘흐림’이라고만 적어요. 그것도 정식 기록이에요."; }
+    },
+    LONELY: {
+      name: "혼자 뜬 달형", icon: "lone", line: "연결이 그리운 밤", skipWish: [3],
+      head: function () { return "혼자 뜬 달도 매일 같은 얼굴로 지구를 보고 있어요."; },
+      body: function (sc) {
+        var a = sc.a;
+        return [
+          S_PEOPLE[a[I.people]] + (a[I.wish] === 3 ? " 누군가와 가까워지고 싶다고도 했고요." : "") + (a[I.joy] === 2 ? " 이번 주에 ‘좋다’ 싶은 순간도 기억나지 않는다고 했어요." : ""),
+          "외로움은 사람 수보다 ‘연결돼 있다’는 느낌에서 와요. 그래서 큰 결심보다 작은 접촉이 먼저 효과를 내요."
+        ];
+      },
+      fact: ["카페에서 직원과 웃으며 눈을 맞추고 짧게 대화한 사람들은, 최대한 빨리 주문만 하고 나온 사람들보다 기분이 더 좋았어요. 그 차이는 ‘어딘가에 속해 있다’는 느낌에서 나왔어요."],
+      src: "Sandstrom & Dunn (2014), Social Psychological and Personality Science",
+      todo: ["오늘 카페나 편의점에서 눈 맞추고 한마디 더 하기 (‘오늘 바쁘시네요’ 정도)", "연락이 뜸했던 사람에게 ‘생각나서’라고만 보내기. 답장은 기대하지 않고요.", "도서관·운동 모임처럼 같은 시간에 같은 얼굴을 보는 곳 하나 찾아보기"],
+      quip: function () { return "중력은 언제나 양쪽이 같이 당겨요. 지구가 달을 당기는 만큼, 달도 지구를 당기고 있어요."; }
+    },
+    SPOTLIGHT: {
+      name: "주인공 착시형", icon: "spot", line: "모두가 나만 보는 것 같은 밤",
+      head: function () { return "다들 나만 보는 것 같지만, 객석은 생각보다 어두워요."; },
+      body: function (sc) {
+        var a = sc.a, out = [S_VOICE[3], "그 장면에서 나는 주인공이라 조명이 다 나한테 있는 것 같지만, 다른 사람들은 각자 자기 무대에서 자기 대사를 챙기느라 바빠요."];
+        if (hurt(a) || a[I.time] >= 2) out.push("SNS도 같아요. 내가 남의 게시물을 금방 잊듯, 남들도 내 하루를 그렇게 지나가요.");
+        return out;
+      },
+      fact: ["민망한 가수 얼굴이 크게 박힌 티셔츠를 입고 다른 학생들이 있는 방에 들어간 학생들은, 절반쯤이 알아챘을 거라고 예상했어요. 실제로 알아본 사람은 4명 중 1명 정도였어요. 사람들은 남이 나를 얼마나 보는지 늘 크게 잡아요."],
+      src: "Gilovich, Medvec & Savitsky (2000), Journal of Personality and Social Psychology",
+      todo: ["최근에 실수한 장면 하나를 떠올리고, 그걸 아직 기억하고 있을 사람을 실제로 꼽아 보기", "지난주에 다른 사람이 한 실수 하나를 떠올려 보기. 잘 안 떠오르면, 남들도 내 실수를 그렇게 잊어요."],
+      quip: function () { return "객석을 다시 보세요. 다들 자기 휴대폰 보고 있어요."; }
+    },
+    CRITIC: {
+      name: "자책 돋보기형", icon: "glass", line: "내 흠만 크게 보이는 밤",
+      head: function () { return "돋보기로 보면 매끈한 달도 분화구투성이예요."; },
+      body: function (sc) {
+        var out = [S_VOICE[2], "그 목소리는 정확한 관측자가 아니라 배율이 지나치게 높은 렌즈예요. 흠은 크게 보이고, 잘한 건 화면 밖으로 밀려나요."];
+        if (hurt(sc.a)) out.push("남의 하늘은 맨눈으로, 내 하늘은 돋보기로 보면 비교는 질 수밖에 없어요.");
+        return out;
+      },
+      fact: ["자기 약점이나 실수를 떠올린 뒤 친구에게 하듯 다정하게 스스로에게 말해 준 사람들이, 자존감을 북돋는 말을 하거나 아무것도 안 한 사람들보다 더 고치고 나아지려 했어요. 어려운 시험을 망친 뒤엔 더 공부하려 했고요. 다정하게 대한다고 느슨해지지 않았어요."],
+      src: "Breines & Chen (2012), Personality and Social Psychology Bulletin · 실험 4개",
+      todo: ["가장 최근에 한 실수를 친구가 했다고 치고, 그 친구에게 해 줄 말을 3분 동안 나에게 써 보기", "‘역시 난 안 돼’가 떠오르면 ‘이번엔 잘 안 됐어’로 바꿔 말해 보기"],
+      quip: function () { return "돋보기를 대면 모공도 분화구예요. 관측소에서 사람 얼굴은 맨눈으로만 봐요."; }
+    },
+    LIGHT: {
+      name: "빛 공해형", icon: "city", line: "알림과 피드로 눈부신 밤",
+      head: function () { return "불빛이 너무 밝아서 별이 안 보이는 밤이에요."; },
+      body: function (sc) {
+        var a = sc.a;
+        return [S_TIME[a[I.time]] + " 그런데 남의 소식에 크게 흔들리지는 않는다고 했어요.", "비교보다 양이 문제예요. 알림과 피드가 계속 켜져 있으면, 부러워하지 않아도 마음이 쉴 틈이 없어요."];
+      },
+      fact: ["124명에게 한 주는 이메일을 하루 세 번만, 한 주는 수시로 확인하게 했더니, 세 번만 볼 때 하루 스트레스가 더 낮았어요. 확인 횟수만 줄였을 뿐인데요.", "SNS와 알림은 이 실험에서 다루지 않았지만, ‘확인 횟수 정해 두기’는 똑같이 해 볼 수 있어요."],
+      src: "Kushlev & Dunn (2015), Computers in Human Behavior · 124명",
+      todo: ["메신저를 뺀 앱 알림 모두 끄기", "SNS는 하루 세 번, 시간을 정해 두고 보기 (예: 점심·퇴근길·저녁 9시)", "잠들기 전 30분은 화면 대신 종이책이나 음악으로 보내기"],
+      quip: function () { return "천문대를 도시에서 먼 산 위에 짓는 이유예요. 별이 거기만 뜨는 건 아니거든요."; }
+    },
+    NORTH: {
+      name: "북극성 찾는 중형", icon: "north", line: "방향을 고르는 밤", skipWish: [2],
+      head: function () { return "10년 치 지도를 한 번에 고를 필요는 없어요."; },
+      body: function (sc) {
+        var y = sc.a[I.year];
+        var second = y === 0 ? "1년 전보다 나아진 게 있다고 했으니, 이미 어딘가로는 움직이고 있어요. 방향은 움직이면서 더 잘 보여요."
+          : y === 2 ? "1년 전보다 힘들어졌다고 했죠. 힘든 해라면 방향보다 회복이 먼저일 수 있어요."
+          : "지금 필요한 건 평생의 방향이 아니라, 이번 주에 갈 수 있는 한 칸이에요.";
+        return ["요즘 가장 바라는 게 방향을 찾는 거라고 했어요.", second];
+      },
+      fact: ["18~68세 1만 9천여 명에게 물었더니, 나이와 상관없이 다들 ‘지난 10년 동안 나는 많이 변했다’고 하면서 ‘앞으로 10년은 별로 안 변할 것’이라고 예상했어요. 연구진은 이걸 ‘역사의 끝 착각’이라고 불렀어요.", "지금의 내가 10년 뒤의 나를 다 정할 필요는 없다는 뜻이에요."],
+      src: "Quoidbach, Gilbert & Wilson (2013), Science · 19,000여 명",
+      todo: function (sc) {
+        return sc.a[I.year] === 2
+          ? ["이번 주 일정에서 회복을 위해 뺄 수 있는 것 하나 빼기", "지난 1년 동안 버텨 낸 일 세 가지 적기"]
+          : ["해 보고 싶은 것의 가장 작은 버전 하나를 골라 이번 주 달력에 적기 (예: 이직 → 관심 회사 공고 하나 읽기, 운동 → 동네 한 바퀴)", "1년 전의 나에게 지금의 나를 소개하는 세 줄 쓰기"];
+      },
+      quip: function () { return "북극성도 영원한 북극성은 아니에요. 지구 자전축이 2만 6천 년쯤에 한 바퀴 돌아서, 그 자리가 다른 별에게 넘어가요. 방향이 바뀌는 건 별에게도 있는 일이에요."; }
+    },
+    WAXING: {
+      name: "차오르는 달형", icon: "wax", line: "차오르는 중인 밤", skipWish: [1],
+      head: function () { return "아직 보름이 아닐 뿐, 매일 차오르는 중이에요."; },
+      body: function (sc) {
+        var a = sc.a, out = [];
+        if (a[I.wish] === 1) out.push("인정받고 싶다고 했어요. 남의 인정은 내가 정할 수 없지만, 내가 나아간 만큼은 내가 셀 수 있어요.");
+        if (a[I.year] === 0) out.push("1년 전보다 나아진 게 있다고 했는데, 별점은 " + sc.perceived + "개를 줬어요. 진전은 있는데 아직 기록이 안 된 상태예요.");
+        else out.push("달은 보름 전 2주 동안 매일 조금씩 차올라요. 그 2주를 기록하지 않으면 보름달만 기억에 남아요.");
+        return out;
+      },
+      fact: ["7개 회사 238명이 쓴 업무 일기 약 1만 2천 건을 분석했더니, 가장 기분 좋고 의욕 있던 날은 ‘의미 있는 일에서 조금이라도 나아간 날’이었어요. 큰 성과가 아니어도요."],
+      src: "Amabile & Kramer (2011), The Progress Principle · 일기 약 12,000건",
+      todo: function (sc) {
+        return ["오늘 나아간 것 하나 적기. ‘메일 하나 보냄’도 들어가요.", "할 일 목록 옆에 ‘끝낸 일 목록’ 만들기", sc.a[I.year] === 0 ? "1년 전보다 나아진 점 한 줄을 휴대폰 메모 맨 위에 두기" : "이번 달에 끝낸 일 하나를 휴대폰 메모 맨 위에 두기"];
+      },
+      quip: function () { return "달이 보름에만 뜨는 건 아니에요. 사람들이 보름에만 사진을 찍을 뿐이에요."; }
+    },
+    COLLECTOR: {
+      name: "작은 별 수집가형", icon: "jar", line: "작은 빛을 잘 줍는 밤",
+      head: function () { return "다들 유성우를 기다릴 때, 매일 뜨는 별을 줍고 있어요."; },
+      body: function (sc) {
+        var first = hurt(sc.a)
+          ? "이번 주에 ‘아, 좋다’ 싶은 순간이 여러 번 있었다고 했어요. 남의 소식에 한동안 작아질 때도 있지만, 그 순간들을 놓치지 않고 있어요."
+          : "이번 주에 ‘아, 좋다’ 싶은 순간이 여러 번 있었고, 남의 소식에 크게 흔들리지 않는다고 했어요.";
+        return [first, "행복을 큰 사건에서 기다리지 않고, 자주 오는 작은 순간에서 줍는 편이에요. 그 습관은 연구로도 효과가 확인된 방법이에요."];
+      },
+      fact: ["일주일 동안 매일 밤 ‘좋았던 일 세 가지와 그 일이 왜 일어났는지’를 적은 사람들은 행복감이 올라갔고, 6개월 뒤 확인에서도 그 효과가 이어졌어요. 이미 하고 있는 걸 적기만 하면 돼요."],
+      src: "Seligman 외 (2005), American Psychologist",
+      todo: ["‘오늘의 별 3개’에 이유까지 적어 보기", "그중 하나를 그 순간을 같이 만든 사람에게 말하기"],
+      quip: function () { return "관측소에서 제일 부러워하는 장비를 이미 갖고 계시네요. 작은 빛을 놓치지 않는 눈이요."; }
+    },
+    CLEAR: {
+      name: "맑은 밤형", icon: "clear", line: "보이는 만큼 밝은 밤", skipWish: [3],
+      head: function () { return "오늘은 관측하기 좋은 맑은 밤이에요."; },
+      body: function (sc) {
+        return ["별점은 " + sc.perceived + "개, 끼니·잠·사람 같은 생활 신호로 잰 밝기는 " + sc.actual + "개예요. 보이는 것과 실제가 거의 같아요.", "맑은 밤에 할 일은 하나예요. 남는 빛을 조금 나눠 주는 거예요."];
+      },
+      fact: ["5달러나 20달러를 받아 그날 오후 5시까지 쓰게 했더니, 남을 위해 쓴 사람들이 자기를 위해 쓴 사람들보다 저녁에 더 행복했어요. 5달러로도 충분했어요."],
+      src: "Dunn, Aknin & Norton (2008), Science",
+      todo: ["오늘 커피 한 잔이나 간식 하나를 누군가에게 사 주기", "요즘 연락이 뜸한 사람에게 안부 한 줄 보내기"],
+      quip: function () { return "관측 조건 최상이에요. 이런 밤의 기록이 흐린 날 꺼내 볼 지도가 돼요."; }
+    },
+    HALF: {
+      name: "반달형", icon: "half", line: "빛과 그늘이 반반인 밤",
+      head: function () { return "반달은 반만 있는 달이 아니에요. 나머지 반이 그늘에 있을 뿐이에요."; },
+      body: function (sc) {
+        return cloudsFor(sc.a).length
+          ? ["좋은 것도 있고, 비어 있는 곳도 있어요. 아래 ‘찾은 빛’과 ‘구름 낀 곳’을 같이 보세요.", "별점을 한 번에 올리려 애쓰기보다, 구름 낀 곳 하나만 골라 손보면 돼요."]
+          : ["눈에 띄는 구름은 없는데, 아주 밝지도 않은 밤이에요.", "이런 밤엔 큰 변화보다, 지금 하는 일에 마음을 붙여 두는 쪽이 도움이 돼요. 아래 연구가 그 얘기예요."];
+      },
+      fact: ["2,250명에게 하루 중 아무 때나 휴대폰으로 ‘지금 뭐 하고, 무슨 생각을 하고, 얼마나 행복한지’ 물었어요. 사람들은 깨어 있는 시간의 46.9%를 지금 하는 일과 다른 생각을 하며 보냈고, 딴생각할 때 덜 행복했어요.", "무엇을 하는지보다 거기에 마음이 있는지가 행복과 더 관련이 컸어요."],
+      src: "Killingsworth & Gilbert (2010), Science · 2,250명",
+      todo: function (sc) {
+        return ["오늘 한 끼는 휴대폰 없이, 밥만 먹기", cloudsFor(sc.a).length ? "‘구름 낀 곳’ 중 하나를 골라, 오늘 할 수 있는 만큼만 손보기" : "오늘 하는 일 하나에 15분만 온전히 집중하기 (알림을 끄고)"];
+      },
+      quip: function () { return "망원경으로 달을 볼 땐 보름보다 반달 무렵이 좋아요. 빛과 그늘의 경계에서 분화구가 제일 또렷하거든요."; }
+    },
+    SAFE: { name: "관측 중지", icon: "safe", line: "관측보다 사람이 먼저인 밤" }
+  };
+  var DEX_ORDER = ["HIDDEN", "TELESCOPE", "SPOTLIGHT", "CRITIC", "SLEEP", "CLOUD", "LONELY", "LIGHT", "NORTH", "WAXING", "COLLECTOR", "CLEAR", "HALF"];
+
+  var WISH = [
+    "쉬고 싶다고 했죠. 쉬는 시간은 달력에 먼저 적어 둬야 생겨요. 이번 주에 ‘아무것도 안 하기’ 두 시간을 먼저 넣어 보세요.",
+    "인정받고 싶다고 했죠. 남의 인정은 내가 정할 수 없지만, 오늘 나아간 건 내가 셀 수 있어요. 작아도 하나 적어 보세요.",
+    "방향을 찾고 싶다고 했죠. 10년 치 지도를 한 번에 고를 필요는 없어요. 이번 주에 해 볼 가장 작은 것 하나면 돼요.",
+    "누군가와 가까워지고 싶다고 했죠. 오늘 한 사람에게 먼저 짧은 안부를 보내 보세요. 답장은 숙제가 아니에요.",
+    "지금 이대로 좋다고 했죠. 그 말이 나온 오늘을 ‘오늘의 별’에 적어 캡처해 두면, 흐린 날 꺼내 볼 수 있어요."
+  ];
+
+  function lightsFor(a) {
+    var L = [];
+    if (a[I.people] === 0) L.push("힘들 때 연락할 사람이 두 명 이상 있어요");
+    else if (a[I.people] === 1) L.push("힘들 때 연락할 사람이 한 명 있어요");
+    if (a[I.joy] === 0) L.push("이번 주에 ‘좋다’ 싶은 순간이 여러 번 있었어요");
+    else if (a[I.joy] === 1) L.push("이번 주에도 ‘좋다’ 싶은 순간이 있었어요");
+    if (a[I.meal] === 0) L.push("끼니를 챙겨 먹고 있어요");
+    else if (a[I.meal] === 1) L.push("대충이라도 끼니는 먹고 있어요");
+    if (a[I.sleep] === 0) L.push("잠을 푹 자는 편이에요");
+    else if (a[I.sleep] === 1) L.push("잠은 그럭저럭 자고 있어요");
+    if (a[I.year] === 0) L.push("1년 전보다 나아진 게 있어요");
+    if (a[I.voice] === 0) L.push("실수한 나에게 ‘그럴 수 있지’라고 말해 줘요");
+    else if (a[I.voice] === 1) L.push("실수를 다음 계획으로 바꿀 줄 알아요");
+    if (a[I.power] === 0) L.push("하루를 버틸 힘이 넉넉해요");
+    else if (a[I.power] === 1) L.push("그럭저럭이라도 하루를 버티고 있어요");
+    if (a[I.after] === 0) L.push("남의 소식에 크게 흔들리지 않아요");
+    else if (a[I.after] === 1) L.push("부러움이 잠깐 왔다가 지나가요");
+    if (a[I.time] === 0) L.push("SNS를 하루 30분 안쪽으로만 봐요");
+    if (a[I.wish] === 4) L.push("‘지금 이대로 좋다’고 말할 수 있어요");
+    return L.slice(0, 6);
+  }
+  function cloudsFor(a) {
+    var C = [];
+    if (a[I.sleep] === 3) C.push("잠을 거의 못 자요");
+    else if (a[I.sleep] === 2) C.push("잠이 자주 모자라요");
+    if (a[I.meal] === 2) C.push("끼니를 자주 걸렀어요");
+    if (a[I.power] === 2) C.push("하루를 버티는 힘이 바닥이에요");
+    if (a[I.people] === 3) C.push("힘들 때 떠오르는 사람이 없어요");
+    else if (a[I.people] === 2) C.push("연락할 사람은 있지만, 연락하기가 어려워요");
+    if (a[I.joy] === 2) C.push("이번 주 ‘좋다’ 싶은 순간이 기억나지 않아요");
+    if (a[I.after] === 3) C.push("남의 소식을 보면 그날 기분이 가라앉아요");
+    else if (a[I.after] === 2) C.push("남의 소식을 보면 한동안 내가 초라해 보여요");
+    if (a[I.time] >= 3) C.push(a[I.time] === 3 ? "SNS를 하루 2시간 넘게 봐요" : "SNS를 틈날 때마다 봐요");
+    if (a[I.voice] === 2) C.push("실수하면 ‘역시 난 안 돼’라고 해요");
+    else if (a[I.voice] === 3) C.push("실수하면 ‘다들 날 한심하게 봤을 거야’라고 생각해요");
+    if (a[I.year] === 2) C.push("1년 전보다 힘들어졌어요");
+    return C.slice(0, 5);
+  }
+  function gapInfo(sc) {
+    var g = sc.gap;
+    if (g >= 2) return { cls: "up", t: "관측 오차 +" + g + " · 실제보다 별 " + g + "개만큼 어둡게 보고 있어요." };
+    if (g === 1) return { cls: "up", t: "관측 오차 +1 · 실제가 조금 더 밝아요." };
+    if (g === 0) return { cls: "even", t: "관측 오차 0 · 보이는 만큼 보고 있어요." };
+    if (g === -1) return { cls: "down", t: "관측 오차 −1 · 별점이 생활 신호보다 조금 높아요." };
+    return { cls: "down", t: "관측 오차 −" + (-g) + " · 마음이 매긴 별점보다 생활 신호(끼니·잠·사람 등)가 약하게 잡혔어요. 그쪽을 챙겨야 별점이 오래가요." };
+  }
+  function buildResult(sc, key) {
+    var r = R[key], a = sc.a;
+    if (key === "SAFE") return { key: key, sc: sc, name: r.name };
+    return {
+      key: key, sc: sc, name: r.name, icon: r.icon,
+      head: r.head(sc), body: r.body(sc), fact: r.fact, src: r.src, todo: typeof r.todo === "function" ? r.todo(sc) : r.todo.slice(), quip: r.quip(sc),
+      lights: lightsFor(a), clouds: cloudsFor(a), gap: gapInfo(sc),
+      wish: r.skipWish && r.skipWish.indexOf(a[I.wish]) >= 0 ? "" : WISH[a[I.wish]]
+    };
+  }
+
+  /* ---------- icons ---------- */
+  function starPts(cx, cy, R1, r1, n) {
+    n = n || 5; var p = [];
+    for (var i = 0; i < n * 2; i++) {
+      var ang = -Math.PI / 2 + i * Math.PI / n, rad = i % 2 ? r1 : R1;
+      p.push((cx + rad * Math.cos(ang)).toFixed(2) + "," + (cy + rad * Math.sin(ang)).toFixed(2));
+    }
+    return p.join(" ");
+  }
+  function st(cx, cy, R1, cls) { return '<polygon class="' + (cls || "a") + '" points="' + starPts(cx, cy, R1, R1 * 0.45) + '"/>'; }
+  function spark(cx, cy, R1, cls) { return '<polygon class="' + (cls || "a") + '" points="' + starPts(cx, cy, R1, R1 * 0.28, 4) + '"/>'; }
+  var CLOUD_PATH = "M10 36c-3.3 0-6-2.5-6-5.6 0-2.8 2.2-5.1 5.1-5.5C9.9 21 13.3 18 17.4 18c3.4 0 6.3 2 7.6 4.9.7-.2 1.4-.3 2.1-.3 3.6 0 6.5 2.8 6.6 6.3 2.4.5 4.3 2.5 4.3 4.9 0 2.8-2.4 5.1-5.3 5.1H10z";
+  var ICON = {
+    full: '<circle class="m" cx="27" cy="21" r="13"/><circle class="c f" cx="22" cy="16" r="2.4"/><circle class="c f" cx="31" cy="25" r="3"/><path class="b" transform="translate(-4 4)" d="' + CLOUD_PATH + '"/>',
+    scope: '<rect class="m" x="8" y="20" width="26" height="8" rx="2" transform="rotate(-24 21 24)"/><rect class="b" x="32" y="13" width="6" height="11" rx="1.5" transform="rotate(-24 35 18)"/><path class="s" d="M20 30l-6 13M22 30l6 13M21 30v13"/>' + spark(41, 7, 4.5) + spark(33, 4, 2.2),
+    sleep: '<path class="m" d="M30 8a16 16 0 1 0 10 28A13 13 0 0 1 30 8z"/><path class="sa" d="M33 13h6l-6 7h6M40 5h4l-4 5h4"/>',
+    cloud: '<circle class="m" cx="30" cy="17" r="9"/><path class="b" d="' + CLOUD_PATH + '"/>' + spark(10, 9, 2.4),
+    lone: '<path class="m" d="M20 8a15 15 0 1 0 12 25A12 12 0 0 1 20 8z"/>' + spark(40, 10, 2.6) + spark(42, 36, 1.8, "b"),
+    spot: '<path class="m f" d="M18 4h12l10 36H8z"/><rect class="b" x="16" y="2" width="16" height="5" rx="1.5"/>' + st(24, 34, 7),
+    glass: '<circle class="s" cx="20" cy="20" r="12"/><path class="s" d="M29 29l11 11"/>' + st(20, 20, 6),
+    city: '<rect class="b" x="4" y="26" width="9" height="18"/><rect class="b" x="15" y="18" width="10" height="26"/><rect class="b" x="27" y="23" width="8" height="21"/><rect class="b" x="37" y="30" width="7" height="14"/><rect class="a" x="18" y="22" width="2.5" height="2.5"/><rect class="a" x="21.5" y="28" width="2.5" height="2.5"/><rect class="a" x="7" y="30" width="2.5" height="2.5"/><rect class="a" x="30" y="27" width="2.5" height="2.5"/>' + spark(10, 9, 2, "b") + spark(38, 8, 2.6),
+    north: '<circle class="s" cx="24" cy="24" r="17"/>' + spark(24, 24, 13) + '<circle class="c" cx="24" cy="24" r="2"/>',
+    wax: '<circle class="m" cx="24" cy="24" r="15"/><path class="c" d="M24 9a15 15 0 0 0 0 30a9 15 0 0 1 0-30z"/>',
+    jar: '<path class="s" d="M14 14h20v4c3 2 4 5 4 9v11a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4V27c0-4 1-7 4-9z"/><path class="s" d="M13 10h22"/>' + st(19, 31, 4) + st(29, 27, 3.4) + st(25, 37, 2.8),
+    clear: st(13, 14, 6) + st(34, 12, 4) + st(28, 31, 8) + spark(9, 36, 2.6, "m") + spark(41, 39, 2.2, "m") + spark(22, 6, 1.8, "m"),
+    half: '<circle class="s" cx="24" cy="24" r="15"/><path class="m" d="M24 9a15 15 0 0 1 0 30z"/>',
+    safe: '<circle class="r f" cx="24" cy="22" r="17"/><circle class="r" cx="24" cy="22" r="8"/><path class="s" d="M24 33v9M17 42h14"/>',
+    title: st(24, 24, 20)
+  };
+  function iconSVG(name) { return '<svg class="ico" viewBox="0 0 48 48" aria-hidden="true">' + ICON[name] + "</svg>"; }
+  function starSVG() { return '<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="' + starPts(12, 12.6, 11, 4.9) + '"/></svg>'; }
+  function starRow(el, n, animate, delay) {
+    el.innerHTML = "";
+    var spans = [];
+    for (var i = 0; i < 5; i++) { var s = document.createElement("span"); s.innerHTML = starSVG(); el.appendChild(s); spans.push(s); }
+    el.setAttribute("aria-label", "별 5개 중 " + n + "개");
+    el.setAttribute("role", "img");
+    if (!animate || reduce) { for (var j = 0; j < n; j++) spans[j].classList.add("on"); return; }
+    for (var k = 0; k < n; k++) (function (k) { setTimeout(function () { spans[k].classList.add("on"); }, delay + k * 260); })(k);
+  }
+  function starsText(n) { var t = ""; for (var i = 0; i < 5; i++) t += i < n ? "★" : "☆"; return t; }
+
+  /* ---------- state ---------- */
+  var answers = Q.map(function () { return null; });
+  var step = 0, last = null, advTimer = null, scanTimer = null;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function $(id) { return document.getElementById(id); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function show(id) {
+    ["s-start", "s-q", "s-scan", "s-result", "s-safe", "s-log", "s-dex"].forEach(function (s) { $(s).hidden = s !== id; });
+    document.body.classList.toggle("dawn", id === "s-result" || id === "s-log");
+    window.scrollTo(0, 0);
+  }
+  function partOfDay(h) { return h < 6 ? "새벽" : h < 11 ? "아침" : h < 17 ? "낮" : h < 21 ? "저녁" : "밤"; }
+  function whenText(d) {
+    var h = d.getHours();
+    return (d.getMonth() + 1) + "월 " + d.getDate() + "일(" + "일월화수목금토".charAt(d.getDay()) + ") " + partOfDay(h) + " " + ((h % 12) || 12) + "시";
+  }
+  function logNo(d) { return "관측 No. " + pad(d.getMonth() + 1) + pad(d.getDate()) + "-" + pad(d.getHours()) + pad(d.getMinutes()); }
+
+  /* ---------- question flow ---------- */
+  function renderQ() {
+    var q = Q[step];
+    $("q-step").textContent = pad(step + 1) + " / " + Q.length;
+    $("q-bar").style.width = (step / Q.length * 100) + "%";
+    $("q-title").textContent = q.t;
+    $("q-sub").hidden = !q.s;
+    $("q-sub").textContent = q.s || "";
+    $("btn-back").style.visibility = step === 0 ? "hidden" : "visible";
+    var box = $("q-opts");
+    box.innerHTML = "";
+    q.o.forEach(function (o, i) {
+      var b = document.createElement("button");
+      b.className = "opt"; b.type = "button"; b.id = "opt-" + step + "-" + i;
+      b.setAttribute("aria-pressed", answers[step] === i ? "true" : "false");
+      b.innerHTML = '<svg class="dot" viewBox="0 0 24 24" aria-hidden="true"><polygon points="' + starPts(12, 12.6, 10, 4.4) + '"/></svg><span><b></b><small></small></span>';
+      var main = b.querySelector("b"), small = b.querySelector("small");
+      if (q.stars) { main.className = "rate"; main.textContent = starsText(i + 1); main.setAttribute("aria-label", o[0]); }
+      else { main.textContent = o[0]; main.style.fontWeight = "400"; }
+      if (o[1]) small.textContent = o[1]; else small.remove();
+      b.addEventListener("click", function () {
+        if (advTimer) return; // 두 번 눌러도 질문을 건너뛰지 않게
+        Array.prototype.forEach.call(box.children, function (c, j) { c.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+        answers[step] = i;
+        advTimer = setTimeout(function () { advTimer = null; next(); }, reduce ? 0 : 180);
+      });
+      box.appendChild(b);
+    });
+  }
+  function next() {
+    if (step < Q.length - 1) { step++; renderQ(); }
+    else { $("q-bar").style.width = "100%"; observe(); }
+  }
+
+  /* ---------- observe ---------- */
+  var SCAN_FIXED = ["망원경을 내 하늘 쪽으로 돌리는 중", "끼니·잠·사람 신호 재는 중", "겉보기 밝기와 실제 밝기 맞춰 보는 중", "관측 기록 쓰는 중"];
+  var SCAN_FUN = ["남의 별 보정값 빼는 중", "렌즈에 묻은 비교 지문 닦는 중", "피드 구름 걷어내는 중", "자책 배율 낮추는 중"];
+  function observe() {
+    var miss = answers.indexOf(null);
+    if (miss >= 0) { step = miss; renderQ(); show("s-q"); return; }
+    if (scanTimer) { clearInterval(scanTimer); scanTimer = null; }
+    var sc = score(), key = decide(sc);
+    last = buildResult(sc, key);
+    if (key === "SAFE") { renderSafe(); show("s-safe"); return; }
+    show("s-scan");
+    $("scan-icon").innerHTML = iconSVG("scope");
+    var lines = [SCAN_FIXED[0], pick(SCAN_FUN), SCAN_FIXED[1], SCAN_FIXED[2], SCAN_FIXED[3]];
+    var box = $("scanlines");
+    box.innerHTML = lines.map(function () { return "<div></div>"; }).join("");
+    Array.prototype.forEach.call(box.children, function (d, i) { d.textContent = lines[i]; });
+    if (reduce) { renderResult(last); show("s-result"); return; }
+    var i = 0;
+    scanTimer = setInterval(function () {
+      if (i < box.children.length) { box.children[i].classList.add("done"); i++; }
+      if (i >= box.children.length) { clearInterval(scanTimer); scanTimer = null; setTimeout(function () { renderResult(last); show("s-result"); playStars(); }, 500); }
+    }, 320);
+  }
+  function fillList(el, items, empty) {
+    el.innerHTML = "";
+    (items.length ? items : [empty]).forEach(function (t) { var li = document.createElement("li"); li.textContent = t; el.appendChild(li); });
+  }
+  function renderResult(v) {
+    var d = new Date();
+    $("r-no").textContent = logNo(d);
+    $("r-when").textContent = whenText(d);
+    $("r-icon").innerHTML = iconSVG(v.icon);
+    $("r-name").textContent = v.name;
+    $("r-head").textContent = v.head;
+    starRow($("r-p"), v.sc.perceived, false, 0);
+    starRow($("r-a"), v.sc.actual, false, 0);
+    var g = $("r-gap"); g.className = "gap " + v.gap.cls; g.textContent = v.gap.t;
+    var body = $("r-body"); body.innerHTML = "";
+    v.body.forEach(function (t) { var p = document.createElement("p"); p.textContent = t; body.appendChild(p); });
+    fillList($("r-lights"), v.lights, "이번 관측에선 빛이 잘 안 잡혔어요. 구름이 두꺼운 날엔 장비가 원래 그래요.");
+    fillList($("r-clouds"), v.clouds, "이번 관측에선 구름이 거의 없었어요.");
+    $("r-fact").textContent = v.fact[0];
+    var src = $("r-src");
+    src.textContent = v.src;
+    var f = $("r-fact").parentNode, extra = f.querySelector(".extra");
+    if (extra) extra.remove();
+    if (v.fact[1]) { var p2 = document.createElement("p"); p2.className = "extra"; p2.textContent = v.fact[1]; f.insertBefore(p2, src); }
+    fillList($("r-todo"), v.todo, "");
+    $("r-wish").textContent = v.wish;
+    $("r-wish").hidden = !v.wish;
+    $("r-quip").textContent = v.quip;
+    $("sharebox").hidden = true;
+    $("toast").textContent = "";
+  }
+  function playStars() {
+    if (!last || last.key === "SAFE" || reduce) return;
+    starRow($("r-p"), last.sc.perceived, true, 200);
+    starRow($("r-a"), last.sc.actual, true, 200 + last.sc.perceived * 260 + 300);
+  }
+  function renderSafe() { $("safe-icon").innerHTML = iconSVG("safe"); }
+
+  function renderDex() {
+    var box = $("dex");
+    var keys = DEX_ORDER.concat(["SAFE"]);
+    box.innerHTML = keys.map(function (k) {
+      var me = last && last.key === k;
+      return '<div class="tile' + (me ? " me" : "") + (k === "SAFE" ? " safe-tile" : "") + '">' + (me ? '<span class="metag">내 결과</span>' : "") + iconSVG(R[k].icon) + '<span class="tn"></span><span class="tl"></span></div>';
+    }).join("");
+    Array.prototype.forEach.call(box.children, function (el, i) {
+      el.querySelector(".tn").textContent = R[keys[i]].name;
+      el.querySelector(".tl").textContent = R[keys[i]].line;
+    });
+  }
+  function shareText() {
+    var v = last, sc = v.sc;
+    return "[행복관측소] 내 관측 결과: " + v.name + "\n" + v.head +
+      "\n겉보기 밝기 " + starsText(sc.perceived) + " · 실제 밝기 " + starsText(sc.actual) + " (관측 오차 " + (sc.gap > 0 ? "+" : sc.gap < 0 ? "−" : "") + Math.abs(sc.gap) + ")" +
+      "\n관측소장: " + v.quip +
+      "\n\n남의 별만 보다 지친 날, 1분 관측\n" + SHARE_URL;
+  }
+  window.__happyTest = { Q: Q, R: R, I: I, score: score, decide: decide, build: buildResult, lightsFor: lightsFor, cloudsFor: cloudsFor, shareText: function () { return shareText(); }, setAnswers: function (a) { answers = a.slice(); }, observe: function () { observe(); }, DEX_ORDER: DEX_ORDER, WISH: WISH, CMP_LINE: CMP_LINE };
+
+  /* ---------- three good things ---------- */
+  function logEntries() {
+    var out = [];
+    for (var i = 1; i <= 3; i++) {
+      var g = $("g" + i).value.trim(), w = $("w" + i).value.trim();
+      if (g) out.push({ g: g, w: w });
+    }
+    return out;
+  }
+  function renderLog(entries) {
+    var d = new Date(), card = $("logcard");
+    card.innerHTML = '<p class="when"></p>' + entries.map(function () { return '<div class="entry">' + starSVG() + '<p class="txt"></p></div>'; }).join("") + '<p class="sign">내일 밤에도 세 개. 일주일만 이어 가 봐요.</p>';
+    card.querySelector(".when").textContent = "관측 일지 · " + whenText(d);
+    Array.prototype.forEach.call(card.querySelectorAll(".txt"), function (el, i) {
+      el.textContent = entries[i].g;
+      if (entries[i].w) { var em = document.createElement("em"); em.textContent = " — " + entries[i].w; el.appendChild(em); }
+    });
+  }
+  function logText(entries) {
+    var d = new Date();
+    return "[행복관측소 관측 일지] " + whenText(d) + "\n" + entries.map(function (e) { return "★ " + e.g + (e.w ? " — " + e.w : ""); }).join("\n") + "\n\n내일 밤에도 세 개.\n" + SHARE_URL;
+  }
+
+  /* ---------- copy ---------- */
+  function copyText(text, onOk, onFail) {
+    try { navigator.clipboard.writeText(text).then(onOk, onFail); } catch (e) { onFail(); }
+  }
+
+  /* ---------- sky ---------- */
+  function drawSky() {
+    var c = $("sky"); if (!c.getContext) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2), w = window.innerWidth, h = window.innerHeight;
+    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+    var g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+    var cs = getComputedStyle(document.documentElement);
+    var chart = cs.getPropertyValue("--chart").trim(), moon = cs.getPropertyValue("--moon").trim(), gold = cs.getPropertyValue("--star").trim();
+    var cx = w * 0.9, cy = -h * 0.06, big = Math.max(w, h);
+    g.strokeStyle = chart; g.lineWidth = 1;
+    [0.35, 0.62, 0.9, 1.18].forEach(function (k) { g.beginPath(); g.arc(cx, cy, big * k, 0, Math.PI * 2); g.stroke(); });
+    for (var i = 0; i < 9; i++) { var ang = Math.PI * (0.48 + i * 0.07); g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.cos(ang) * big * 2, cy + Math.sin(ang) * big * 2); g.stroke(); }
+    var seed = 11; function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+    var n = Math.round(w * h / 4800);
+    for (var j = 0; j < n; j++) {
+      var x = rnd() * w, y = rnd() * h, big1 = rnd() < 0.07, r = big1 ? 1.4 : 0.45 + rnd() * 0.75;
+      g.globalAlpha = 0.25 + rnd() * 0.6; g.fillStyle = rnd() < 0.14 ? gold : moon;
+      g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+    }
+    g.globalAlpha = 1;
+  }
+  var skyT = null;
+  window.addEventListener("resize", function () { clearTimeout(skyT); skyT = setTimeout(drawSky, 150); });
+
+  /* ---------- wiring ---------- */
+  drawSky();
+  $("title-icon").innerHTML = iconSVG("title");
+  Array.prototype.forEach.call(document.querySelectorAll(".mini-star"), function (el) { el.outerHTML = starSVG(); });
+  starRow($("ex-p"), 2, false, 0);
+  starRow($("ex-a"), 4, false, 0);
+  $("start-chips").innerHTML = DEX_ORDER.map(function () { return '<span class="chip"></span>'; }).join("");
+  Array.prototype.forEach.call($("start-chips").children, function (el, i) { el.textContent = R[DEX_ORDER[i]].name; });
+
+  function again() {
+    if (scanTimer) clearInterval(scanTimer);
+    if (advTimer) clearTimeout(advTimer);
+    scanTimer = advTimer = null;
+    answers = Q.map(function () { return null; }); step = 0; renderQ(); show("s-q");
+  }
+  $("btn-start").addEventListener("click", function () { step = 0; renderQ(); show("s-q"); });
+  $("btn-back").addEventListener("click", function () {
+    if (advTimer) { clearTimeout(advTimer); advTimer = null; }
+    if (step > 0) { step--; renderQ(); }
+  });
+  $("btn-again").addEventListener("click", again);
+  $("btn-again2").addEventListener("click", again);
+  $("btn-safe-back").addEventListener("click", function () { answers = Q.map(function () { return null; }); show("s-start"); });
+  $("btn-dex").addEventListener("click", function () { renderDex(); show("s-dex"); });
+  $("btn-dex-back").addEventListener("click", function () { show("s-result"); });
+  $("btn-share").addEventListener("click", function () {
+    var t = shareText(), box = $("sharebox"), ta = $("share-text");
+    copyText(t, function () { $("toast").textContent = "결과를 복사했어요. 카톡이나 메신저에 붙여넣으세요."; },
+      function () { ta.value = t; box.hidden = false; ta.focus(); ta.select(); });
+  });
+  $("btn-log").addEventListener("click", function () { $("log-out").hidden = true; $("log-form").hidden = false; $("log-msg").textContent = ""; show("s-log"); });
+  $("log-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var entries = logEntries();
+    if (!entries.length) { $("log-msg").textContent = "한 개만 적어도 돼요."; $("g1").focus(); return; }
+    renderLog(entries);
+    $("log-form").hidden = true; $("log-out").hidden = false;
+    window.scrollTo(0, 0);
+  });
+  $("btn-log-edit").addEventListener("click", function () { $("log-out").hidden = true; $("log-form").hidden = false; });
+  $("btn-log-copy").addEventListener("click", function () {
+    var t = logText(logEntries()), btn = $("btn-log-copy");
+    copyText(t, function () { btn.textContent = "복사했어요"; setTimeout(function () { btn.textContent = "일지 복사"; }, 1800); },
+      function () {
+        var el = $("logcard"), sel = window.getSelection(), rg = document.createRange();
+        rg.selectNodeContents(el); sel.removeAllRanges(); sel.addRange(rg);
+        btn.textContent = "일지를 선택해 뒀어요. 길게 눌러 복사하세요.";
+      });
+  });
+  $("btn-log-back").addEventListener("click", function () { show(last && last.key !== "SAFE" ? "s-result" : "s-start"); });
+})();
+</script>
+</body>
+</html>
