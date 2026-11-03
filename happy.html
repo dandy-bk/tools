@@ -100,6 +100,12 @@ a { color: var(--teal); }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font-size: 13px; line-height: 1.4; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-soft); background: var(--panel); }
 .foot { font-size: 13px; color: var(--ink-faint); display: grid; gap: 6px; padding-top: 4px; }
+.postcard { display: grid; gap: 3px; padding: 14px 16px; border: 1px dashed var(--line); border-radius: 14px; background: var(--panel); color: var(--ink); text-decoration: none; min-width: 0; }
+.postcard .pk { font-size: 12px; color: var(--ink-faint); }
+.postcard .pt { font-family: var(--font-display); font-weight: 700; font-size: 16px; line-height: 1.4; }
+.postcard .pt::after { content: " →"; color: var(--star); }
+.postcard .pd { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+.postcard:hover, .postcard:focus-visible { border-color: var(--star); outline: none; }
 .foot b { color: var(--ink-soft); font-weight: 400; }
 
 /* ---------- questions ---------- */
@@ -265,7 +271,7 @@ a { color: var(--teal); }
     <div class="foot">
       <p>진단 도구가 아니에요. 생각을 정리하는 관측 도구예요.</p>
       <p>마음이 계속 무겁다면 정신건강위기상담 <b>1577-0199</b>(365일 24시간)나 자살예방상담 <b>109</b>에 이야기해 보세요.</p>
-      <p>만든 곳: <a href="https://blog.naver.com/ydnad" target="_blank" rel="noopener">My Seasonal Life 블로그</a></p>
+      <p>만든 곳: My Seasonal Life · <a href="https://blog.naver.com/ydnad/224463227596" target="_blank" rel="noopener">블로그에서 이 테스트 글 보기</a></p>
     </div>
   </section>
 
@@ -320,6 +326,7 @@ a { color: var(--teal); }
       <textarea id="share-text" rows="8" readonly></textarea>
     </div>
     <p class="toast" id="toast" role="status" aria-live="polite"></p>
+    <a class="postcard" id="r-post" href="https://blog.naver.com/ydnad/224463227596"><span class="pk">블로그 글</span><span class="pt">SNS 상대적 박탈감, 나만 뒤처진 것 같을 때 1분 행복 테스트</span><span class="pd">30초 종이 관측표, 관측 오차 읽는 법, 연구 출처까지 정리했어요.</span></a>
   </section>
 
   <!-- safety -->
@@ -395,8 +402,8 @@ a { color: var(--teal); }
 <script>
 (function () {
   "use strict";
-  // 독립 사이트 버전은 head에서 window.__SHARE_URL__(자기 주소)을 넣어 준다
-  var SHARE_URL = window.__SHARE_URL__ || "https://dandy-bk.github.io/tools/happy.html";
+  // 결과 복사·일지 복사 주소 = 짝 글(26번). 블로그 방문으로 잡히게 테스트 주소 대신 글 주소를 쓴다(분노관제센터와 같은 방식)
+  var POST_URL = "https://blog.naver.com/ydnad/224463227596";
 
   /* ---------- questions ---------- */
   // o: [label, small]
@@ -935,7 +942,7 @@ a { color: var(--teal); }
     return "[행복관측소] 내 관측 결과: " + v.name + "\n" + v.head +
       "\n겉보기 밝기 " + starsText(sc.perceived) + " · 실제 밝기 " + starsText(sc.actual) + " (관측 오차 " + (sc.gap > 0 ? "+" : sc.gap < 0 ? "−" : "") + Math.abs(sc.gap) + ")" +
       "\n관측소장: " + v.quip +
-      "\n\n남의 별만 보다 지친 날, 1분 관측\n" + SHARE_URL;
+      "\n\n남의 별만 보다 지친 날, 30초 관측표와 1분 테스트\n" + POST_URL;
   }
   window.__happyTest = { Q: Q, R: R, I: I, score: score, decide: decide, build: buildResult, lightsFor: lightsFor, cloudsFor: cloudsFor, shareText: function () { return shareText(); }, setAnswers: function (a) { answers = a.slice(); }, observe: function () { observe(); }, DEX_ORDER: DEX_ORDER, WISH: WISH, CMP_LINE: CMP_LINE };
 
@@ -959,7 +966,7 @@ a { color: var(--teal); }
   }
   function logText(entries) {
     var d = new Date();
-    return "[행복관측소 관측 일지] " + whenText(d) + "\n" + entries.map(function (e) { return "★ " + e.g + (e.w ? " — " + e.w : ""); }).join("\n") + "\n\n내일 밤에도 세 개.\n" + SHARE_URL;
+    return "[행복관측소 관측 일지] " + whenText(d) + "\n" + entries.map(function (e) { return "★ " + e.g + (e.w ? " — " + e.w : ""); }).join("\n") + "\n\n내일 밤에도 세 개.\n" + POST_URL;
   }
 
   /* ---------- copy ---------- */
